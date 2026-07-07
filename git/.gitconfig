@@ -1,0 +1,8 @@
+[gpg]
+	program = D:/programs/scoop/apps/git/current/usr/bin/gpg.exe
+[user]
+	signingkey = D8F443835C06BE6C
+	email = nihit429@gmail.com
+	name = Nihit Sunhare
+[commit]
+	gpgsign = true

@@ -1,8 +1,45 @@
-[gpg]
-	program = D:/programs/scoop/apps/git/current/usr/bin/gpg.exe
-[user]
-	signingkey = D8F443835C06BE6C
-	email = nihit429@gmail.com
-	name = Nihit Sunhare
-[commit]
-	gpgsign = true
+[include]
+    path = ~/.gitconfig.local
+
+[core]
+    editor = notepad++.exe -multiInst -notabbar -nosession
+    pager = delta
+    autocrlf = true
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[credential]
+    helper = manager
+
+[pull]
+    rebase = false
+
+[push]
+    default = simple
+    autoSetupRemote = true
+
+[merge]
+    conflictstyle = zdiff3
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+    hyperlinks = true
+    features = decorations
+
+[alias]
+    s = status
+    st = status --short --branch
+    aa = add .
+    cm = commit -m
+    lg = log --graph --decorate --oneline --all
+    df = diff
+    dc = diff --cached

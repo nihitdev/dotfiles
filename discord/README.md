@@ -1,86 +1,88 @@
-# system24 servers
+<div align="center">
 
-An unofficial custom fork of refact0r/System24 for Discord. This fork keeps the original System24 structure and behavior where present, changes the server-list panel label from `nav` to `servers`, and includes a ready-to-use Catppuccin Mocha theme file.
+# Shellcord
 
-## Description
+**A terminal-inspired Discord theme built for developers.**
 
-Short description:
+[![Release](https://img.shields.io/github/v/release/nihitdev/shellcord?style=flat-square&color=cba6f7&label=release)](https://github.com/nihitdev/shellcord/releases)
+[![License](https://img.shields.io/github/license/nihitdev/shellcord?style=flat-square&color=a6e3a1)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/nihitdev/shellcord?style=flat-square&color=f9e2af)](https://github.com/nihitdev/shellcord/stargazers)
+[![CSS](https://img.shields.io/badge/built%20with-CSS-89b4fa?style=flat-square&logo=css&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
+[![Vencord](https://img.shields.io/badge/Vencord-compatible-cba6f7?style=flat-square)](https://vencord.dev/)
+[![BetterDiscord](https://img.shields.io/badge/BetterDiscord-compatible-7289da?style=flat-square)](https://betterdiscord.app/)
 
-```text
-A polished Catppuccin Mocha fork of System24 for Discord, with TUI-style panels and the server list labelled "servers".
-```
+Modular customization · Catppuccin colors · Clean terminal aesthetic
 
-Long description:
+![Shellcord preview](assets/preview.png)
 
-```text
-system24 servers is an unofficial fork of refact0r/System24 using Catppuccin Mocha colors, DM Mono typography, rounded blurred panels, and a server-list panel label changed from "nav" to "servers". Built for Vencord and BetterDiscord.
-```
+</div>
 
-## Screenshots
+## Features
 
-Screenshots coming soon.
+- Terminal-inspired interface with TUI-style panel labels
+- Catppuccin Mocha palette and DM Mono typography
+- Rounded, softly blurred panels with focused hover accents
+- Optional ASCII titles, loaders, Spotify progress bar, and panel labels
+- Modular CSS source files for straightforward customization
+- Compatible with Vencord and BetterDiscord
 
 ## Installation
 
 ### Vencord
 
-1. Open Vencord settings.
-2. Go to Themes.
-3. Add the raw theme URL:
+Open **Settings → Themes → Online Themes** and add:
 
 ```text
-https://raw.githubusercontent.com/nihitdev/theme-fetch/main/theme/system24-servers.theme.css
+https://raw.githubusercontent.com/nihitdev/shellcord/main/theme/shellcord.theme.css
 ```
 
 ### BetterDiscord
 
-1. Download or copy `theme/system24-servers.theme.css`.
-2. Place it in your BetterDiscord themes folder.
-3. Enable `system24 servers (catppuccin mocha)` in BetterDiscord themes.
+1. Download [`shellcord.theme.css`](https://raw.githubusercontent.com/nihitdev/shellcord/main/theme/shellcord.theme.css).
+2. Move it into your BetterDiscord themes folder.
+3. Enable **Shellcord** from the Themes page.
 
-## Theme File
+## Customization
 
-The ready-to-use theme file is:
+Open `theme/shellcord.theme.css` and adjust the variables near the top of the file. You can change typography, spacing, animations, window controls, blur, panel labels, ASCII styling, and the complete color palette without editing generated CSS.
 
-```text
-theme/system24-servers.theme.css
-```
-
-Before publishing, replace the hosted build import placeholder:
+The inherited ASCII loader value remains `system24` for compatibility:
 
 ```css
-@import url('https://raw.githubusercontent.com/nihitdev/theme-fetch/main/build/system24.css');
+body {
+    --ascii-titles: on;
+    --ascii-loader: system24;
+    --panel-labels: on;
+    --custom-spotify-bar: on;
+}
 ```
 
-Use the raw.githubusercontent.com URL for this repository's built CSS. Do not use GitHub Pages for this fork unless you intentionally change the theme import yourself.
-
-## Build
-
-Install dependencies and build the generated CSS:
+## Development
 
 ```sh
+git clone https://github.com/nihitdev/shellcord.git
+cd shellcord
 npm install
 npm run build
 ```
 
-The source label rule lives in:
+Make changes in `src/` and run `npm run build` to regenerate `build/shellcord.css`. Do not edit the generated build directly.
+
+For live desktop development, set `DEV_OUTPUT_PATH` in `.env` and run `npm run dev`. The browser injection workflow is documented in [`docs/BROWSER_DEV.md`](docs/BROWSER_DEV.md).
+
+## Project structure
 
 ```text
-src/panel-labels.css
-```
-
-The generated build output is:
-
-```text
-build/system24.css
+src/                       Shellcord source modules
+theme/shellcord.theme.css  Installable theme and public variables
+build/shellcord.css        Generated, committed CSS build
+scripts/theme.config.js    Build paths and source ordering
 ```
 
 ## Credits
 
-Based on System24 by refact0r. This is an unofficial fork and is not affiliated with or endorsed by the original System24 project.
-
-Catppuccin Mocha colors and Catppuccin assets are credited to the Catppuccin project.
+Shellcord is based on [System24](https://github.com/refact0r/system24) by refact0r and inherits [midnight](https://github.com/refact0r/midnight-discord). It is not affiliated with or endorsed by either project. The color palette and related assets are credited to [Catppuccin](https://github.com/catppuccin/catppuccin).
 
 ## License
 
-MIT. Preserve the upstream System24 license and attribution when distributing this fork. See `LICENSE`.
+Distributed under the [MIT License](LICENSE). Preserve the upstream System24 license and attribution when redistributing this fork.

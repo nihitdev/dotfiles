@@ -1,11 +1,11 @@
 /**
- * @name system24 servers (catppuccin mocha)
- * @description A polished TUI-style Discord theme based on System24 and Catppuccin Mocha, with rounded panels, soft blur, and the server-list panel labelled "servers".
+ * @name Shellcord
+ * @description A terminal-inspired Discord theme for developers.
  * @author nihitdev
  * @version 1.0.0
- * @source https://github.com/nihitdev/theme-fetch
+ * @source https://github.com/nihitdev/shellcord
  */
-@import url('https://raw.githubusercontent.com/nihitdev/theme-fetch/main/build/system24.css');
+@import url('https://raw.githubusercontent.com/nihitdev/shellcord/main/build/shellcord.css');
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 
 body {

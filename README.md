@@ -11,7 +11,7 @@ A collection of configuration files for the tools I use every day.
 ## ✨ Configurations
 
 | Tool | Description |
-|------|-------------|
+| :--- | :---------- |
 | 🦇 Bat | Syntax highlighting pager |
 | 🎵 Cava | Terminal audio visualizer |
 | 🪟 ExplorerBlurMica | Explorer customization |
@@ -54,27 +54,27 @@ git clone https://github.com/<username>/dotfiles.git
 cd dotfiles
 ```
 
-Copy the desired configuration files to their respective locations or restore them using your own installation script.
+Copy the desired configuration files to their respective locations, or restore them using your own installation script.
 
 ---
 
 ## 🎨 Theme
 
-- Catppuccin Mocha
-- JetBrainsMono Nerd Font
-- Windows Terminal
-- Oh My Posh
-- Fastfetch
-- Bat
+- **Flavor:** Catppuccin Mocha
+- **Font:** JetBrainsMono Nerd Font
+- **Terminal:** Windows Terminal
+- **Prompt:** Oh My Posh
+- **System Info:** Fastfetch
+- **Pager:** Bat
 
 ---
 
 ## 📸 Preview
 
-> I will add em later dw.
+*Screenshots coming soon.*
 
 ---
 
 ## 📄 License
 
-MIT
+This project is licensed under the MIT License.

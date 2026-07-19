@@ -1,0 +1,281 @@
+watch_stylesheet: true
+watch_config: true
+debug: false
+update_check: true # Enable automatic update check.
+glazewm:
+  start_command: "glazewm.exe start"
+  stop_command: "glazewm.exe command wm-exit"
+  reload_command: "glazewm.exe command wm-exit && glazewm.exe start"
+bars:
+  primary-bar:
+    enabled: true
+    screens: ["primary"]
+    class_name: "yasb-bar"
+    alignment:
+      position: "top"
+      center: true
+    animation:
+      enabled: true
+      duration: 1000
+    blur_effect:
+      enabled: true
+      acrylic: true
+      dark_mode: true
+      round_corners: false
+      round_corners_type: "normal"
+      border_color: "#8dbcff"
+    window_flags:
+      always_on_top: false
+      windows_app_bar: true
+    dimensions:
+      width: "100%"
+      height: 28
+    padding:
+      top: 0
+      left: 0
+      bottom: 0
+      right: 0
+    widgets:
+      left: [
+        "glazewm_tiling_direction",
+        "glazewm_workspaces",
+        "komorebi_active_layout",
+        "komorebi_workspaces", 
+        "active_window"
+      ]
+      center: [
+        "clock"
+      ]
+      right: [
+        "media",
+        "cava",
+        "cpu",
+        "memory"
+        ]
+widgets:
+  active_window:
+    type: "yasb.active_window.ActiveWindowWidget"
+    options:
+      label: "{win[process][name]}"
+      label_alt: "{win[title]}"
+      label_no_window: ""
+      label_icon: true
+      label_icon_size: 14
+      max_length: 46
+      max_length_ellipsis: "..."
+      monitor_exclusive: true
+  clock:
+    type: "yasb.clock.ClockWidget"
+    options:
+      label: "{%I:%M:%S}"
+      label_alt: "{%I:%M:%S}"
+      timezones: []
+      callbacks:
+        on_left: ""
+  power_menu:
+    type: "yasb.power_menu.PowerMenuWidget"
+    options:
+      label: "\uf011"
+      uptime: True
+      blur: False
+      blur_background: True
+      animation_duration: 200
+      button_row: 5
+      buttons:
+        shutdown: ["\uf011", "Rage Quit"]
+        restart: ["\uead2", "Oops, Reboot"]
+        signout: ["\udb80\udf43", "Dip Out"]
+        hibernate: ["\uf28e", "Bear Mode"]
+        sleep: ["\u23fe", "Nap Time"]
+        cancel: ["", "Nah, Im Good "]
+  cava:
+    type: "yasb.cava.CavaWidget"
+    options:
+      bar_height: 12
+      min_bar_height: 0
+      gradient: 1
+      reverse: 0
+      foreground: "#89b4fa"
+      gradient_color_1: '#74c7ec'
+      gradient_color_2: '#89b4fa'
+      gradient_color_3: '#cba6f7'
+      bars_number: 8
+      bar_spacing: 2
+      bar_width: 4
+      hide_empty: true
+      container_padding:
+        top: 0
+        left: 8
+        bottom: 0
+        right: 8
+  cpu:
+      type: "yasb.cpu.CpuWidget"
+      options:
+        label: "{info[percent][total]:.0f}%"
+        progress_bar:
+          enabled: true
+          position: "left"
+          size: 17
+          thickness: 3
+          color: "#89dceb"
+          background_color: "#1e1e2e"
+          animation: true 
+        animation:
+          enabled: true
+          type: FadeInOut
+          duration: 200
+        update_interval: 2000
+        callbacks:
+          on_right: "toggle_menu"
+          on_left: "toggle_menu"
+        menu:
+          enabled: true
+          show_graph: true
+          show_graph_grid: true
+          graph_history_size: 60
+  glazewm_workspaces:
+    type: "glazewm.workspaces.GlazewmWorkspacesWidget"
+    options:
+      offline_label: "GlazeWM is offline dude"
+      hide_empty_workspaces: false
+      hide_if_offline: false
+      enable_scroll_switching: true
+      reverse_scroll_direction: true
+  glazewm_tiling_direction:
+    type: "glazewm.tiling_direction.GlazewmTilingDirectionWidget"
+    options:
+      horizontal_label: "\ueb56"
+      vertical_label: "\ueb57"
+      btn_shadow:
+        enabled: true
+        color: "black"
+        radius: 3
+        offset: [ 1, 1 ]
+  memory:
+    type: "yasb.memory.MemoryWidget"
+    options:
+      label: "{virtual_mem_percent}%"
+      update_interval: 5000
+      progress_bar:
+        enabled: true
+        size: 17
+        thickness: 3
+        position: left
+        color: "#cba6f7"
+        background_color: "#1e1e2e"
+        animation: True
+      animation:
+        enabled: true
+        type: FadeInOut
+        duration: 200 
+      callbacks:
+        on_left: "toggle_menu"
+        on_right: "toggle_menu"
+      memory_thresholds:
+        low: 25
+        medium: 50
+        high: 90
+      menu:
+        enabled: true
+        show_graph: true
+        show_graph_grid: true
+        graph_history_size: 60
+  komorebi_workspaces:
+    type: "komorebi.workspaces.WorkspaceWidget"
+    options:
+      label_offline: "\u23fc Offline"
+      label_workspace_btn: "\u000d"
+      label_workspace_active_btn: "\u000d"
+      label_workspace_populated_btn: "\u000d"
+      label_default_name: "{index}"
+      label_zero_index: false
+      hide_empty_workspaces: false
+      hide_if_offline: true
+      animation: true
+  komorebi_active_layout:
+    type: "komorebi.active_layout.ActiveLayoutWidget"
+    options:
+      hide_if_offline: false
+      label: "{icon}"
+      layouts:
+        [
+          "bsp",
+          "columns",
+          "rows",
+          "grid",
+          "vertical_stack",
+          "horizontal_stack",
+          "ultrawide_vertical_stack",
+          "right_main_vertical_stack",
+        ]
+      layout_icons:
+        bsp: "BSP"
+        columns: "COLS"
+        rows: "ROWS"
+        grid: "GRID"
+        vertical_stack: "V-STACK"
+        horizontal_stack: "H-STACK"
+        ultrawide_vertical_stack: "W-STACK"
+        right_main_vertical_stack: "RMV-STACK"
+        monocle: "MONOCLE"
+        maximized: "MAX"
+        floating: "FLOATING"
+        paused: "PAUSED"
+      callbacks:
+        on_left: "next_layout"
+        on_middle: "toggle_monocle"
+        on_right: "prev_layout"
+  media:
+    type: "yasb.media.MediaWidget"
+    options:
+      label: "{title}"
+      label_alt: "{title}"
+      separator: " - "
+      hide_empty: true
+      callbacks:
+        on_left: "toggle_media_menu"
+      max_field_size:
+        label: 30
+        label_alt: 30
+      show_thumbnail: false
+      controls_only: false
+      controls_left: true
+      controls_hide: false
+      thumbnail_alpha: 80
+      thumbnail_padding: 8
+      thumbnail_corner_radius: 16
+      icons:
+        prev_track: " "
+        next_track: " "
+        play: "\udb81\udf5b"
+        pause: "\uf001"
+      media_menu:
+        blur: true
+        round_corners: false
+        round_corners_type: "normal"
+        border_color: "system"
+        alignment: "right"
+        direction: "down"
+        offset_top: 6
+        offset_left: 0
+        thumbnail_corner_radius: 0
+        thumbnail_size: 96
+        max_title_size: 60
+        max_artist_size: 20
+        show_source: true
+      media_menu_icons:
+        play: "\ue768"
+        pause: "\ue769"
+        prev_track: "\ue892"
+        next_track: "\ue893"
+      scrolling_label:
+        enabled: false
+        update_interval_ms: 33
+        style: "left"  # can be "left", "right", "bounce", "bounce-ease"
+        separator: " | "
+        label_padding: 0
+        always_scroll: false
+        # Easing curve par: https://www.desmos.com/calculator/j7eamemxzi
+        ease_slope: 20
+        ease_pos: 0.8
+        ease_min: 0.5

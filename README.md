@@ -22,6 +22,7 @@ A collection of configuration files for the tools I use every day.
 | 📦 Scoop | Package manager exports |
 | 🖥️ Windows Terminal | Terminal settings |
 | 📊 YASB | Yet Another Status Bar |
+|💬 Discord Theme  |  vencord | themes
 
 ---
 
@@ -31,6 +32,7 @@ A collection of configuration files for the tools I use every day.
 .
 ├── bat/
 ├── cava/
+├──Discord/
 ├── explorerblurmica/
 ├── fastfetch/
 ├── git/

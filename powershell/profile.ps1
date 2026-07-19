@@ -1,183 +1,334 @@
-# ============================================
-# NIHIT INDUSTRIES™ PowerShell
-# All-in-One Profile v2.0
-# ============================================
+# ============================================================
+# PowerShell Profile
+# UTF-8 • Oh My Posh • Fastfetch • Zoxide • Modern CLI aliases
+# ============================================================
 
-# --------------------------------------------
-# CONFIG
-# --------------------------------------------
-$Global:DevName = "windows@nihitdev"
 
-# --------------------------------------------
+# ------------------------------------------------------------
+# PATHS
+# ------------------------------------------------------------
+
+$FastfetchConfig = "$HOME\.config\fastfetch\config.jsonc"
+$OhMyPoshConfig  = "$HOME\pure.omp.json"
+
+
+# ------------------------------------------------------------
+# UTF-8 ENCODING
+# ------------------------------------------------------------
+
+try {
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    $OutputEncoding           = [System.Text.UTF8Encoding]::new($false)
+
+    chcp 65001 > $null
+}
+catch {
+    # Ignore encoding errors during terminal startup.
+}
+
+
+# ------------------------------------------------------------
+# HELPER FUNCTIONS
+# ------------------------------------------------------------
+
+function Test-Command {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
+}
+
+
+function Show-MissingCommand {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    Write-Host "$Name is not installed or is not available in PATH." `
+        -ForegroundColor Yellow
+}
+
+
+# ------------------------------------------------------------
+# TERMINAL STARTUP
+# ------------------------------------------------------------
+
+Clear-Host
+
+if (Test-Command "fastfetch") {
+    if (Test-Path $FastfetchConfig) {
+        fastfetch --config $FastfetchConfig
+    }
+    else {
+        fastfetch
+    }
+}
+
+
+# ------------------------------------------------------------
 # PROMPT
-# --------------------------------------------
-function prompt {
-    Write-Host (Get-Location) -ForegroundColor White
-    Write-Host $Global:DevName -ForegroundColor Green -NoNewline
-    return "> "
-}
+# ------------------------------------------------------------
 
-# --------------------------------------------
-# NAVIGATION (Lazy load zoxide)
-# --------------------------------------------
-function z {
-    if (-not (Get-Command __zoxide_z -ErrorAction SilentlyContinue)) {
-        zoxide init powershell | Out-String | Invoke-Expression
+if (Test-Command "oh-my-posh") {
+    if (Test-Path $OhMyPoshConfig) {
+        oh-my-posh init pwsh --config $OhMyPoshConfig |
+            Invoke-Expression
     }
-    __zoxide_z @args
-}
-
-function zi {
-    if (-not (Get-Command __zoxide_zi -ErrorAction SilentlyContinue)) {
-        zoxide init powershell | Out-String | Invoke-Expression
+    else {
+        oh-my-posh init pwsh |
+            Invoke-Expression
     }
-    __zoxide_zi @args
 }
 
-function .. { Set-Location .. }
-function ... { Set-Location ../.. }
-function .... { Set-Location ../../.. }
 
-# --------------------------------------------
-# ALIASES (Fast - load immediately)
-# --------------------------------------------
-Set-Alias c clear
-Set-Alias cat bat
-Set-Alias grep rg
-Set-Alias find fd
-Set-Alias du dust
-Set-Alias top btm
-Set-Alias sudo gsudo
-Set-Alias http xh
-Set-Alias dns doggo
-Set-Alias ps procs
+# ------------------------------------------------------------
+# NAVIGATION
+# ------------------------------------------------------------
 
-# --------------------------------------------
-# FUNCTIONS
-# --------------------------------------------
-# File listing
-function l { eza --icons @args }
-function la { eza -a --icons @args }
-function ll { eza -lah --git --icons }
-function lt { eza --tree --level=2 --icons }
+if (Test-Command "zoxide") {
+    Invoke-Expression (& zoxide init powershell | Out-String)
+}
 
-# Markdown viewer
-function md { glow @args }
+function .. {
+    Set-Location ..
+}
 
-# Notepad++
-function npp { notepad++.exe @args }
+function ... {
+    Set-Location ../..
+}
 
-# Fastfetch (lazy load)
+function .... {
+    Set-Location ../../..
+}
+
+
+# ------------------------------------------------------------
+# TERMINAL UTILITIES
+# ------------------------------------------------------------
+
+function c {
+    Clear-Host
+}
+
+function reload {
+    . $PROFILE
+}
+
+function profile {
+    code $PROFILE
+}
+
+
+# ------------------------------------------------------------
+# MODERN COMMAND REPLACEMENTS
+# ------------------------------------------------------------
+
+function cat {
+    if (Test-Command "bat") {
+        bat --paging=never @args
+    }
+    else {
+        Microsoft.PowerShell.Management\Get-Content @args
+    }
+}
+
+function grep {
+    if (Test-Command "rg") {
+        rg @args
+    }
+    else {
+        Show-MissingCommand "ripgrep"
+    }
+}
+
+function find {
+    if (Test-Command "fd") {
+        fd @args
+    }
+    else {
+        Show-MissingCommand "fd"
+    }
+}
+
+function du {
+    if (Test-Command "dust") {
+        dust @args
+    }
+    else {
+        Show-MissingCommand "dust"
+    }
+}
+
+function top {
+    if (Test-Command "btm") {
+        btm @args
+    }
+    else {
+        Show-MissingCommand "bottom"
+    }
+}
+
+function sudo {
+    if (Test-Command "gsudo") {
+        gsudo @args
+    }
+    else {
+        Show-MissingCommand "gsudo"
+    }
+}
+
+function http {
+    if (Test-Command "xh") {
+        xh @args
+    }
+    else {
+        Show-MissingCommand "xh"
+    }
+}
+
+function dns {
+    if (Test-Command "doggo") {
+        doggo @args
+    }
+    else {
+        Show-MissingCommand "doggo"
+    }
+}
+
+function ps {
+    if (Test-Command "procs") {
+        procs @args
+    }
+    else {
+        Microsoft.PowerShell.Management\Get-Process @args
+    }
+}
+
+function sed {
+    if (Test-Command "sd") {
+        sd @args
+    }
+    else {
+        Show-MissingCommand "sd"
+    }
+}
+
+
+# ------------------------------------------------------------
+# FILE LISTING
+# ------------------------------------------------------------
+
+function l {
+    if (Test-Command "eza") {
+        eza --icons @args
+    }
+    else {
+        Get-ChildItem @args
+    }
+}
+
+function la {
+    if (Test-Command "eza") {
+        eza --all --icons @args
+    }
+    else {
+        Get-ChildItem -Force @args
+    }
+}
+
+function ll {
+    if (Test-Command "eza") {
+        eza --long --all --header --git --icons @args
+    }
+    else {
+        Get-ChildItem -Force @args |
+            Format-Table
+    }
+}
+
+function lt {
+    if (Test-Command "eza") {
+        eza --tree --level=2 --icons @args
+    }
+    else {
+        tree @args
+    }
+}
+
+
+# ------------------------------------------------------------
+# APPLICATION SHORTCUTS
+# ------------------------------------------------------------
+
+function md {
+    if (Test-Command "glow") {
+        glow @args
+    }
+    else {
+        Show-MissingCommand "glow"
+    }
+}
+
+function npp {
+    if (Test-Command "notepad++.exe") {
+        notepad++.exe @args
+    }
+    else {
+        Show-MissingCommand "Notepad++"
+    }
+}
+
 function ff {
-    if (-not (Get-Command fastfetch -ErrorAction SilentlyContinue)) {
-        Write-Host "fastfetch not installed. Run: scoop install fastfetch" -ForegroundColor Yellow
+    if (Test-Command "fastfetch") {
+        if ($args.Count -gt 0) {
+            fastfetch @args
+        }
+        elseif (Test-Path $FastfetchConfig) {
+            fastfetch --config $FastfetchConfig
+        }
+        else {
+            fastfetch
+        }
+    }
+    else {
+        Show-MissingCommand "fastfetch"
+    }
+}
+
+
+# ------------------------------------------------------------
+# YAZI FILE MANAGER
+# ------------------------------------------------------------
+
+function y {
+    if (-not (Test-Command "yazi.exe")) {
+        Show-MissingCommand "yazi"
         return
     }
-    fastfetch
-}
 
-# --------------------------------------------
-# CMD PROTECTION SYSTEM™
-# --------------------------------------------
-function global:Type-Text {
-    param(
-        [AllowEmptyString()]
-        [string]$Text = '',
-        [ValidateRange(0, 1000)]
-        [int]$Speed = 0,
-        [ConsoleColor]$Color = [ConsoleColor]::White
-    )
-    foreach ($Character in $Text.ToCharArray()) {
-        Write-Host -NoNewline $Character -ForegroundColor $Color
-        if ($Speed -gt 0) { Start-Sleep -Milliseconds $Speed }
-    }
-    Write-Host
-}
+    $TempFile = New-TemporaryFile
 
-function global:cmd {
-    [CmdletBinding()]
-    param(
-        [Parameter(ValueFromRemainingArguments = $true)]
-        [string[]]$Arguments
-    )
-    
-    Clear-Host
-    Type-Text 'Initializing Nihit Industries Security Framework...' 8 Cyan
-    Start-Sleep -Milliseconds 250
-    Type-Text '[##########] 100%' 2 Green
-    Start-Sleep -Milliseconds 300
-    Write-Host
-    Type-Text 'Scanning executable...' 10 Yellow
-    Start-Sleep -Milliseconds 400
-    Type-Text 'Found: cmd.exe' 15 White
-    Start-Sleep -Milliseconds 350
-    Type-Text 'Reading executable metadata...' 10 Yellow
-    Start-Sleep -Milliseconds 500
-    Type-Text 'Checking compatibility...' 10 Yellow
-    Start-Sleep -Milliseconds 700
-    Write-Host
-    Type-Text '❌ STATUS : LEGACY APPLICATION DETECTED' 18 Red
-    Start-Sleep -Milliseconds 700
-    Clear-Host
-    
-    # CMD ASCII ART
-    Type-Text ' ██████╗███╗   ███╗██████╗ ' 1 Cyan
-    Type-Text '██╔════╝████╗ ████║██╔══██╗' 1 Cyan
-    Type-Text '██║     ██╔████╔██║██║  ██║' 1 Cyan
-    Type-Text '██║     ██║╚██╔╝██║██║  ██║' 1 Cyan
-    Type-Text '╚██████╗██║ ╚═╝ ██║██████╔╝' 1 Cyan
-    Type-Text ' ╚═════╝╚═╝     ╚═╝╚═════╝ ' 1 Cyan
-    Write-Host
-    Type-Text '════════════════════════════════════════════════════════' 1 DarkGray
-    Type-Text '        NIHIT INDUSTRIES™ TERMINAL' 4 Magenta
-    Type-Text '          Legacy Shell Protection' 4 DarkGray
-    Type-Text '════════════════════════════════════════════════════════' 1 DarkGray
-    Write-Host
-    Type-Text '🚨 ACCESS DENIED 🚨' 15 Red
-    Write-Host
-    Type-Text 'The application you attempted to launch:' 6 White
-    Write-Host
-    Type-Text '        cmd.exe' 25 Yellow
-    Write-Host
-    Type-Text 'has reached End-of-Life and is no longer' 6 White
-    Type-Text 'supported on this workstation.' 6 White
-    Write-Host
-    Type-Text 'Reason(s):' 8 Cyan
-    Type-Text '  ❌ Lacks modern scripting' 4 Red
-    Type-Text '  ❌ No package management' 4 Red
-    Type-Text '  ❌ Primitive tab completion' 4 Red
-    Type-Text '  ❌ Skill issue detected' 8 Red
-    Write-Host
-    Type-Text 'Approved Shells' 8 Green
-    Type-Text '  ✅ PowerShell 7' 3 Green
-    Type-Text '  ✅ WSL' 3 Green
-    Type-Text '  ✅ Nushell' 3 Green
-    Write-Host
-    Type-Text 'Rejected' 8 Red
-    Type-Text '  ❌ cmd.exe' 10 Red
-    Write-Host
-    Type-Text 'Status:' 8 Cyan
-    Type-Text '  Legacy software blocked by' 5 White
-    Type-Text '  Nihit Industries Security Policy' 5 White
-    Type-Text '  (NISP-2026)' 5 White
-    Write-Host
-    Type-Text 'Suggestion:' 8 Cyan
-    Type-Text '  Upgrade your shell.' 8 White
-    Type-Text '  Upgrade your workflow.' 8 White
-    Type-Text '  Upgrade yourself.' 15 Yellow
-    Write-Host
-    Type-Text 'Press any key to embrace the future...' 15 DarkGray
-    
     try {
-        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+        yazi.exe @args --cwd-file="$($TempFile.FullName)"
+
+        if (Test-Path $TempFile.FullName) {
+            $NewDirectory = Get-Content $TempFile.FullName -Raw
+
+            if (
+                $NewDirectory -and
+                (Test-Path $NewDirectory -PathType Container)
+            ) {
+                Set-Location $NewDirectory
+            }
+        }
     }
-    catch {
-        Read-Host 'Press Enter to embrace the future' | Out-Null
+    finally {
+        Remove-Item $TempFile.FullName `
+            -Force `
+            -ErrorAction SilentlyContinue
     }
-    Clear-Host
 }
-# --------------------------------------------
-# STARTUP MESSAGE
-# --------------------------------------------
-Write-Host "🚀 NIHIT INDUSTRIES™ Terminal Loaded" -ForegroundColor Green
-Write-Host "⚡ Type 'cmd' at your own risk" -ForegroundColor Yellow

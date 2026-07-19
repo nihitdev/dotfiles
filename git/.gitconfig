@@ -1,29 +1,7 @@
-[include]
-    path = ~/.gitconfig.local
-
 [core]
-    editor = notepad++.exe -multiInst -notabbar -nosession
     pager = delta
-    autocrlf = true
-
-[init]
-    defaultBranch = main
-
-[color]
-    ui = auto
-
-[credential]
-    helper = manager
-
-[pull]
-    rebase = false
-
-[push]
-    default = simple
-    autoSetupRemote = true
-
-[merge]
-    conflictstyle = zdiff3
+        autocrlf = true
+        eol = native
 
 [interactive]
     diffFilter = delta --color-only
@@ -33,13 +11,47 @@
     side-by-side = true
     line-numbers = true
     hyperlinks = true
-    features = decorations
+    hyperlinks-file-link-format = vscode://file/{path}:{line}
+    syntax-theme = Catppuccin Mocha
+    plus-style = syntax "#003800"
+    minus-style = syntax "#3f0001"
+
+[merge]
+    conflictstyle = zdiff3
+
+[diff]
+    colorMoved = default
+
+[pull]
+    rebase = false
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[color "branch"]
+    current = yellow bold
+    local = green bold
+    remote = cyan bold
+
+[color "status"]
+    added = green bold
+    changed = yellow bold
+    untracked = red bold
 
 [alias]
-    s = status
-    st = status --short --branch
-    aa = add .
-    cm = commit -m
-    lg = log --graph --decorate --oneline --all
-    df = diff
-    dc = diff --cached
+    st = status -sb
+    lg = log --graph --decorate --all --oneline
+    l = log --oneline
+    last = log -1 HEAD
+    co = checkout
+    sw = switch
+    cm = commit
+    br = branch
+[filter "lfs"]
+        process = git-lfs filter-process
+        required = true
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f

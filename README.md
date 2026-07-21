@@ -2,7 +2,7 @@
 
 ![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows)
 ![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell)
-![License](https://img.shields.io/github/license/<username>/dotfiles)
+![License](https://img.shields.io/github/license/nihitdev/dotfiles)
 
 > My Windows development environment.
 

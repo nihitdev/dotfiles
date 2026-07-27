@@ -9,7 +9,8 @@
 # ------------------------------------------------------------
 
 $FastfetchConfig = "$HOME\.config\fastfetch\config.jsonc"
-$OhMyPoshConfig  = "$HOME\pure.omp.json"
+$OhMyPoshConfig  = "$HOME\themes\amro.omp.json"
+$ProfileCache    = Join-Path $PSScriptRoot ".profile-cache"
 
 
 # ------------------------------------------------------------
@@ -21,7 +22,6 @@ try {
     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
     $OutputEncoding           = [System.Text.UTF8Encoding]::new($false)
 
-    chcp 65001 > $null
 }
 catch {
     # Ignore encoding errors during terminal startup.
@@ -54,12 +54,36 @@ function Show-MissingCommand {
 
 
 # ------------------------------------------------------------
+# STARTUP COMMANDS
+# ------------------------------------------------------------
+
+# Only resolve programs that are needed during startup. Everything else is
+# checked lazily when its wrapper function is called.
+$HasOhMyPosh = Test-Command "oh-my-posh"
+$HasZoxide   = Test-Command "zoxide"
+$HasFastfetch = Test-Command "fastfetch"
+
+
+# ------------------------------------------------------------
+# PSREADLINE
+# ------------------------------------------------------------
+
+if ($Host.Name -eq 'ConsoleHost') {
+    # PowerShell loads PSReadLine automatically for interactive consoles. Do
+    # not force its relatively expensive import for scripts or redirected runs.
+    if ((Get-Module PSReadLine) -and -not [Console]::IsOutputRedirected) {
+        Set-PSReadLineOption -PredictionSource History
+        Set-PSReadLineOption -PredictionViewStyle InlineView
+        Set-PSReadLineKeyHandler -Key RightArrow -Function ForwardChar
+    }
+}
+
+
+# ------------------------------------------------------------
 # TERMINAL STARTUP
 # ------------------------------------------------------------
 
-Clear-Host
-
-if (Test-Command "fastfetch") {
+if ($HasFastfetch -and -not [Console]::IsOutputRedirected) {
     if (Test-Path $FastfetchConfig) {
         fastfetch --config $FastfetchConfig
     }
@@ -73,24 +97,53 @@ if (Test-Command "fastfetch") {
 # PROMPT
 # ------------------------------------------------------------
 
-if (Test-Command "oh-my-posh") {
-    if (Test-Path $OhMyPoshConfig) {
-        oh-my-posh init pwsh --config $OhMyPoshConfig |
-            Invoke-Expression
+function Enable-PoshPrompt {
+    if (-not $HasOhMyPosh) {
+        Show-MissingCommand "oh-my-posh"
+        return
     }
-    else {
-        oh-my-posh init pwsh |
-            Invoke-Expression
+
+    $OhMyPoshInit = Join-Path $ProfileCache "oh-my-posh.ps1"
+    $PromptConfig = Get-Item $OhMyPoshConfig -ErrorAction SilentlyContinue
+    $PromptCache  = Get-Item $OhMyPoshInit -ErrorAction SilentlyContinue
+
+    if (
+        -not $PromptCache -or
+        ($PromptConfig -and $PromptConfig.LastWriteTimeUtc -gt $PromptCache.LastWriteTimeUtc)
+    ) {
+        New-Item $ProfileCache -ItemType Directory -Force | Out-Null
+
+        if ($PromptConfig) {
+            oh-my-posh init pwsh --config $OhMyPoshConfig |
+                Set-Content $OhMyPoshInit -Encoding utf8
+        }
+        else {
+            oh-my-posh init pwsh |
+                Set-Content $OhMyPoshInit -Encoding utf8
+        }
+    }
+
+    if (Test-Path $OhMyPoshInit) {
+        . $OhMyPoshInit
     }
 }
+
+Enable-PoshPrompt
 
 
 # ------------------------------------------------------------
 # NAVIGATION
 # ------------------------------------------------------------
 
-if (Test-Command "zoxide") {
-    Invoke-Expression (& zoxide init powershell | Out-String)
+if ($HasZoxide) {
+    $ZoxideInit = Join-Path $ProfileCache "zoxide.ps1"
+
+    if (-not (Test-Path $ZoxideInit)) {
+        New-Item $ProfileCache -ItemType Directory -Force | Out-Null
+        zoxide init powershell | Set-Content $ZoxideInit -Encoding utf8
+    }
+
+    . $ZoxideInit
 }
 
 function .. {
@@ -119,7 +172,12 @@ function reload {
 }
 
 function profile {
-    code $PROFILE
+    if (Test-Command "code") {
+        code $PROFILE
+    }
+    else {
+        notepad.exe $PROFILE
+    }
 }
 
 
@@ -264,7 +322,7 @@ function lt {
 # APPLICATION SHORTCUTS
 # ------------------------------------------------------------
 
-function md {
+function preview-md {
     if (Test-Command "glow") {
         glow @args
     }

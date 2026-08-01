@@ -1,82 +1,70 @@
-# 🏠 dotfiles
+# Windows dotfiles
 
-![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows)
-![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell)
-![License](https://img.shields.io/github/license/nihitdev/dotfiles)
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows)
+[![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
+[![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
-> My Windows development environment.
+My personal Windows terminal and desktop setup: a Catppuccin-inspired environment built around PowerShell, Nushell, Windows Terminal, and modern command-line tools.
 
-A collection of configuration files for the tools I use every day.
+## What's included
 
-## ✨ Configurations
+| Configuration | Purpose |
+| --- | --- |
+| [Bat](bat/) | Syntax-highlighted file viewer and Catppuccin themes |
+| [Cava](cava/) | Terminal audio visualizer |
+| [Discord](discord/) | Shellcord/System24 Vencord themes and color flavors |
+| [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
+| [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
+| [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
+| [Oh My Posh](oh-my-posh/) | Prompt theme |
+| [PowerShell](powershell/) | Profile, prompt startup, navigation, and CLI helpers |
+| [Scoop](scoop/) | Exported package inventory |
+| [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
+| [YASB](yasb/) | Status bar configuration and styles |
 
-| Tool | Description |
-| :--- | :---------- |
-| 🦇 Bat | Syntax highlighting pager |
-| 🎵 Cava | Terminal audio visualizer |
-| 🪟 ExplorerBlurMica | Explorer customization |
-| 🚀 Fastfetch | System information |
-| 🌿 Git | Git configuration |
-| 🎨 Oh My Posh | PowerShell prompt |
-| ⚡ PowerShell | Shell profile & functions |
-| 📦 Scoop | Package manager exports |
-| 🖥️ Windows Terminal | Terminal settings |
-| 📊 YASB | Yet Another Status Bar |
-|💬 Discord Theme  |  vencord | themes
+## Installation
 
----
-
-## 📁 Repository
-
-```text
-.
-├── bat/
-├── cava/
-├──Discord/
-├── explorerblurmica/
-├── fastfetch/
-├── git/
-├── oh-my-posh/
-├── powershell/
-├── scoop/
-├── windows-terminal/
-├── yasb/
-├── LICENSE
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
-
-Clone the repository:
+These are personal configuration files, so review them before copying or linking them. Several files assume that the corresponding applications are already installed.
 
 ```powershell
-git clone https://github.com/<username>/dotfiles.git
+git clone https://github.com/nihitdev/dotfiles.git
 cd dotfiles
 ```
 
-Copy the desired configuration files to their respective locations, or restore them using your own installation script.
+Copy the configurations you want to the locations used by each application:
 
----
+| Repository path | Typical destination |
+| --- | --- |
+| `powershell/profile.ps1` | `$PROFILE` |
+| `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
+| `fastfetch/` | `~/.config/fastfetch/` |
+| `oh-my-posh/pure.omp.json` | `~/.config/oh-my-posh/pure.omp.json` |
+| `bat/config` | Run `bat --config-file` to find it |
+| `bat/themes/` | Run `bat --config-dir` to find the theme directory |
+| `cava/config` | `~/.config/cava/config` |
+| `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
+| `yasb/` | `~/.config/yasb/` |
 
-## 🎨 Theme
+After adding Bat themes, run `bat cache --build`. Restart the relevant shell or application after installing a configuration.
 
-- **Flavor:** Catppuccin Mocha
-- **Font:** JetBrainsMono Nerd Font
-- **Terminal:** Windows Terminal
-- **Prompt:** Oh My Posh
-- **System Info:** Fastfetch
-- **Pager:** Bat
+> [!NOTE]
+> The Windows Terminal settings can contain machine-specific profile identifiers. Merge the tracked settings with your existing file instead of replacing it blindly.
 
----
+## Shell tooling
 
-## 📸 Preview
+The PowerShell and Nushell profiles integrate with optional tools such as Fastfetch, Oh My Posh, Zoxide, Bat, Ripgrep, fd, eza, dust, bottom, gsudo, xh, doggo, procs, sd, Glow, and Yazi. Missing optional commands are handled gracefully.
 
-*Screenshots coming soon.*
+The complete Scoop export is available in [`scoop/packages.json`](scoop/packages.json). Restore only the packages you need rather than treating the export as a required dependency list.
 
----
+## Look and feel
 
-## 📄 License
+- Palette: Catppuccin Mocha
+- Fonts: Nerd Font-compatible terminal fonts
+- Terminal: Windows Terminal
+- Prompt: Oh My Posh
+- System information: Fastfetch
+- Pager: Bat
 
-This project is licensed under the MIT License.
+## License
+
+Licensed under the [MIT License](LICENSE).

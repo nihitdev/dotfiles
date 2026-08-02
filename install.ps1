@@ -21,8 +21,10 @@ if (
     try {
         New-Item -ItemType Directory -Path $TemporaryRoot -Force | Out-Null
         Write-Host 'Downloading dotfiles...'
+        $ArchiveUri = 'https://github.com/nihitdev/dotfiles/archive/refs/heads/main.zip' +
+            "?cache=$([guid]::NewGuid())"
         Invoke-WebRequest `
-            -Uri 'https://github.com/nihitdev/dotfiles/archive/refs/heads/main.zip' `
+            -Uri $ArchiveUri `
             -OutFile $ArchivePath
         Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TemporaryRoot
 

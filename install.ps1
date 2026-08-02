@@ -1,10 +1,13 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
-    [switch]$NoBackup
+    [switch]$NoBackup,
+
+    [Parameter(DontShow)]
+    [string]$SourceRoot
 )
 
 $ErrorActionPreference = 'Stop'
-$RepositoryRoot = $PSScriptRoot
+$RepositoryRoot = if ($SourceRoot) { $SourceRoot } else { $PSScriptRoot }
 
 # When invoked with `irm <raw-url> | iex`, the script has no repository beside
 # it. Download a temporary copy and hand execution to that local copy.
@@ -23,8 +26,14 @@ if (
             -OutFile $ArchivePath
         Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TemporaryRoot
 
-        $DownloadedInstaller = Join-Path $TemporaryRoot 'dotfiles-main\install.ps1'
-        & $DownloadedInstaller @PSBoundParameters
+        $DownloadedRoot = Join-Path $TemporaryRoot 'dotfiles-main'
+        $DownloadedInstaller = Join-Path $DownloadedRoot 'install.ps1'
+        $DownloadedScript = [scriptblock]::Create(
+            (Get-Content -LiteralPath $DownloadedInstaller -Raw)
+        )
+        $ForwardedParameters = @{} + $PSBoundParameters
+        $ForwardedParameters.Remove('SourceRoot')
+        & $DownloadedScript -SourceRoot $DownloadedRoot @ForwardedParameters
     }
     finally {
         if (Test-Path -LiteralPath $TemporaryRoot) {

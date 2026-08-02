@@ -9,7 +9,7 @@
 # ------------------------------------------------------------
 
 const FASTFETCH_CONFIG = $"($nu.home-dir)/.config/fastfetch/config.jsonc"
-const OH_MY_POSH_CONFIG = $"($nu.home-dir)/.config/oh-my-posh/pure.omp.json"
+const OH_MY_POSH_CONFIG = $"($nu.home-dir)/.config/oh-my-posh/amro.omp.json"
 
 
 # ------------------------------------------------------------

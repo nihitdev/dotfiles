@@ -18,27 +18,44 @@ My personal Windows terminal and desktop setup: a Catppuccin-inspired environmen
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
 | [Oh My Posh](oh-my-posh/) | Prompt theme |
 | [PowerShell](powershell/) | Profile, prompt startup, navigation, and CLI helpers |
-| [Scoop](scoop/) | Exported package inventory |
+| [Starship](starship/) | Cross-shell prompt configuration |
 | [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
 | [YASB](yasb/) | Status bar configuration and styles |
 
 ## Installation
 
-These are personal configuration files, so review them before copying or linking them. Several files assume that the corresponding applications are already installed.
+These are personal configuration files, so review them before installing. Several files assume that the corresponding applications are already installed.
+
+Install directly from PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.ps1 | iex
+```
+
+Alternatively, clone the repository and run the installer locally:
 
 ```powershell
 git clone https://github.com/nihitdev/dotfiles.git
 cd dotfiles
+Set-ExecutionPolicy -Scope Process Bypass
+.\install.ps1
 ```
 
-Copy the configurations you want to the locations used by each application:
+The installer copies the user-level configurations to their standard locations. Existing files are preserved in a timestamped backup directory unless you pass `-NoBackup`. Use `-WhatIf` to preview the changes.
+
+```powershell
+.\install.ps1 -WhatIf
+.\install.ps1 -NoBackup
+```
+
+The main destinations are:
 
 | Repository path | Typical destination |
 | --- | --- |
 | `powershell/profile.ps1` | `$PROFILE` |
 | `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
 | `fastfetch/` | `~/.config/fastfetch/` |
-| `oh-my-posh/pure.omp.json` | `~/.config/oh-my-posh/pure.omp.json` |
+| `oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
@@ -53,8 +70,6 @@ After adding Bat themes, run `bat cache --build`. Restart the relevant shell or 
 ## Shell tooling
 
 The PowerShell and Nushell profiles integrate with optional tools such as Fastfetch, Oh My Posh, Zoxide, Bat, Ripgrep, fd, eza, dust, bottom, gsudo, xh, doggo, procs, sd, Glow, and Yazi. Missing optional commands are handled gracefully.
-
-The complete Scoop export is available in [`scoop/packages.json`](scoop/packages.json). Restore only the packages you need rather than treating the export as a required dependency list.
 
 ## Look and feel
 

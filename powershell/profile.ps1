@@ -9,7 +9,7 @@
 # ------------------------------------------------------------
 
 $FastfetchConfig = "$HOME\.config\fastfetch\config.jsonc"
-$OhMyPoshConfig  = "$HOME\.config\oh-my-posh\pure.omp.json"
+$OhMyPoshConfig  = "$HOME\.config\oh-my-posh\amro.omp.json"
 $ProfileCache    = Join-Path $PSScriptRoot ".profile-cache"
 
 

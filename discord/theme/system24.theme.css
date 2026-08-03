@@ -1,11 +1,11 @@
 /**
- * @name system24 (light)
- * @description a light, tui-style discord theme.
+ * @name system24
+ * @description a tui-style discord theme.
  * @author refact0r
  * @version 2.0.0
  * @invite nz87hXyvcy
  * @website https://github.com/refact0r/system24
- * @source https://github.com/refact0r/system24/blob/master/theme/flavors/system24-light.theme.css
+ * @source https://github.com/refact0r/system24/blob/master/theme/system24.theme.css
  * @authorId 508863359777505290
  * @authorLink https://www.refact0r.dev
 */
@@ -83,45 +83,44 @@ body {
 
 /* color options */
 :root {
-    color-scheme: light;
     --colors: on; /* off: discord default colors, on: midnight custom colors */
 
     /* text colors */
-    --text-0: var(--text-1); /* text on colored elements */
-    --text-1: oklch(20% 0 0); /* other normally white text */
-    --text-2: oklch(25% 0 0); /* headings and important text */
-    --text-3: oklch(30% 0 0); /* normal text */
-    --text-4: oklch(50% 0 0); /* icon buttons and channels */
-    --text-5: oklch(70% 0 0); /* muted channels/chats and timestamps */
+    --text-0: var(--bg-4); /* text on colored elements */
+    --text-1: oklch(95% 0 0); /* other normally white text */
+    --text-2: oklch(85% 0 0); /* headings and important text */
+    --text-3: oklch(75% 0 0); /* normal text */
+    --text-4: oklch(60% 0 0); /* icon buttons and channels */
+    --text-5: oklch(40% 0 0); /* muted channels/chats and timestamps */
 
-    /* background and light colors */
-    --bg-1: oklch(82% 0 0); /* dark buttons when clicked */
-    --bg-2: oklch(86% 0 0); /* dark buttons */
-    --bg-3: oklch(90% 0 0); /* spacing, secondary elements */
-    --bg-4: oklch(94% 0 0); /* main background color */
-    --hover: oklch(50% 0 0 / 0.1); /* channels and buttons when hovered */
-    --active: oklch(50% 0 0 / 0.2); /* channels and buttons when clicked or selected */
-    --active-2: oklch(50% 0 0 / 0.3); /* extra state for transparent buttons */
+    /* background and dark colors */
+    --bg-1: oklch(31% 0 0); /* dark buttons when clicked */
+    --bg-2: oklch(27% 0 0); /* dark buttons */
+    --bg-3: oklch(23% 0 0); /* spacing, secondary elements */
+    --bg-4: oklch(19% 0 0); /* main background color */
+    --hover: oklch(54% 0 0 / 0.1); /* channels and buttons when hovered */
+    --active: oklch(54% 0 0 / 0.2); /* channels and buttons when clicked or selected */
+    --active-2: oklch(54% 0 0 / 0.3); /* extra state for transparent buttons */
     --message-hover: var(--hover); /* messages when hovered */
 
     /* accent colors */
-    --accent-1: var(--purple-3); /* links and other accent text */
+    --accent-1: var(--purple-1); /* links and other accent text */
     --accent-2: var(--purple-2); /* small accent elements */
-    --accent-3: var(--purple-2); /* accent buttons */
-    --accent-4: var(--purple-3); /* accent buttons when hovered */
-    --accent-5: var(--purple-4); /* accent buttons when clicked */
+    --accent-3: var(--purple-3); /* accent buttons */
+    --accent-4: var(--purple-4); /* accent buttons when hovered */
+    --accent-5: var(--purple-5); /* accent buttons when clicked */
     --accent-new: var(--red-2); /* stuff that's normally red like mute/deafen buttons */
-    --mention: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 80%) 40%, transparent); /* background of messages that mention you */
-    --mention-hover: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 90%) 40%, transparent); /* background of messages that mention you when hovered */
+    --mention: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 90%) 40%, transparent); /* background of messages that mention you */
+    --mention-hover: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 95%) 40%, transparent); /* background of messages that mention you when hovered */
     --reply: linear-gradient(to right, color-mix(in hsl, var(--text-3), transparent 90%) 40%, transparent); /* background of messages that reply to you */
     --reply-hover: linear-gradient(to right, color-mix(in hsl, var(--text-3), transparent 95%) 40%, transparent); /* background of messages that reply to you when hovered */
 
     /* status indicator colors */
-    --online: var(--green-3); /* change to #40a258 for default */
-    --dnd: var(--red-3); /* change to #d83a41 for default */
-    --idle: var(--yellow-3); /* change to #cc954c for default */
-    --streaming: var(--purple-3); /* change to ##9147ff for default */
-    --offline: var(--text-5); /* change to #82838b for default offline color */
+    --online: var(--green-2); /* change to #40a258 for default */
+    --dnd: var(--red-2); /* change to #d83a41 for default */
+    --idle: var(--yellow-2); /* change to #cc954c for default */
+    --streaming: var(--purple-2); /* change to #9147ff for default */
+    --offline: var(--text-4); /* change to #82838b for default offline color */
 
     /* border colors */
     --border-light: var(--hover); /* general light border color */

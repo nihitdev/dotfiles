@@ -12,6 +12,7 @@
     .vc-spotify-button-row {
         margin-top: 8px;
     }
+    /* Vencord sets the progress geometry with higher-priority component styles. */
     #app-mount #vc-spotify-progress-bar .bar_a562c8 {
         height: 22px !important;
         top: 0 !important;

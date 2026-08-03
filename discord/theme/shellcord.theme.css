@@ -174,7 +174,7 @@ body {
     --brand-500: var(--purple-3);
 }
 
-/* Rounder corners */
+/* Rounder corners; these override Discord's component-level radius rules. */
 .guilds__5e434,
 .panels__5e434,
 .sidebar__5e434,

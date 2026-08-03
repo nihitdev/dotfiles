@@ -116,7 +116,7 @@ body {
     --online: var(--green-2); /* change to #40a258 for default */
     --dnd: var(--red-2); /* change to #d83a41 for default */
     --idle: var(--yellow-2); /* change to #cc954c for default */
-    --streaming: var(--purple-2); /* change to ##9147ff for default */
+    --streaming: var(--purple-2); /* change to #9147ff for default */
     --offline: var(--text-4); /* change to #82838b for default offline color */
 
     /* border colors */
@@ -158,8 +158,8 @@ body {
 }
 
 body {
-    --custom-chatbar: separated !important; /* off: default chatbar, aligned: chatbar aligned with the user panel, separated: chatbar separated from chat */
-    --chatbar-height: 56px !important; /* height of the chatbar (52px by default, 47px recommended for aligned, 56px recommended for separated) */
+    --custom-chatbar: separated; /* off: default chatbar, aligned: chatbar aligned with the user panel, separated: chatbar separated from chat */
+    --chatbar-height: 56px; /* height of the chatbar (52px by default, 47px recommended for aligned, 56px recommended for separated) */
 }
 
 .bg__960e4 {

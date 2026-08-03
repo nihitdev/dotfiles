@@ -81,6 +81,7 @@ body {
         content: 'vc';
     }
 
+    /* Labels sit outside these panels, so Discord's clipping must be overridden. */
     .content_f75fb0 > .membersWrap_c8ffbb,
     .panels__5e434,
     .sidebar__5e434,
@@ -146,6 +147,7 @@ body {
         padding: 8px;
     }
 
+    /* Discord's message fade mask would clip the chat panel label. */
     .messagesWrapper__36d07 {
         mask: none !important;
     }

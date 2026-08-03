@@ -53,6 +53,7 @@
         right: -4px;
         border: 2px solid var(--background-base-lower);
     }
+    /* Status fills must win over Discord's status-specific background rules. */
     .wrapper__44b0c:has(rect[fill='#45a366'])::after,
     .container__1ce5d:has(.status_a423bd[style='background-color: rgb(69, 163, 102);'])::after {
         background: var(--online-2) !important;

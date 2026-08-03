@@ -1,11 +1,11 @@
 /**
- * @name system24
- * @description a tui-style discord theme.
+ * @name system24 (auto)
+ * @description a tui-style discord theme that follows your system color scheme.
  * @author refact0r
  * @version 2.0.0
  * @invite nz87hXyvcy
  * @website https://github.com/refact0r/system24
- * @source https://github.com/refact0r/system24/blob/master/theme/system24.theme.css
+ * @source https://github.com/refact0r/system24/blob/master/theme/flavors/system24-auto.theme.css
  * @authorId 508863359777505290
  * @authorLink https://www.refact0r.dev
 */
@@ -81,8 +81,9 @@ body {
     --label-font-weight: 500; /* font weight of labels */
 }
 
-/* color options */
+/* dark color options (default) */
 :root {
+    color-scheme: dark;
     --colors: on; /* off: discord default colors, on: midnight custom colors */
 
     /* text colors */
@@ -119,7 +120,7 @@ body {
     --online: var(--green-2); /* change to #40a258 for default */
     --dnd: var(--red-2); /* change to #d83a41 for default */
     --idle: var(--yellow-2); /* change to #cc954c for default */
-    --streaming: var(--purple-2); /* change to ##9147ff for default */
+    --streaming: var(--purple-2); /* change to #9147ff for default */
     --offline: var(--text-4); /* change to #82838b for default offline color */
 
     /* border colors */
@@ -158,4 +159,44 @@ body {
     --purple-3: oklch(65% 0.12 310);
     --purple-4: oklch(60% 0.12 310);
     --purple-5: oklch(55% 0.12 310);
+}
+
+/* light color options */
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+
+        /* text colors */
+        --text-0: var(--text-1);
+        --text-1: oklch(20% 0 0);
+        --text-2: oklch(25% 0 0);
+        --text-3: oklch(30% 0 0);
+        --text-4: oklch(50% 0 0);
+        --text-5: oklch(70% 0 0);
+
+        /* background and light colors */
+        --bg-1: oklch(82% 0 0);
+        --bg-2: oklch(86% 0 0);
+        --bg-3: oklch(90% 0 0);
+        --bg-4: oklch(94% 0 0);
+        --hover: oklch(50% 0 0 / 0.1);
+        --active: oklch(50% 0 0 / 0.2);
+        --active-2: oklch(50% 0 0 / 0.3);
+        --message-hover: var(--hover);
+
+        /* accent colors */
+        --accent-1: var(--purple-3);
+        --accent-3: var(--purple-2);
+        --accent-4: var(--purple-3);
+        --accent-5: var(--purple-4);
+        --mention: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 80%) 40%, transparent);
+        --mention-hover: linear-gradient(to right, color-mix(in hsl, var(--accent-2), transparent 90%) 40%, transparent);
+
+        /* status indicator colors */
+        --online: var(--green-3);
+        --dnd: var(--red-3);
+        --idle: var(--yellow-3);
+        --streaming: var(--purple-3);
+        --offline: var(--text-5);
+    }
 }

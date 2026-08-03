@@ -1,6 +1,6 @@
 # ============================================================
 # Nushell Config
-# UTF-8 • Oh My Posh • Fastfetch • Zoxide • Modern CLI tools
+# UTF-8 • Starship • Fastfetch • Zoxide • Modern CLI tools
 # ============================================================
 
 
@@ -8,8 +8,10 @@
 # PATHS
 # ------------------------------------------------------------
 
+const STARTUP_CACHE_DIR = $"($nu.cache-dir)/init"
+const STARSHIP_CACHE = $"($nu.cache-dir)/init/starship.nu"
+const ZOXIDE_CACHE = $"($nu.cache-dir)/init/zoxide.nu"
 const FASTFETCH_CONFIG = $"($nu.home-dir)/.config/fastfetch/config.jsonc"
-const OH_MY_POSH_CONFIG = $"($nu.home-dir)/.config/oh-my-posh/amro.omp.json"
 
 
 # ------------------------------------------------------------
@@ -24,6 +26,27 @@ def has-command [name: string] {
 
 def missing-command [name: string] {
     print $"(ansi yellow)($name) is not installed or unavailable in PATH.(ansi reset)"
+}
+
+# Regenerate cached Starship and Zoxide integrations.
+def refresh-shell-cache [] {
+    mkdir $STARTUP_CACHE_DIR
+
+    if (has-command starship) {
+        ^starship init nu | save --force $STARSHIP_CACHE
+        print $"(ansi green)Refreshed Starship cache.(ansi reset)"
+    } else {
+        missing-command starship
+    }
+
+    if (has-command zoxide) {
+        ^zoxide init nushell | save --force $ZOXIDE_CACHE
+        print $"(ansi green)Refreshed Zoxide cache.(ansi reset)"
+    } else {
+        missing-command zoxide
+    }
+
+    print $"(ansi cyan)Run 'reload' to apply the changes.(ansi reset)"
 }
 
 
@@ -54,29 +77,29 @@ $env.config.completions = {
 
 
 # ------------------------------------------------------------
-# TERMINAL STARTUP
+# CACHED SHELL INTEGRATIONS
+#
+# Keep these at the top level. Sourcing them inside an `if`
+# block makes commands such as `z` and `zi` disappear afterward.
 # ------------------------------------------------------------
 
-if (has-command fastfetch) {
-    if ($FASTFETCH_CONFIG | path exists) {
-        ^fastfetch --config $FASTFETCH_CONFIG
-    } else {
-        ^fastfetch
+source $STARSHIP_CACHE
+source $ZOXIDE_CACHE
+
+
+# ------------------------------------------------------------
+# FASTFETCH STARTUP
+# ------------------------------------------------------------
+
+if $nu.is-interactive {
+    if (has-command fastfetch) {
+        if ($FASTFETCH_CONFIG | path exists) {
+            ^fastfetch --config $FASTFETCH_CONFIG
+        } else {
+            ^fastfetch
+        }
     }
 }
-
-
-# ------------------------------------------------------------
-# ZOXIDE
-# ------------------------------------------------------------
-
-# Run this once manually:
-#
-# zoxide init nushell | save -f ~/.zoxide.nu
-#
-# Then uncomment:
-#
-# source ~/.zoxide.nu
 
 
 # ------------------------------------------------------------
@@ -112,9 +135,14 @@ def reload [] {
     exec nu
 }
 
-# Type `profile` to open config.nu in Notepad.
+# Open config.nu in Notepad.
 def profile [] {
     ^notepad.exe $nu.config-path
+}
+
+# Open config.nu in Neovim/LazyVim.
+def nprofile [] {
+    ^nvim $nu.config-path
 }
 
 # Open env.nu in Notepad.
@@ -130,8 +158,8 @@ def paths [] {
 # ------------------------------------------------------------
 # MODERN CLI COMMANDS
 #
-# Native Nushell commands such as cat, find, du and ps are not
-# replaced because they return structured data.
+# Native Nushell commands such as cat, find, du and ps remain
+# unchanged because they produce structured data.
 # ------------------------------------------------------------
 
 def --wrapped bat [...args] {
@@ -338,15 +366,10 @@ def --wrapped ff [...args] {
 
 
 # ------------------------------------------------------------
-# OH MY POSH PROMPT
+# PROMPT
 # ------------------------------------------------------------
 
-# Oh My Posh requires Nushell 0.104.0 or newer.
-if (has-command oh-my-posh) {
-    if ($OH_MY_POSH_CONFIG | path exists) {
-        oh-my-posh init nu --config $OH_MY_POSH_CONFIG
-    } else {
-        print $"(ansi yellow)Oh My Posh theme not found: ($OH_MY_POSH_CONFIG)(ansi reset)"
-        oh-my-posh init nu
-    }
-}
+# Starship is loaded from the cached initialization script.
+# Prompt appearance and the beloved λ are configured in:
+#
+# ~/.config/starship.toml

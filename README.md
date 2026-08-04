@@ -4,7 +4,7 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
 [![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
-My Catppuccin-inspired Windows setup for PowerShell, Nushell, Windows Terminal, Discord, and a collection of modern command-line tools.
+My Catppuccin-inspired Windows setup for PowerShell, Nushell, Windows Terminal, Discord, OneCommander, and a collection of modern command-line tools.
 
 ## Quick install
 
@@ -26,6 +26,7 @@ The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before
 | [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
 | [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
+| [OneCommander](one-commander/) | Catppuccin Mocha file manager theme |
 | [Oh My Posh](oh-my-posh/) | Custom prompt theme and shell integration |
 | [PowerShell](powershell/) | Profile, prompt startup, navigation, and CLI helpers |
 | [Starship](starship/) | Optional minimal cross-shell prompt |
@@ -65,6 +66,7 @@ The main destinations are:
 | --- | --- |
 | `powershell/profile.ps1` | `$PROFILE` |
 | `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
+| `one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
 | `fastfetch/` | `~/.config/fastfetch/` |
 | `oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
 | `starship/starship.toml` | `~/.config/starship.toml` |
@@ -75,6 +77,18 @@ The main destinations are:
 | `yasb/` | `~/.config/yasb/` |
 
 The installer rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+
+### OneCommander theme
+
+The installer applies this theme automatically. For a manual installation, copy it to OneCommander's dark-theme directory:
+
+```powershell
+$themeDirectory = Join-Path $env:LOCALAPPDATA 'OneCommander\Themes\Dark'
+New-Item -ItemType Directory -Force -Path $themeDirectory | Out-Null
+Copy-Item '.\one-commander\Catppuccin-Mocha.xaml' -Destination $themeDirectory -Force
+```
+
+Restart OneCommander, open **Settings**, select **Theme**, and choose **Catppuccin Mocha** from the dark themes.
 
 > [!NOTE]
 > Windows Terminal settings can contain machine-specific profile identifiers. The installer backs up your existing settings before replacing them, so review the tracked file first if you have custom profiles.

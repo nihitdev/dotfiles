@@ -97,6 +97,10 @@ $Installations = @(
     @{ Source = 'bat\config'; Destination = Join-Path $env:APPDATA 'bat\config' }
     @{ Source = 'bat\themes'; Destination = Join-Path $env:APPDATA 'bat\themes' }
     @{ Source = 'cava\config'; Destination = Join-Path $ConfigRoot 'cava\config' }
+    @{
+        Source = 'one-commander\Catppuccin-Mocha.xaml'
+        Destination = Join-Path $env:LOCALAPPDATA 'OneCommander\Themes\Dark\Catppuccin-Mocha.xaml'
+    }
     @{ Source = 'yasb'; Destination = Join-Path $ConfigRoot 'yasb' }
 )
 

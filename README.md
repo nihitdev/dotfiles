@@ -108,4 +108,6 @@ The PowerShell and Nushell profiles integrate with optional tools such as Fastfe
 
 ## License
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the [GNU General Public License v3.0](LICENSE).
+
+Copyright (C) 2026 nihit_dev.

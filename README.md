@@ -26,6 +26,7 @@ The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before
 | [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
 | [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
+| [Neovim](nvim/) | LazyVim-based editor configuration with Catppuccin and Copilot |
 | [Oh My Zsh](oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
 | [OneCommander](one-commander/) | Catppuccin Mocha file manager theme |
 | [Oh My Posh](oh-my-posh/) | Custom prompt theme and shell integration |
@@ -69,6 +70,7 @@ The main destinations are:
 | --- | --- |
 | `powershell/profile.ps1` | `$PROFILE` |
 | `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
+| `nvim/` | `%LOCALAPPDATA%\nvim\` |
 | `one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
 | `fastfetch/` | `~/.config/fastfetch/` |
 | `oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |

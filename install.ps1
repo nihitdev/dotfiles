@@ -91,6 +91,7 @@ $ConfigRoot = Join-Path $HOME '.config'
 $Installations = @(
     @{ Source = 'powershell\profile.ps1'; Destination = $PROFILE.CurrentUserAllHosts }
     @{ Source = 'nushell\config.nu'; Destination = Join-Path $env:APPDATA 'nushell\config.nu' }
+    @{ Source = 'nvim'; Destination = Join-Path $env:LOCALAPPDATA 'nvim' }
     @{ Source = 'fastfetch'; Destination = Join-Path $ConfigRoot 'fastfetch' }
     @{ Source = 'oh-my-posh\amro.omp.json'; Destination = Join-Path $ConfigRoot 'oh-my-posh\amro.omp.json' }
     @{ Source = 'starship\starship.toml'; Destination = Join-Path $ConfigRoot 'starship.toml' }

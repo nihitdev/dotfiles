@@ -1,0 +1,1 @@
+-- Add custom options here. LazyVim's defaults are loaded automatically.

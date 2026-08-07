@@ -46,6 +46,16 @@ if (
     return
 }
 
+Write-Host @'
+██████╗ ██╗ ██████╗██╗███╗   ██╗ ██████╗
+██╔══██╗██║██╔════╝██║████╗  ██║██╔════╝
+██████╔╝██║██║     ██║██╔██╗ ██║██║  ███╗
+██╔══██╗██║██║     ██║██║╚██╗██║██║   ██║
+██║  ██║██║╚██████╗██║██║ ╚████║╚██████╔╝
+╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝╚═╝  ╚═══╝ ╚═════╝
+'@ -ForegroundColor Magenta
+Write-Host "`nInstalling Nihit's Dotfiles..."
+
 $Timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $BackupRoot = Join-Path $HOME ".dotfiles-backup\$Timestamp"
 
@@ -138,8 +148,19 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
     }
 }
 
-Write-Host 'Dotfiles installation complete.' -ForegroundColor Green
 if (-not $NoBackup -and (Test-Path -LiteralPath $BackupRoot)) {
     Write-Host "Previous files were backed up to $BackupRoot"
 }
-Write-Host 'Restart your shells and configured applications to apply the changes.'
+
+Write-Host @'
+✔ PowerShell
+✔ Nushell
+✔ WezTerm
+✔ Neovim
+✔ Fastfetch
+✔ OneCommander
+✔ Windows Terminal
+✔ Catppuccin Theme
+
+Done! Restart your terminal.
+'@ -ForegroundColor Green

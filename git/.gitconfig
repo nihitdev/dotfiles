@@ -1,57 +1,119 @@
+# Core and Windows line-ending policy
 [core]
-    pager = delta
-        autocrlf = true
-        eol = native
+	pager = delta
+	editor = nvim
+	autocrlf = true
+	eol = native
+	safecrlf = warn
 
-[interactive]
-    diffFilter = delta --color-only
+# Repository defaults and maintenance
+[init]
+	defaultBranch = main
 
-[delta]
-    navigate = true
-    side-by-side = true
-    line-numbers = true
-    hyperlinks = true
-    hyperlinks-file-link-format = vscode://file/{path}:{line}
-    syntax-theme = Catppuccin Mocha
-    plus-style = syntax "#003800"
-    minus-style = syntax "#3f0001"
-
-[merge]
-    conflictstyle = zdiff3
-
-[diff]
-    colorMoved = default
+[fetch]
+	prune = true
 
 [pull]
-    rebase = false
+	rebase = false
 
-[init]
-    defaultBranch = main
+[push]
+	default = simple
+	autoSetupRemote = true
 
+[rebase]
+	autoStash = true
+
+[rerere]
+	enabled = true
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
+
+[column]
+	ui = auto
+
+[help]
+	autocorrect = prompt
+
+# Diff and merge behavior
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[merge]
+	conflictStyle = zdiff3
+
+[interactive]
+	diffFilter = delta --color-only
+
+# Delta: Catppuccin Mocha, optimized for normal terminal widths
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = false
+	hyperlinks = true
+	hyperlinks-file-link-format = vscode://file/{path}:{line}
+	syntax-theme = Catppuccin Mocha
+
+	file-style = "#89b4fa" bold
+	file-decoration-style = "#45475a" box
+	commit-style = "#cba6f7" bold
+	commit-decoration-style = "#45475a" box
+	hunk-header-style = file line-number syntax
+	hunk-header-file-style = "#b4befe" bold
+	hunk-header-line-number-style = "#6c7086"
+	hunk-header-decoration-style = "#45475a" box
+
+	line-numbers-left-style = "#6c7086"
+	line-numbers-right-style = "#6c7086"
+	line-numbers-zero-style = "#6c7086"
+	line-numbers-plus-style = "#a6e3a1" bold
+	line-numbers-minus-style = "#f38ba8" bold
+	zero-style = syntax
+	plus-style = syntax "#313244"
+	plus-emph-style = syntax "#45475a"
+	minus-style = syntax "#313244"
+	minus-emph-style = syntax "#45475a"
+
+	merge-conflict-ours-diff-header-style = "#89b4fa" bold
+	merge-conflict-ours-diff-header-decoration-style = "#45475a" box
+	merge-conflict-theirs-diff-header-style = "#cba6f7" bold
+	merge-conflict-theirs-diff-header-decoration-style = "#45475a" box
+
+# Subtle Catppuccin accents outside Delta
 [color]
-    ui = auto
+	ui = auto
 
 [color "branch"]
-    current = yellow bold
-    local = green bold
-    remote = cyan bold
+	current = "#cba6f7" bold
+	local = "#89b4fa"
+	remote = "#94e2d5"
 
 [color "status"]
-    added = green bold
-    changed = yellow bold
-    untracked = red bold
+	added = "#a6e3a1"
+	changed = "#f9e2af"
+	untracked = "#f38ba8"
 
+# Small, memorable aliases that add information or remove friction
 [alias]
-    st = status -sb
-    lg = log --graph --decorate --all --oneline
-    l = log --oneline
-    last = log -1 HEAD
-    co = checkout
-    sw = switch
-    cm = commit
-    br = branch
+	st = status -sb
+	ll = log --decorate --date=relative --pretty=format:\"%C(auto)%h%d %C(dim white)(%ar) %C(bold blue)%an%Creset %s\"
+	lg = log --graph --decorate --all --date=relative --pretty=format:\"%C(auto)%h%d %C(dim white)(%ar) %C(bold blue)%an%Creset %s\"
+	recent = log -10 --decorate --date=relative --pretty=format:\"%C(auto)%h%d %C(dim white)(%ar) %C(bold blue)%an%Creset %s\"
+	last = show --stat --oneline HEAD
+	amend = commit --amend --no-edit
+	unstage = restore --staged --
+	branches = branch --sort=-committerdate --format=\"%(HEAD) %(color:yellow)%(refname:short)%(color:reset) %(color:dim white)%(committerdate:relative)%(color:reset) %(subject)\"
 [filter "lfs"]
-        process = git-lfs filter-process
-        required = true
-        clean = git-lfs clean -- %f
-        smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[user]
+	email = nihit429@gmail.com
+	name = Nihit Sunhare
+[sequence]
+	editor = nvim

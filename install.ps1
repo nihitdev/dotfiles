@@ -101,9 +101,15 @@ $ConfigRoot = Join-Path $HOME '.config'
 $Installations = @(
     @{ Source = 'powershell\profile.ps1'; Destination = $PROFILE.CurrentUserAllHosts }
     @{ Source = 'nushell\config.nu'; Destination = Join-Path $env:APPDATA 'nushell\config.nu' }
+    @{ Source = 'git\.gitconfig'; Destination = Join-Path $HOME '.gitconfig' }
+    @{ Source = 'lazygit\config.yml'; Destination = Join-Path $env:LOCALAPPDATA 'lazygit\config.yml' }
+    @{ Source = 'broot'; Destination = Join-Path $env:APPDATA 'dystroy\broot\config' }
+    @{ Source = 'nvim'; Destination = Join-Path $env:LOCALAPPDATA 'nvim' }
+    @{ Source = 'yazi'; Destination = Join-Path $env:APPDATA 'yazi\config' }
     @{ Source = 'fastfetch'; Destination = Join-Path $ConfigRoot 'fastfetch' }
     @{ Source = 'oh-my-posh\amro.omp.json'; Destination = Join-Path $ConfigRoot 'oh-my-posh\amro.omp.json' }
     @{ Source = 'starship\starship.toml'; Destination = Join-Path $ConfigRoot 'starship.toml' }
+    @{ Source = 'atuin\config.toml'; Destination = Join-Path $ConfigRoot 'atuin\config.toml' }
     @{ Source = 'bat\config'; Destination = Join-Path $env:APPDATA 'bat\config' }
     @{ Source = 'bat\themes'; Destination = Join-Path $env:APPDATA 'bat\themes' }
     @{ Source = 'cava\config'; Destination = Join-Path $ConfigRoot 'cava\config' }
@@ -138,7 +144,7 @@ foreach ($Package in $TerminalPackages) {
 $VencordThemes = Join-Path $env:APPDATA 'Vencord\themes'
 if (Test-Path -LiteralPath (Split-Path $VencordThemes -Parent)) {
     Install-Dotfile `
-        -Source (Join-Path $RepositoryRoot 'discord\themes') `
+        -Source (Join-Path $RepositoryRoot 'discord\theme') `
         -Destination $VencordThemes
 }
 
@@ -155,12 +161,18 @@ if (-not $NoBackup -and (Test-Path -LiteralPath $BackupRoot)) {
 Write-Host @'
 ✔ PowerShell
 ✔ Nushell
-✔ WezTerm
+✔ Git and Delta
+✔ LazyGit
+✔ Broot
 ✔ Neovim
+✔ Yazi
 ✔ Fastfetch
+✔ Atuin
+✔ Bat and Cava
 ✔ OneCommander
 ✔ Windows Terminal
-✔ Catppuccin Theme
+✔ YASB
+✔ Catppuccin themes
 
 Done! Restart your terminal.
 '@ -ForegroundColor Green

@@ -4,7 +4,7 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
 [![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
-My Catppuccin-inspired Windows setup for PowerShell, Nushell, Windows Terminal, Discord, OneCommander, and modern command-line tools, plus a manual Linux setup for Zsh.
+My Catppuccin-inspired Windows setup for PowerShell, Nushell, Windows Terminal, Neovim, Git, terminal file managers, and modern command-line tools, plus a manual Linux setup for Zsh.
 
 ## Quick install
 
@@ -20,11 +20,16 @@ The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before
 
 | Configuration | Purpose |
 | --- | --- |
+| [Atuin](atuin/) | Searchable and synchronized shell history with a Catppuccin theme |
 | [Bat](bat/) | Syntax-highlighted file viewer and Catppuccin themes |
+| [Broot](broot/) | Tree-based file navigation with custom verbs and a Catppuccin Mocha skin |
 | [Cava](cava/) | Terminal audio visualizer |
 | [Discord](discord/) | Shellcord/System24 Vencord themes and color flavors |
 | [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
 | [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
+| [Git](git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
+| [LazyGit](lazygit/) | Catppuccin Mocha terminal Git UI theme |
+| [Neovim](nvim/) | LazyVim setup, plugin lockfile, dashboard, and AI-assisted editing |
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
 | [Oh My Zsh](oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
 | [OneCommander](one-commander/) | Catppuccin Mocha file manager theme |
@@ -34,6 +39,7 @@ The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before
 | [Starship](starship/) | Optional minimal cross-shell prompt |
 | [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
 | [YASB](yasb/) | Status bar configuration and styles |
+| [Yazi](yazi/) | Fast terminal file manager with previews, search, Git status, and Catppuccin Mocha |
 
 ## Prompt options
 
@@ -69,17 +75,52 @@ The main destinations are:
 | --- | --- |
 | `powershell/profile.ps1` | `$PROFILE` |
 | `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
+| `git/.gitconfig` | `~/.gitconfig` |
+| `lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\config.yml` |
+| `broot/` | `%APPDATA%\dystroy\broot\config\` |
+| `nvim/` | `%LOCALAPPDATA%\nvim\` |
+| `yazi/` | `%APPDATA%\yazi\config\` |
 | `one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
 | `fastfetch/` | `~/.config/fastfetch/` |
 | `oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
 | `starship/starship.toml` | `~/.config/starship.toml` |
+| `atuin/config.toml` | `~/.config/atuin/config.toml` |
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
 | `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
 | `yasb/` | `~/.config/yasb/` |
 
-The installer rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+The installer backs up every existing destination, copies all Windows configurations above, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+
+### Developer tools
+
+- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. It intentionally keeps Windows `autocrlf = true` and installs the personal identity stored in this repository.
+- **LazyGit:** the theme is installed into LazyGit's standard Windows configuration directory.
+- **Neovim:** the complete LazyVim configuration and lockfile are installed to Neovim's standard Windows config directory. Start `nvim` after installation to let `lazy.nvim` restore pinned plugins.
+- **Yazi:** the full configuration and vendored packages are installed. Run `ya pkg install` after installation whenever you want to verify or restore the package payload from `package.toml`.
+- **Broot:** `conf.hjson`, `verbs.hjson`, and the Catppuccin skin are installed together so custom verbs and theming remain in sync.
+
+ExplorerBlurMica remains a manual copy because its `config.ini` must live beside the particular ExplorerBlurMica installation, whose directory varies by package manager. Copy `explorerblurmica/config.ini` over the application's existing `config.ini` after backing it up.
+
+### Atuin
+
+After installing Atuin, set it up manually in PowerShell with these exact steps:
+
+1. Initialize Atuin in your shell by adding this line to your PowerShell profile (`$PROFILE`):
+
+   ```powershell
+   atuin init powershell | Out-String | Invoke-Expression
+   ```
+
+2. Create Atuin's configuration directory and copy the tracked configuration into it:
+
+   ```powershell
+   New-Item -ItemType Directory -Force -Path "$HOME\.config\atuin" | Out-Null
+   Copy-Item '.\atuin\config.toml' -Destination "$HOME\.config\atuin\config.toml" -Force
+   ```
+
+The tracked PowerShell profile already performs step 1 when Atuin is available, and `install.ps1` performs step 2 automatically.
 
 ### Oh My Zsh and Powerlevel10k (Linux)
 
@@ -120,7 +161,7 @@ Restart OneCommander, open **Settings**, select **Theme**, and choose **Catppucc
 
 ## Shell tooling
 
-The PowerShell and Nushell profiles integrate with optional tools such as Fastfetch, Oh My Posh, Zoxide, Bat, Ripgrep, fd, eza, dust, bottom, gsudo, xh, doggo, procs, sd, Glow, and Yazi. Missing optional commands are handled gracefully.
+The PowerShell and Nushell profiles integrate with optional tools such as Fastfetch, Oh My Posh, Zoxide, Atuin, Bat, Ripgrep, fd, eza, dust, bottom, gsudo, xh, doggo, procs, sd, Glow, Yazi, Broot, LazyGit, GitHub CLI, and Neovim. Missing optional commands are handled gracefully.
 
 ## Look and feel
 
@@ -129,7 +170,7 @@ The PowerShell and Nushell profiles integrate with optional tools such as Fastfe
 - Terminal: Windows Terminal
 - Prompts: Oh My Posh, Starship, and Powerlevel10k
 - System information: Fastfetch
-- Pager: Bat
+- Pagers: Delta for Git, Bat for files
 
 ## License
 

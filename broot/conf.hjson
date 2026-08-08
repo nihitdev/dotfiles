@@ -1,0 +1,33 @@
+# ============================================================
+# Broot
+# Catppuccin Mocha
+# ============================================================
+
+show_selection_mark: true
+
+content_search_max_file_size: 10MB
+
+lines_before_match_in_preview: 1
+lines_after_match_in_preview: 1
+
+enable_kitty_keyboard: false
+
+special_paths: {
+    "~/.config": {
+        show: always
+    }
+}
+
+preview_transformers: [
+    {
+        input_extensions: [json]
+        output_extension: json
+        mode: text
+        command: [jq]
+    }
+]
+
+imports: [
+    verbs.hjson
+    skins/catppuccin-mocha.hjson
+]

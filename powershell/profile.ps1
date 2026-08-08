@@ -1,6 +1,6 @@
 # ============================================================
 # PowerShell Profile
-# UTF-8 • Oh My Posh • Fastfetch • Zoxide • Modern CLI aliases
+# UTF-8 • Oh My Posh • Fastfetch • Zoxide • Atuin • Modern CLI aliases
 # ============================================================
 
 
@@ -61,6 +61,7 @@ function Show-MissingCommand {
 # checked lazily when its wrapper function is called.
 $HasOhMyPosh = Test-Command "oh-my-posh"
 $HasZoxide   = Test-Command "zoxide"
+$HasAtuin    = Test-Command "atuin"
 $HasFastfetch = Test-Command "fastfetch"
 
 
@@ -144,6 +145,10 @@ if ($HasZoxide) {
     }
 
     . $ZoxideInit
+}
+
+if ($HasAtuin) {
+    atuin init powershell | Out-String | Invoke-Expression
 }
 
 function .. {

@@ -1,0 +1,23 @@
+#:schema https://yazi-rs.github.io/schemas/keymap.json
+
+[mgr]
+prepend_keymap = [
+	# One-key fuzzy jump; keep the stock filter on Shift+F and stock z binding.
+	{ on = "f", run = "plugin fzf", desc = "Jump to a file or directory via fzf" },
+	{ on = "F", run = "filter --smart", desc = "Filter files" },
+
+	# Open files or enter directories without disturbing Vim-style navigation.
+	{ on = "l",       run = "plugin smart-enter", desc = "Enter directory or open file" },
+	{ on = "<Enter>", run = "plugin smart-enter", desc = "Enter directory or open file" },
+
+	# Explicit search aliases; stock s/S bindings remain available too.
+	{ on = [ "g", "s" ], run = "search --via=fd", desc = "Search files by name via fd" },
+	{ on = [ "g", "r" ], run = "search --via=rg", desc = "Search file contents via ripgrep" },
+
+	# Windows-native workflows. Commands inherit Yazi's current directory.
+	{ on = [ "g", "t" ], run = 'shell --orphan -- wt -w 0 new-tab -d . pwsh', desc = "Open PowerShell terminal here", for = "windows" },
+	{ on = [ "g", "l" ], run = "shell --block -- lazygit", desc = "Open lazygit here" },
+
+	# A mnemonic path-copy alias; stock c,c/c,d/c,f/c,n remain intact.
+	{ on = [ "c", "p" ], run = "copy path", desc = "Copy path" },
+]

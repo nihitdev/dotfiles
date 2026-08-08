@@ -1,0 +1,24 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "0be29a9"
+hash = "85f99436edc2ad966d5da617f980461c"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "0be29a9"
+hash = "2ede7b0f1beade8390be1b52cfed6a49"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:piper"
+rev = "0be29a9"
+hash = "8ba891b675bd881552e29cd3eb976d1b"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mime-ext"
+rev = "0be29a9"
+hash = "6dda13ebe58a1722f62157a4cfde6110"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "be0b21d"
+hash = "2ec4fc683a76760d62cd8268530926c1"

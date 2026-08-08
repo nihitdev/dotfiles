@@ -1,0 +1,15 @@
+#:schema https://yazi-rs.github.io/schemas/theme.json
+
+[flavor]
+dark = "catppuccin-mocha"
+
+# Restrained Catppuccin overrides for git.yazi status marks.
+[git]
+unknown  = { fg = "#6c7086" }
+modified = { fg = "#f9e2af" }
+added    = { fg = "#a6e3a1" }
+untracked = { fg = "#89b4fa" }
+ignored  = { fg = "#585b70" }
+deleted  = { fg = "#f38ba8" }
+updated  = { fg = "#cba6f7" }
+clean    = { fg = "#6c7086" }

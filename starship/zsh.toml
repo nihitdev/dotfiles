@@ -1,0 +1,213 @@
+# ============================================================
+# Starship
+# Minimal • Clean • Fast
+# ============================================================
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+scan_timeout = 100
+command_timeout = 1000
+
+format = """
+$directory$git_branch$git_status
+$character"""
+
+# ------------------------------------------------------------
+# Directory
+# ------------------------------------------------------------
+
+[directory]
+style = "bold cyan"
+format = "[$path]($style) "
+home_symbol = "~"
+truncation_length = 0
+truncate_to_repo = false
+read_only = " "
+
+# ------------------------------------------------------------
+# Git
+# ------------------------------------------------------------
+
+[git_branch]
+symbol = " "
+style = "#cba6f7"
+format = "[$symbol$branch]($style)"
+
+[git_status]
+style = "bold red"
+format = " [$all_status$ahead_behind]($style)"
+
+# ------------------------------------------------------------
+# Prompt Character
+# ------------------------------------------------------------
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[os]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[rust]
+disabled = true
+
+[java]
+disabled = true
+
+[golang]
+disabled = true
+
+[c]
+disabled = true
+
+[cmake]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[kubernetes]
+disabled = true
+
+[package]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[battery]
+disabled = true
+
+[time]
+disabled = true
+
+[cmd_duration]
+disabled = true
+
+[jobs]
+disabled = true
+
+[status]
+disabled = true
+
+[shell]
+disabled = true
+
+[aws]
+disabled = true
+
+[azure]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[terraform]
+disabled = true
+
+[buf]
+disabled = true
+
+[conda]
+disabled = true
+
+[crystal]
+disabled = true
+
+[dart]
+disabled = true
+
+[deno]
+disabled = true
+
+[dotnet]
+disabled = true
+
+[elixir]
+disabled = true
+
+[elm]
+disabled = true
+
+[erlang]
+disabled = true
+
+[fennel]
+disabled = true
+
+[guix_shell]
+disabled = true
+
+[haskell]
+disabled = true
+
+[haxe]
+disabled = true
+
+[helm]
+disabled = true
+
+[julia]
+disabled = true
+
+[kotlin]
+disabled = true
+
+[lua]
+disabled = true
+
+[nim]
+disabled = true
+
+[nix_shell]
+disabled = true
+
+[ocaml]
+disabled = true
+
+[opa]
+disabled = true
+
+[perl]
+disabled = true
+
+[php]
+disabled = true
+
+[pulumi]
+disabled = true
+
+[purescript]
+disabled = true
+
+[rlang]
+disabled = true
+
+[ruby]
+disabled = true
+
+[scala]
+disabled = true
+
+[swift]
+disabled = true
+
+[vagrant]
+disabled = true
+
+[zig]
+disabled = true
+
+[character]
+success_symbol = '[ζ](bold green)'
+error_symbol = '[ζ](bold red)'
+vimcmd_symbol = '[ζ](bold yellow)'

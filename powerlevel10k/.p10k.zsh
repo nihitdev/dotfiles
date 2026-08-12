@@ -1,23 +1,32 @@
-  # ------------------------------------------------------------
-  # INSTANT PROMPT
-  # ------------------------------------------------------------
+# ~/.p10k.zsh
 
-  typeset -g POWERLEVEL9K_INSTANT_PROMPT=verbose
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+  dir
+  vcs
+  newline
+  prompt_char
+)
 
-  # ------------------------------------------------------------
-  # HOT RELOAD
-  # ------------------------------------------------------------
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 
-  typeset -g POWERLEVEL9K_DISABLE_HOT_RELOAD=true
+# Directory
+typeset -g POWERLEVEL9K_DIR_FOREGROUND=39
+typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
+typeset -g POWERLEVEL9K_SHORTEN_DELIMITER='…/'
 
-  (( ! $+functions[p10k] )) || p10k reload
-}
+# Git
+typeset -g POWERLEVEL9K_VCS_FOREGROUND=76
+typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=' '
 
-# ------------------------------------------------------------
-# CONFIG
-# ------------------------------------------------------------
+# Prompt
+typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_VIINS_CONTENT_EXPANSION='❯'
+typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_VIINS_CONTENT_EXPANSION='❯'
+typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_VIINS_FOREGROUND=76
+typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_VIINS_FOREGROUND=196
 
-typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
+# No background blocks
+typeset -g POWERLEVEL9K_BACKGROUND=
 
-(( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
-'builtin' 'unset' 'p10k_config_opts'
+# No extra whitespace
+typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false

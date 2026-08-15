@@ -1,12 +1,15 @@
-# Nihit's Windows dotfiles
+# Nihit's cross-platform dotfiles
 
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows)
+[![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=black)](https://kernel.org/)
 [![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
 [![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
-My Catppuccin-inspired Windows setup for PowerShell, Nushell, Windows Terminal, Neovim, Git, terminal file managers, and modern command-line tools, plus a manual Linux setup for Zsh.
+My Catppuccin-inspired setup for Windows and Linux, covering shells, terminals, editors, Git, file managers, and modern command-line tools.
 
 ## Quick install
+
+### Windows
 
 Open PowerShell and run:
 
@@ -15,6 +18,25 @@ irm https://nihit.is-a.dev/ricingsetup | iex
 ```
 
 The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before applying the configurations. Applications and command-line tools are not installed automatically.
+
+### Linux
+
+Clone the repository and run the Linux installer:
+
+```sh
+git clone https://github.com/nihitdev/dotfiles.git
+cd dotfiles
+./install.sh
+```
+
+Preview changes or install only selected components:
+
+```sh
+./install.sh --dry-run
+./install.sh --only nvim --only yazi
+```
+
+The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, and `ssh`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux.
 
 ## What's included
 
@@ -52,7 +74,7 @@ This repository includes three prompt configurations:
 
 All three require a [Nerd Font](https://www.nerdfonts.com/) for their icons to render correctly.
 
-## Manual installation
+## Windows installation details
 
 If you prefer to inspect everything before running it, clone the repository:
 
@@ -68,6 +90,7 @@ Preview the changes without writing anything, or skip backups if you already hav
 ```powershell
 .\install.ps1 -WhatIf
 .\install.ps1 -NoBackup
+.\install.ps1 -Only nvim,yazi
 ```
 
 The main destinations are:
@@ -89,15 +112,29 @@ The main destinations are:
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
-| `ssh/config` | `~/.ssh/config` (manual installation) |
+| `ssh/config` | `~/.ssh/config` |
 | `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
 | `yasb/` | `~/.config/yasb/` |
 
-The installer backs up every existing destination, copies all Windows configurations above, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+The installer backs up every existing destination, replaces managed directories cleanly, preserves an existing global Git identity, applies restricted permissions to the SSH client config, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+
+## Platform compatibility
+
+The Linux installer intentionally excludes configurations that are Windows-specific or depend on Windows application paths:
+
+| Configuration | Why it is not installed on Linux |
+| --- | --- |
+| PowerShell profile | Uses Windows paths and Windows-focused commands |
+| Windows Terminal | Windows application with package-specific settings paths |
+| YASB | Windows status bar |
+| ExplorerBlurMica | Windows Explorer customization |
+| OneCommander | Windows file manager |
+
+Discord themes are portable, but the Linux Vencord theme directory varies by installation method. They remain a manual copy instead of being forced by `install.sh`.
 
 ### Developer tools
 
-- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. It keeps Windows `autocrlf = true` and uses placeholder identity values that you should replace after installation.
+- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. The installers preserve an existing identity instead of replacing it with the repository placeholders; if no identity exists, configure one before committing.
 - **LazyGit:** the theme is installed into LazyGit's standard Windows configuration directory.
 - **Neovim:** the complete LazyVim configuration and lockfile are installed to Neovim's standard Windows config directory. Start `nvim` after installation to let `lazy.nvim` restore pinned plugins.
 - **Yazi:** the full configuration and vendored packages are installed. Run `ya pkg install` after installation whenever you want to verify or restore the package payload from `package.toml`.
@@ -127,7 +164,7 @@ The tracked PowerShell profile already performs step 1 when Atuin is available, 
 ### Oh My Zsh and Powerlevel10k (Linux)
 
 > [!IMPORTANT]
-> This configuration is for Linux and is not installed by the Windows `install.ps1` script or the quick-install command above.
+> This configuration is installed by `install.sh`, but not by the Windows `install.ps1` script.
 
 After installing Zsh and [Oh My Zsh](https://ohmyz.sh/), clone [Powerlevel10k](https://github.com/romkatv/powerlevel10k) into the Oh My Zsh custom themes directory:
 
@@ -136,7 +173,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
 ```
 
-The tracked Zsh configuration also enables [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) and [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting); install those plugins in the Oh My Zsh custom plugins directory before starting Zsh. Then copy the configuration files:
+The tracked Zsh configuration also enables [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) and [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting); install those plugins in the Oh My Zsh custom plugins directory before starting Zsh. The Linux installer copies the configuration files automatically. For a manual installation:
 
 ```sh
 cp oh-my-zsh/.zshrc ~/.zshrc

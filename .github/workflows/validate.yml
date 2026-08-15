@@ -36,5 +36,10 @@ jobs:
       - name: Check Git configuration
         run: git config --file git/.gitconfig --list >/dev/null
 
+      - name: Check Linux installer
+        run: |
+          bash -n install.sh
+          ./install.sh --dry-run --only nvim --only ssh
+
       - name: Check whitespace
         run: git diff --check HEAD~1 HEAD

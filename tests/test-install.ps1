@@ -113,7 +113,7 @@ Host existing.example
     $BadRemoteScript = Join-Path $TestRoot 'remote-install-bad-hash.ps1'
     $RemoteText = Get-Content -LiteralPath $RemoteScript -Raw
     $RemoteText = $RemoteText.Replace(
-        '63295490461fc98115480aa45a850fbe00c265ce6eee2988c93ee3b889d74e3b',
+        'd7a016fb6a4f91577234d616200fb266e6d5761b584cc55f1d7c70ecee457cf8',
         ('0' * 64)
     )
     Set-Content -LiteralPath $BadRemoteScript -Value $RemoteText

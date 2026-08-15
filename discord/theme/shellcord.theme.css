@@ -5,8 +5,7 @@
  * @version 1.0.0
  * @source https://github.com/nihitdev/shellcord
  */
-@import url('https://raw.githubusercontent.com/nihitdev/shellcord/main/build/shellcord.css');
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+@import url('https://raw.githubusercontent.com/nihitdev/shellcord/6075e0968f55f27ed6654cd2d3ec447f90553a89/build/shellcord.css');
 
 body {
     /* font, change to '' for default discord font */
@@ -43,7 +42,7 @@ body {
     --dms-icon-color-before: var(--icon-subtle);
     --dms-icon-color-after: var(--white);
     --custom-dms-background: image;
-    --dms-background-image-url: url('https://raw.githubusercontent.com/catppuccin/catppuccin/refs/heads/main/assets/logos/exports/macchiato_square.png');
+    --dms-background-image-url: url('https://raw.githubusercontent.com/catppuccin/catppuccin/d09787dd98ca6fba08af5ef2ae94a7e09f17daca/assets/logos/exports/macchiato_square.png');
     --dms-background-image-size: cover;
     --dms-background-color: linear-gradient(70deg, var(--blue-2), var(--purple-2), var(--red-2));
 

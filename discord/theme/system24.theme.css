@@ -11,7 +11,7 @@
 */
 
 /* import theme modules */
-@import url('https://refact0r.github.io/system24/build/system24.css');
+@import url('https://raw.githubusercontent.com/refact0r/system24/e620464b32ccc0ddbd8e17e3ae351023ba900e6d/build/system24.css');
 
 body {
     /* font, change to '' for default discord font */

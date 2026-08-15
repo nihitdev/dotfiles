@@ -2,4 +2,4 @@
 
 System-information layout, colors, modules, and custom ASCII artwork.
 
-Copy this directory to `~/.config/fastfetch`, then run `fastfetch --config ~/.config/fastfetch/config.jsonc` to preview it.
+Copy this directory to `${XDG_CONFIG_HOME:-~/.config}/fastfetch` on Linux or `~/.config/fastfetch` on Windows. The shell profiles pass the installed `ascii.txt` path explicitly so custom XDG roots work. Preview it with `fastfetch --config <config-path> --file <config-directory>/ascii.txt`.

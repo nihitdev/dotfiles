@@ -6,5 +6,5 @@
 --style=full
 --paging=never
 --tabs=4
---color=always
+--color=auto
 --italic-text=always

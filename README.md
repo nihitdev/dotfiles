@@ -14,10 +14,10 @@ My Catppuccin-inspired setup for Windows and Linux, covering shells, terminals, 
 Open PowerShell and run:
 
 ```powershell
-irm https://nihit.is-a.dev/ricingsetup | iex
+irm https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.ps1 | iex
 ```
 
-The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before applying the configurations. Applications and command-line tools are not installed automatically.
+The installer backs up existing files to a private, uniquely named directory under `~/.dotfiles-backup` before applying the configurations. Applications and command-line tools are not installed automatically. Windows Terminal settings are installed only when explicitly requested with `-Only windows-terminal`.
 
 ### Linux
 
@@ -37,6 +37,8 @@ Preview changes or install only selected components:
 ```
 
 The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, and `ssh`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux.
+
+Remote bootstrap archives are pinned to an immutable repository commit and verified with SHA-256 before extraction. When publishing installer changes, update the pinned commit and both archive hashes together.
 
 ## What's included
 
@@ -63,6 +65,9 @@ The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`
 | [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
 | [YASB](yasb/) | Status bar configuration and styles |
 | [Yazi](yazi/) | Fast terminal file manager with previews, search, Git status, and Catppuccin Mocha |
+
+Third-party snapshots and intentionally duplicated application assets are
+documented in [VENDORED.md](VENDORED.md).
 
 ## Prompt options
 
@@ -99,7 +104,7 @@ The main destinations are:
 | --- | --- |
 | `powershell/profile.ps1` | `$PROFILE` |
 | `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
-| `git/.gitconfig` | `~/.gitconfig` |
+| `git/.gitconfig` | Managed config included from `~/.gitconfig` |
 | `lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\config.yml` |
 | `broot/` | `%APPDATA%\dystroy\broot\config\` |
 | `nvim/` | `%LOCALAPPDATA%\nvim\` |
@@ -112,11 +117,13 @@ The main destinations are:
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
-| `ssh/config` | `~/.ssh/config` |
+| `ssh/config` | `~/.ssh/config.d/dotfiles.conf`, included from `~/.ssh/config` |
 | `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
 | `yasb/` | `~/.config/yasb/` |
 
-The installer backs up every existing destination, replaces managed directories cleanly, preserves an existing global Git identity, applies restricted permissions to the SSH client config, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+The installer backs up every existing destination, stages replacements before activation, and automatically restores earlier destinations if installation fails. Existing Git and SSH configuration remains in place: the installer adds managed include files instead of replacing either global file. It also applies restricted permissions to the SSH client config, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
+
+Windows Terminal is intentionally excluded from the default install because its settings contain machine-specific profiles. Install it explicitly with `.\install.ps1 -Only windows-terminal` after reviewing the tracked settings.
 
 ## Platform compatibility
 

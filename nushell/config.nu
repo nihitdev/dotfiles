@@ -8,10 +8,12 @@
 # PATHS
 # ─────────────────────────────────────────────────────────────────────────────
 
-const STARTUP_CACHE_DIR = $"($nu.cache-dir)/init"
-const STARSHIP_CACHE = $"($nu.cache-dir)/init/starship.nu"
-const ZOXIDE_CACHE = $"($nu.cache-dir)/init/zoxide.nu"
-const FASTFETCH_CONFIG = $"($nu.home-dir)/.config/fastfetch/config.jsonc"
+const STARTUP_CACHE_DIR = $"($nu.config-path | path dirname)/dotfiles-init"
+const STARSHIP_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/starship.nu"
+const ZOXIDE_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/zoxide.nu"
+const XDG_CONFIG_ROOT = $env.XDG_CONFIG_HOME? | default $"($nu.home-dir)/.config"
+const FASTFETCH_CONFIG = $"($XDG_CONFIG_ROOT)/fastfetch/config.jsonc"
+const FASTFETCH_LOGO = $"($XDG_CONFIG_ROOT)/fastfetch/ascii.txt"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -94,7 +96,7 @@ source $ZOXIDE_CACHE
 if $nu.is-interactive {
     if (has-command fastfetch) {
         if ($FASTFETCH_CONFIG | path exists) {
-            ^fastfetch --config $FASTFETCH_CONFIG
+            ^fastfetch --config $FASTFETCH_CONFIG --file $FASTFETCH_LOGO
         } else {
             ^fastfetch
         }
@@ -137,7 +139,13 @@ def reload [] {
 
 # Open config.nu in Notepad.
 def profile [] {
-    ^notepad.exe $nu.config-path
+    if (has-command notepad.exe) {
+        ^notepad.exe $nu.config-path
+    } else if (has-command nvim) {
+        ^nvim $nu.config-path
+    } else {
+        missing-command "notepad.exe or nvim"
+    }
 }
 
 # Open config.nu in Neovim/LazyVim.
@@ -147,7 +155,13 @@ def nprofile [] {
 
 # Open env.nu in Notepad.
 def env-profile [] {
-    ^notepad.exe $nu.env-path
+    if (has-command notepad.exe) {
+        ^notepad.exe $nu.env-path
+    } else if (has-command nvim) {
+        ^nvim $nu.env-path
+    } else {
+        missing-command "notepad.exe or nvim"
+    }
 }
 
 def paths [] {
@@ -211,10 +225,12 @@ def --wrapped btm [...args] {
 }
 
 def --wrapped sudo [...args] {
-    if (has-command gsudo) {
+    if $nu.os-info.name == "windows" and (has-command gsudo) {
         ^gsudo ...$args
+    } else if (has-command sudo) {
+        ^sudo ...$args
     } else {
-        missing-command gsudo
+        missing-command (if $nu.os-info.name == "windows" { "gsudo" } else { "sudo" })
     }
 }
 
@@ -301,23 +317,23 @@ def --wrapped g [...args] {
 }
 
 def gs [] {
-    ^git status --short --branch
+    g status --short --branch
 }
 
 def ga [...files] {
-    ^git add ...$files
+    g add ...$files
 }
 
 def gc [message: string] {
-    ^git commit -m $message
+    g commit -m $message
 }
 
 def gp [] {
-    ^git push
+    g push
 }
 
 def gl [] {
-    ^git log --oneline --graph --decorate --all
+    g log --oneline --graph --decorate --all
 }
 
 
@@ -358,7 +374,7 @@ def --wrapped ff [...args] {
     if ($args | is-not-empty) {
         ^fastfetch ...$args
     } else if ($FASTFETCH_CONFIG | path exists) {
-        ^fastfetch --config $FASTFETCH_CONFIG
+        ^fastfetch --config $FASTFETCH_CONFIG --file $FASTFETCH_LOGO
     } else {
         ^fastfetch
     }

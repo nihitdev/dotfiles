@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Install Lua
-        run: sudo apt-get update && sudo apt-get install --yes lua5.4
+      - name: Install validation tools
+        run: sudo apt-get update && sudo apt-get install --yes lua5.4 yamllint
 
       - name: Check strict JSON files
         run: |
@@ -36,10 +36,47 @@ jobs:
       - name: Check Git configuration
         run: git config --file git/.gitconfig --list >/dev/null
 
+      - name: Check repository formats and links
+        run: |
+          python3 scripts/validate_repo.py
+          yamllint -d relaxed .github/workflows/validate.yml lazygit/config.yml yasb/config.yaml
+
       - name: Check Linux installer
         run: |
           bash -n install.sh
           ./install.sh --dry-run --only nvim --only ssh
+          ./tests/test-install.sh
+
+      - name: Check Nushell portability guards
+        run: |
+          grep -Fq 'source $STARSHIP_CACHE' nushell/config.nu
+          grep -Fq 'source $ZOXIDE_CACHE' nushell/config.nu
+          grep -Fq 'has-command sudo' nushell/config.nu
 
       - name: Check whitespace
         run: git diff --check HEAD~1 HEAD
+
+  windows-installer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Parse PowerShell files
+        shell: pwsh
+        run: |
+          $Errors = $null
+          $Tokens = $null
+          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $_.FullName,
+              [ref]$Tokens,
+              [ref]$Errors
+            ) | Out-Null
+            if ($Errors) { throw ($Errors | Out-String) }
+          }
+
+      - name: Test Windows installer safety
+        shell: pwsh
+        run: ./tests/test-install.ps1

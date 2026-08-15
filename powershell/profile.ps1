@@ -9,6 +9,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 $FastfetchConfig = "$HOME\.config\fastfetch\config.jsonc"
+$FastfetchLogo   = "$HOME\.config\fastfetch\ascii.txt"
 $OhMyPoshConfig  = "$HOME\.config\oh-my-posh\amro.omp.json"
 $ProfileCache    = Join-Path $PSScriptRoot ".profile-cache"
 
@@ -86,7 +87,7 @@ if ($Host.Name -eq 'ConsoleHost') {
 
 if ($HasFastfetch -and -not [Console]::IsOutputRedirected) {
     if (Test-Path $FastfetchConfig) {
-        fastfetch --config $FastfetchConfig
+        fastfetch --config $FastfetchConfig --file $FastfetchLogo
     }
     else {
         fastfetch
@@ -351,7 +352,7 @@ function ff {
             fastfetch @args
         }
         elseif (Test-Path $FastfetchConfig) {
-            fastfetch --config $FastfetchConfig
+            fastfetch --config $FastfetchConfig --file $FastfetchLogo
         }
         else {
             fastfetch

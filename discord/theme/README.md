@@ -1,13 +1,11 @@
 # Theme distribution files
 
-- `shellcord.theme.css` is the supported Shellcord installer and public
-  customization API.
-- `system24.theme.css` and `flavors/system24-*.theme.css` are preserved upstream
-  System24 compatibility copies. Their branding, import URLs, and defaults are
-  intentionally not synchronized with Shellcord.
+- `shellcord.theme.css` is the preferred Shellcord entrypoint.
+- `system24.theme.css` and `flavors/system24-*.theme.css` are vendored upstream
+  System24 compatibility entrypoints.
 
-Shellcord source changes belong in `src/`. Run `npm run build` to regenerate the
-committed build. Do not edit `build/shellcord.css` directly.
+Remote GitHub CSS and assets are pinned to full commit SHAs. DM Mono is not
+downloaded at runtime; install it locally or use the monospace fallback.
 
-The normal online installer tracks `main` and is the edge channel. Tagged GitHub
-releases provide a stable installer whose build import is pinned to the tag.
+Update these files deliberately alongside [the vendoring notes](../../VENDORED.md)
+and run `python3 scripts/validate_repo.py` before committing.

@@ -2,4 +2,11 @@
 
 Global Git defaults, aliases, maintenance settings, and Delta styling.
 
-Copy `.gitconfig` to `~/.gitconfig`. Replace the placeholder values in `[user]` with your own name and email before creating commits.
+Keep this file separate from `~/.gitconfig` and include it from the user-owned global configuration:
+
+```ini
+[include]
+    path = ~/.config/dotfiles/gitconfig
+```
+
+The installers configure this include automatically and leave identity and other user-specific global settings intact.

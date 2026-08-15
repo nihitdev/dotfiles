@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub
+# ─────────────────────────────────────────────────────────────────────────────
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github/auth/key
+    IdentitiesOnly yes
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Arch User Repository
+# ─────────────────────────────────────────────────────────────────────────────
+
+Host aur.archlinux.org
+    HostName aur.archlinux.org
+    User aur
+    IdentityFile ~/.ssh/aur/auth
+    IdentitiesOnly yes

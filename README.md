@@ -29,13 +29,14 @@ The installer backs up existing files to `~/.dotfiles-backup/<timestamp>` before
 | [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
 | [Git](git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
 | [LazyGit](lazygit/) | Catppuccin Mocha terminal Git UI theme |
-| [Neovim](nvim/) | LazyVim setup, plugin lockfile, dashboard, and AI-assisted editing |
+| [Neovim](nvim/) | LazyVim setup, pinned plugins, and a custom dashboard |
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
 | [Oh My Zsh](oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
 | [OneCommander](one-commander/) | Catppuccin Mocha file manager theme |
 | [Oh My Posh](oh-my-posh/) | Custom prompt theme and shell integration |
 | [Powerlevel10k](powerlevel10k/) | Powerlevel10k prompt configuration for Zsh |
 | [PowerShell](powershell/) | Profile, prompt startup, navigation, and CLI helpers |
+| [SSH](ssh/) | Host aliases and isolated authentication-key paths for GitHub and the AUR |
 | [Starship](starship/) | Optional minimal cross-shell prompt |
 | [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
 | [YASB](yasb/) | Status bar configuration and styles |
@@ -88,6 +89,7 @@ The main destinations are:
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
+| `ssh/config` | `~/.ssh/config` (manual installation) |
 | `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
 | `yasb/` | `~/.config/yasb/` |
 
@@ -95,7 +97,7 @@ The installer backs up every existing destination, copies all Windows configurat
 
 ### Developer tools
 
-- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. It intentionally keeps Windows `autocrlf = true` and installs the personal identity stored in this repository.
+- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. It keeps Windows `autocrlf = true` and uses placeholder identity values that you should replace after installation.
 - **LazyGit:** the theme is installed into LazyGit's standard Windows configuration directory.
 - **Neovim:** the complete LazyVim configuration and lockfile are installed to Neovim's standard Windows config directory. Start `nvim` after installation to let `lazy.nvim` restore pinned plugins.
 - **Yazi:** the full configuration and vendored packages are installed. Run `ya pkg install` after installation whenever you want to verify or restore the package payload from `package.toml`.

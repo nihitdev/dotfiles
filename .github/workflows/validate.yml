@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Repository Validation
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Validate dotfiles
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Lua
+        run: sudo apt-get update && sudo apt-get install --yes lua5.4
+
+      - name: Check strict JSON files
+        run: |
+          jq empty \
+            nvim/lazy-lock.json \
+            nvim/lazyvim.json \
+            oh-my-posh/amro.omp.json \
+            windows-terminal/settings.json
+
+      - name: Check Lua syntax
+        run: find nvim yazi -type f -name '*.lua' -print0 | xargs -0 -n1 luac -p
+
+      - name: Check Git configuration
+        run: git config --file git/.gitconfig --list >/dev/null
+
+      - name: Check whitespace
+        run: git diff --check HEAD~1 HEAD

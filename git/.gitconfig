@@ -117,7 +117,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 [user]
-	email = nihit429@gmail.com
-	name = Nihit Sunhare
+	email = yourname@mail.com
+	name = yourname
 [sequence]
 	editor = nvim

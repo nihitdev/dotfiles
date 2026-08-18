@@ -44,7 +44,7 @@ if (
     $ArchivePath = Join-Path $TemporaryRoot 'dotfiles.zip'
 
     try {
-        New-Item -ItemType Directory -Path $TemporaryRoot -Force | Out-Null
+        New-Item -ItemType Directory -Path $TemporaryRoot -Force -WhatIf:$false | Out-Null
         Write-Host 'Downloading dotfiles...'
         $ArchiveUri = "https://github.com/nihitdev/dotfiles/archive/$RemoteRef.zip"
         Invoke-WebRequest `
@@ -54,7 +54,10 @@ if (
         if ($ActualArchiveSha256 -ne $RemoteArchiveSha256) {
             throw 'Downloaded archive failed SHA-256 verification.'
         }
-        Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TemporaryRoot
+        Expand-Archive `
+            -LiteralPath $ArchivePath `
+            -DestinationPath $TemporaryRoot `
+            -WhatIf:$false
 
         $DownloadedRoot = Join-Path $TemporaryRoot "dotfiles-$RemoteRef"
         $DownloadedInstaller = Join-Path $DownloadedRoot 'install.ps1'

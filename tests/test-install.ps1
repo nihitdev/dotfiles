@@ -45,7 +45,7 @@ Host existing.example
     Assert-True ($GitText.Contains('value = retained')) 'Existing Git setting was lost.'
     Assert-True (([regex]::Matches($GitText, '(?m)^\s*path = ')).Count -eq 1) 'Git include is not idempotent.'
     Assert-True ($SshText.Contains('Host existing.example')) 'Existing SSH host was lost.'
-    Assert-True (([regex]::Matches($SshText, '(?m)^Include ~/.ssh/config.d/\*\.conf$')).Count -eq 1) 'SSH include is not idempotent.'
+    Assert-True (([regex]::Matches($SshText, '(?m)^Include ~/.ssh/config.d/\*\.conf\r?$')).Count -eq 1) 'SSH include is not idempotent.'
     $BackupRuns = Get-ChildItem -LiteralPath (Join-Path $PreserveHome '.dotfiles-backup') -Directory
     Assert-True ($BackupRuns.Count -eq 2) 'Backup runs did not use unique directories.'
     Assert-True ((Get-Acl -LiteralPath (Join-Path $PreserveHome '.dotfiles-backup')).AreAccessRulesProtected) 'Backup parent ACL inheritance was not removed.'

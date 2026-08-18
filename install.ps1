@@ -297,17 +297,17 @@ function Install-GitInclude {
     if (-not (Test-Selected -Name 'git')) { return }
 
     $AlreadyIncluded = $false
+    $NormalizedManagedPath = $ManagedPath.Replace('\', '/')
     if ((Test-Path -LiteralPath (Join-Path $UserHome '.gitconfig')) -and
         (Get-Command git -ErrorAction SilentlyContinue)) {
         $Includes = git config --file (Join-Path $UserHome '.gitconfig') --get-all include.path
-        $NormalizedManagedPath = $ManagedPath.Replace('\', '/')
         $AlreadyIncluded = $Includes | Where-Object {
             $_.Replace('\', '/') -eq $NormalizedManagedPath
         } | Select-Object -First 1
     }
     elseif (Test-Path -LiteralPath (Join-Path $UserHome '.gitconfig')) {
         $AlreadyIncluded = (Get-Content -LiteralPath (Join-Path $UserHome '.gitconfig')) |
-            Where-Object { $_.Trim() -eq "path = $ManagedPath" } |
+            Where-Object { $_.Trim().Replace('\', '/') -eq "path = $NormalizedManagedPath" } |
             Select-Object -First 1
     }
     if ($AlreadyIncluded) { return }
@@ -318,7 +318,7 @@ function Install-GitInclude {
         if (Test-Path -LiteralPath $UserGitConfig) {
             Copy-Item -LiteralPath $UserGitConfig -Destination $TemporarySource
         }
-        Add-Content -LiteralPath $TemporarySource -Value "`n[include]`n    path = $ManagedPath" -Encoding utf8
+        Add-Content -LiteralPath $TemporarySource -Value "`n[include]`n    path = $NormalizedManagedPath" -Encoding utf8
         Install-Dotfile -Name 'git' -Source $TemporarySource -Destination $UserGitConfig
     }
     finally {

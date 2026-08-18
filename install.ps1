@@ -278,6 +278,7 @@ function Install-IncludeLine {
     if (-not (Test-Selected -Name $Name)) { return }
     if ((Test-Path -LiteralPath $Destination) -and
         (Get-Content -LiteralPath $Destination) -contains $Line) { return }
+    if ($WhatIfPreference) { return }
 
     $TemporarySource = Join-Path ([System.IO.Path]::GetTempPath()) "dotfiles-include-$([guid]::NewGuid())"
     try {
@@ -311,6 +312,7 @@ function Install-GitInclude {
             Select-Object -First 1
     }
     if ($AlreadyIncluded) { return }
+    if ($WhatIfPreference) { return }
 
     $TemporarySource = Join-Path ([System.IO.Path]::GetTempPath()) "dotfiles-git-$([guid]::NewGuid())"
     try {

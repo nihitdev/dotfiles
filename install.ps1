@@ -300,7 +300,10 @@ function Install-GitInclude {
     if ((Test-Path -LiteralPath (Join-Path $UserHome '.gitconfig')) -and
         (Get-Command git -ErrorAction SilentlyContinue)) {
         $Includes = git config --file (Join-Path $UserHome '.gitconfig') --get-all include.path
-        $AlreadyIncluded = $ManagedPath -in $Includes
+        $NormalizedManagedPath = $ManagedPath.Replace('\', '/')
+        $AlreadyIncluded = $Includes | Where-Object {
+            $_.Replace('\', '/') -eq $NormalizedManagedPath
+        } | Select-Object -First 1
     }
     elseif (Test-Path -LiteralPath (Join-Path $UserHome '.gitconfig')) {
         $AlreadyIncluded = (Get-Content -LiteralPath (Join-Path $UserHome '.gitconfig')) |

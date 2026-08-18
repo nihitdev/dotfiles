@@ -12,14 +12,14 @@ function Assert-True {
 
 function Invoke-IsolatedInstaller {
     param(
-        [Parameter(Mandatory)][string]$Home,
+        [Parameter(Mandatory)][string]$TestHome,
         [Parameter(Mandatory)][string[]]$Only,
         [string]$SourceRoot = $RepositoryRoot
     )
-    $env:APPDATA = Join-Path $Home 'AppData\Roaming'
-    $env:LOCALAPPDATA = Join-Path $Home 'AppData\Local'
+    $env:APPDATA = Join-Path $TestHome 'AppData\Roaming'
+    $env:LOCALAPPDATA = Join-Path $TestHome 'AppData\Local'
     & (Join-Path $RepositoryRoot 'install.ps1') `
-        -SourceRoot $SourceRoot -HomeRoot $Home -Only $Only
+        -SourceRoot $SourceRoot -HomeRoot $TestHome -Only $Only
 }
 
 try {
@@ -37,8 +37,8 @@ try {
 Host existing.example
     User existing
 '@
-    Invoke-IsolatedInstaller -Home $PreserveHome -Only git, ssh
-    Invoke-IsolatedInstaller -Home $PreserveHome -Only git, ssh
+    Invoke-IsolatedInstaller -TestHome $PreserveHome -Only git, ssh
+    Invoke-IsolatedInstaller -TestHome $PreserveHome -Only git, ssh
     $GitText = Get-Content -LiteralPath (Join-Path $PreserveHome '.gitconfig') -Raw
     $SshText = Get-Content -LiteralPath (Join-Path $PreserveHome '.ssh\config') -Raw
     Assert-True ($GitText.Contains('name = Existing User')) 'Existing Git identity was lost.'
@@ -85,7 +85,7 @@ Host existing.example
     Set-Content -LiteralPath (Join-Path $RollbackHome 'AppData\Roaming\nushell\config.nu') -Value 'old config'
     Set-Content -LiteralPath (Join-Path $PartialSource 'nushell\config.nu') -Value 'new config'
     $RollbackFailed = $false
-    try { Invoke-IsolatedInstaller -Home $RollbackHome -Only nushell -SourceRoot $PartialSource }
+    try { Invoke-IsolatedInstaller -TestHome $RollbackHome -Only nushell -SourceRoot $PartialSource }
     catch { $RollbackFailed = $true }
     Assert-True $RollbackFailed 'Missing second source did not fail closed.'
     Assert-True ((Get-Content -LiteralPath (Join-Path $RollbackHome 'AppData\Roaming\nushell\config.nu') -Raw).Trim() -eq 'old config') 'Rollback did not restore the original Nushell config.'
@@ -98,7 +98,7 @@ Host existing.example
     Set-Content -LiteralPath (Join-Path $TerminalState 'settings.json') -Value '{"sentinel":true}'
     $DefaultPlan = & (Join-Path $RepositoryRoot 'install.ps1') -SourceRoot $RepositoryRoot -WhatIf 6>&1 | Out-String
     Assert-True (-not $DefaultPlan.Contains('windows-terminal')) 'Windows Terminal was selected by the default install.'
-    Invoke-IsolatedInstaller -Home $TerminalHome -Only windows-terminal
+    Invoke-IsolatedInstaller -TestHome $TerminalHome -Only windows-terminal
     $TerminalText = Get-Content -LiteralPath (Join-Path $TerminalState 'settings.json') -Raw
     Assert-True (-not $TerminalText.Contains('sentinel')) 'Explicit Windows Terminal install did not replace settings.'
 

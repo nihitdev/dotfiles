@@ -44,7 +44,7 @@ bars:
         "glazewm_tiling_direction",
         "glazewm_workspaces",
         "komorebi_active_layout",
-        "komorebi_workspaces", 
+        "komorebi_workspaces",
         "active_window"
       ]
       center: [
@@ -55,7 +55,7 @@ bars:
         "cava",
         "cpu",
         "memory"
-        ]
+      ]
 widgets:
   active_window:
     type: "yasb.active_window.ActiveWindowWidget"
@@ -113,30 +113,30 @@ widgets:
         bottom: 0
         right: 8
   cpu:
-      type: "yasb.cpu.CpuWidget"
-      options:
-        label: "{info[percent][total]:.0f}%"
-        progress_bar:
-          enabled: true
-          position: "left"
-          size: 17
-          thickness: 3
-          color: "#89dceb"
-          background_color: "#1e1e2e"
-          animation: true 
-        animation:
-          enabled: true
-          type: FadeInOut
-          duration: 200
-        update_interval: 2000
-        callbacks:
-          on_right: "toggle_menu"
-          on_left: "toggle_menu"
-        menu:
-          enabled: true
-          show_graph: true
-          show_graph_grid: true
-          graph_history_size: 60
+    type: "yasb.cpu.CpuWidget"
+    options:
+      label: "{info[percent][total]:.0f}%"
+      progress_bar:
+        enabled: true
+        position: "left"
+        size: 17
+        thickness: 3
+        color: "#89dceb"
+        background_color: "#1e1e2e"
+        animation: true
+      animation:
+        enabled: true
+        type: FadeInOut
+        duration: 200
+      update_interval: 2000
+      callbacks:
+        on_right: "toggle_menu"
+        on_left: "toggle_menu"
+      menu:
+        enabled: true
+        show_graph: true
+        show_graph_grid: true
+        graph_history_size: 60
   glazewm_workspaces:
     type: "glazewm.workspaces.GlazewmWorkspacesWidget"
     options:
@@ -171,7 +171,7 @@ widgets:
       animation:
         enabled: true
         type: FadeInOut
-        duration: 200 
+        duration: 200
       callbacks:
         on_left: "toggle_menu"
         on_right: "toggle_menu"

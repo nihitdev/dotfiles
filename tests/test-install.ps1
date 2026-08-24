@@ -115,9 +115,11 @@ Host existing.example
 
     $BadRemoteScript = Join-Path $TestRoot 'remote-install-bad-hash.ps1'
     $RemoteText = Get-Content -LiteralPath $RemoteScript -Raw
-    $RemoteText = $RemoteText.Replace(
-        'd7a016fb6a4f91577234d616200fb266e6d5761b584cc55f1d7c70ecee457cf8',
-        ('0' * 64)
+    $BadHash = '0' * 64
+    $RemoteText = [regex]::Replace(
+        $RemoteText,
+        '(?m)^\$RemoteArchiveSha256 = ''[0-9a-f]+''$',
+        "`$RemoteArchiveSha256 = '$BadHash'"
     )
     Set-Content -LiteralPath $BadRemoteScript -Value $RemoteText
     $BadHashRejected = $false

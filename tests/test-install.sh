@@ -115,6 +115,18 @@ run_nushell_payload_test() {
     assert_file_contains "$home/.config/nushell/config.nu" 'has-command sudo'
 }
 
+run_kitty_payload_test() {
+    local home="$test_root/kitty"
+    mkdir -p "$home"
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --only kitty >/dev/null
+    [[ -f $home/.config/kitty/kitty.conf ]] || fail 'Kitty config missing'
+    [[ -f $home/.config/kitty/current-theme.conf ]] || fail 'Kitty theme missing'
+    [[ -f $home/.config/kitty/tab.py ]] || fail 'Kitty tab implementation missing'
+    [[ -f $home/.config/kitty/tab_bar.py ]] || fail 'Kitty tab entrypoint missing'
+    assert_file_contains "$home/.config/kitty/kitty.conf" 'tab_bar_edge top'
+}
+
 run_remote_verification_test() {
     local home="$test_root/remote/home"
     local script_copy="$test_root/remote/install.sh"
@@ -146,11 +158,36 @@ run_static_security_defaults_test() {
     done
 }
 
+run_all_selector_test() {
+    local home="$test_root/all-selector"
+    mkdir -p "$home"
+    local plan
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --dry-run --only all)
+    [[ $plan == *'Install kitty'* ]] || fail '--only all did not select Kitty'
+    [[ $plan == *'Install nvim'* ]] || fail '--only all did not select Neovim'
+}
+
+run_specific_selector_test() {
+    local home="$test_root/specific-selector"
+    local component
+    mkdir -p "$home"
+    for component in zsh nushell git lazygit broot nvim yazi fastfetch \
+        oh-my-posh starship atuin bat cava ssh kitty; do
+        HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+            "$repo_root/install.sh" --dry-run --only "$component" >/dev/null ||
+            fail "--only rejected supported component: $component"
+    done
+}
+
 run_preservation_test
 run_traversal_test
 run_symlink_escape_test
 run_rollback_test
 run_nushell_payload_test
+run_kitty_payload_test
 run_remote_verification_test
 run_static_security_defaults_test
+run_all_selector_test
+run_specific_selector_test
 printf 'Linux installer safety tests passed.\n'

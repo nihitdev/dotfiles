@@ -29,12 +29,13 @@ Usage: ./install.sh [options]
 Options:
   --dry-run          Show what would change without writing files
   --no-backup        Replace existing files without backing them up
-  --only NAME        Install only a component; may be repeated
+  --only NAME        Install one specific component; repeat for multiple tools
+                     Use --only all to install every supported component
   -h, --help         Show this help
 
 Components:
   zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh
-  starship atuin bat cava ssh
+  starship atuin bat cava ssh kitty all
 EOF
 }
 
@@ -64,7 +65,7 @@ while (($#)); do
     shift
 done
 
-valid_components=' zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh starship atuin bat cava ssh '
+valid_components=' zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh starship atuin bat cava ssh kitty all '
 for component in "${only[@]}"; do
     if [[ $valid_components != *" $component "* ]]; then
         printf 'Unsupported component: %s\n' "$component" >&2
@@ -202,7 +203,7 @@ is_selected() {
 
     ((${#only[@]} == 0)) && return 0
     for selected in "${only[@]}"; do
-        [[ $selected == "$component" ]] && return 0
+        [[ $selected == all || $selected == "$component" ]] && return 0
     done
     return 1
 }
@@ -390,6 +391,7 @@ install_item bat "$repo_root/bat/themes" "$config_root/bat/themes"
 install_item cava "$repo_root/cava/config" "$config_root/cava/config"
 install_item ssh "$repo_root/ssh/config" "$HOME/.ssh/config.d/dotfiles.conf"
 install_include_line ssh "$HOME/.ssh/config" 'Include ~/.ssh/config.d/*.conf'
+install_item kitty "$repo_root/kitty" "$config_root/kitty"
 
 if is_selected git && ! $dry_run && command -v git >/dev/null 2>&1; then
     # Adapt the tracked Windows defaults to Linux line-ending behavior.

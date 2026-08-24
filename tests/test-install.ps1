@@ -98,6 +98,9 @@ Host existing.example
     Set-Content -LiteralPath (Join-Path $TerminalState 'settings.json') -Value '{"sentinel":true}'
     $DefaultPlan = & (Join-Path $RepositoryRoot 'install.ps1') -SourceRoot $RepositoryRoot -WhatIf 6>&1 | Out-String
     Assert-True (-not $DefaultPlan.Contains('windows-terminal')) 'Windows Terminal was selected by the default install.'
+    $AllPlan = & (Join-Path $RepositoryRoot 'install.ps1') -SourceRoot $RepositoryRoot -WhatIf -Only all 6>&1 | Out-String
+    Assert-True ($AllPlan.Contains('windows-terminal')) '-Only all did not select Windows Terminal.'
+    Assert-True ($AllPlan.Contains('nvim')) '-Only all did not select Neovim.'
     Invoke-IsolatedInstaller -TestHome $TerminalHome -Only windows-terminal
     $TerminalText = Get-Content -LiteralPath (Join-Path $TerminalState 'settings.json') -Raw
     Assert-True (-not $TerminalText.Contains('sentinel')) 'Explicit Windows Terminal install did not replace settings.'

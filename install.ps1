@@ -6,10 +6,11 @@
 param(
     [switch]$NoBackup,
 
+    [Parameter(HelpMessage = 'Install specific components; pass multiple names or use all.')]
     [ValidateSet(
         'powershell', 'nushell', 'git', 'lazygit', 'broot', 'nvim', 'yazi',
         'fastfetch', 'oh-my-posh', 'starship', 'atuin', 'bat', 'cava',
-        'one-commander', 'yasb', 'windows-terminal', 'discord', 'ssh'
+        'one-commander', 'yasb', 'windows-terminal', 'discord', 'ssh', 'all'
     )]
     [string[]]$Only,
 
@@ -179,6 +180,9 @@ function Complete-Transaction {
 function Test-Selected {
     param([Parameter(Mandatory)][string]$Name)
 
+    if ('all' -in $Only) {
+        return $true
+    }
     if ($Name -eq 'windows-terminal') {
         return $Only.Count -gt 0 -and $Name -in $Only
     }

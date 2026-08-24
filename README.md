@@ -34,9 +34,27 @@ Preview changes or install only selected components:
 ```sh
 ./install.sh --dry-run
 ./install.sh --only nvim --only yazi
+./install.sh --only all
 ```
 
-The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, and `ssh`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux.
+The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, `ssh`, and `kitty`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux.
+
+Install one specific tool by name, or repeat the selector for several tools:
+
+```sh
+./install.sh --only kitty
+./install.sh --only nvim --only yazi --only fastfetch
+```
+
+On Windows, `-Only` accepts one name or a comma-separated list:
+
+```powershell
+.\install.ps1 -Only nvim
+.\install.ps1 -Only powershell,git,yazi
+```
+
+Run `./install.sh --help` on Linux or `Get-Help .\install.ps1 -Detailed` in
+PowerShell to see the validated component names.
 
 Remote bootstrap archives are pinned to an immutable repository commit and verified with SHA-256 before extraction. When publishing installer changes, update the pinned commit and both archive hashes together.
 
@@ -52,6 +70,7 @@ Remote bootstrap archives are pinned to an immutable repository commit and verif
 | [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
 | [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
 | [Git](git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
+| [Kitty](kitty/) | Catppuccin Mocha terminal theme with a sleek top tab bar and clickable tab controls |
 | [LazyGit](lazygit/) | Catppuccin Mocha terminal Git UI theme |
 | [Neovim](nvim/) | LazyVim setup, pinned plugins, and a custom dashboard |
 | [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
@@ -96,7 +115,11 @@ Preview the changes without writing anything, or skip backups if you already hav
 .\install.ps1 -WhatIf
 .\install.ps1 -NoBackup
 .\install.ps1 -Only nvim,yazi
+.\install.ps1 -Only all
 ```
+
+`all` explicitly selects every component supported by that platform. On Windows,
+this includes the normally opt-in Windows Terminal settings.
 
 The main destinations are:
 
@@ -117,6 +140,7 @@ The main destinations are:
 | `bat/config` | Run `bat --config-file` to find it |
 | `bat/themes/` | Run `bat --config-dir` to find the theme directory |
 | `cava/config` | `~/.config/cava/config` |
+| `kitty/` | `~/.config/kitty/` |
 | `ssh/config` | `~/.ssh/config.d/dotfiles.conf`, included from `~/.ssh/config` |
 | `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
 | `yasb/` | `~/.config/yasb/` |
@@ -213,7 +237,7 @@ The PowerShell and Nushell profiles integrate with optional tools such as Fastfe
 
 - Palette: Catppuccin Mocha
 - Fonts: Nerd Font-compatible terminal fonts
-- Terminal: Windows Terminal
+- Terminals: Kitty on Linux and Windows Terminal on Windows
 - Prompts: Oh My Posh, Starship, and Powerlevel10k
 - System information: Fastfetch
 - Pagers: Delta for Git, Bat for files

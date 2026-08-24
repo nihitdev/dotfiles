@@ -77,8 +77,8 @@ script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 repo_root=$script_dir
 temporary_root=''
 stage_root=''
-remote_ref='985ce90867e246e0b6626e435e53744fd10fbe3d'
-remote_archive_sha256='cda1c91afd2f42dedd1dd4c03e5b302591b02525a4b6069e041f1e8e69159b0c'
+remote_ref='e73351e3e6745c15294075c711005f507b8664b1'
+remote_archive_sha256='9ee478057f58ba0561bcc6ce96c38522b87efc8b0585c3aaf7a20c2799b51aa9'
 
 cleanup() {
     local stage

@@ -30,8 +30,8 @@ if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) {
 $ExplicitSourceRoot = -not [string]::IsNullOrWhiteSpace($SourceRoot)
 $RepositoryRoot = if ($ExplicitSourceRoot) { $SourceRoot } else { $PSScriptRoot }
 $UserHome = if ($HomeRoot) { $HomeRoot } else { $HOME }
-$RemoteRef = '985ce90867e246e0b6626e435e53744fd10fbe3d'
-$RemoteArchiveSha256 = 'd7a016fb6a4f91577234d616200fb266e6d5761b584cc55f1d7c70ecee457cf8'
+$RemoteRef = 'e73351e3e6745c15294075c711005f507b8664b1'
+$RemoteArchiveSha256 = 'd488c564a673cc7cfd4b7a0c0c20807c35ee2fd8a94ae9d39d47f81ca5ed90ba'
 
 # When invoked with `irm <raw-url> | iex`, the script has no repository beside
 # it. Download a temporary copy and hand execution to that local copy.

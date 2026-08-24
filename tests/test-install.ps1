@@ -115,12 +115,14 @@ Host existing.example
 
     $BadRemoteScript = Join-Path $TestRoot 'remote-install-bad-hash.ps1'
     $RemoteText = Get-Content -LiteralPath $RemoteScript -Raw
+    $OriginalRemoteText = $RemoteText
     $BadHash = '0' * 64
     $RemoteText = [regex]::Replace(
         $RemoteText,
-        '(?m)^\$RemoteArchiveSha256 = ''[0-9a-f]+''$',
+        '(?m)^\$RemoteArchiveSha256 = ''[0-9a-f]+''\r?$',
         "`$RemoteArchiveSha256 = '$BadHash'"
     )
+    Assert-True ($RemoteText -ne $OriginalRemoteText) 'Remote archive hash fixture was not modified.'
     Set-Content -LiteralPath $BadRemoteScript -Value $RemoteText
     $BadHashRejected = $false
     try { & $BadRemoteScript -WhatIf -Only nvim }

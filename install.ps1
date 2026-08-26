@@ -38,7 +38,7 @@ $RemoteArchiveSha256 = 'd488c564a673cc7cfd4b7a0c0c20807c35ee2fd8a94ae9d39d47f81c
 if (
     -not $ExplicitSourceRoot -and (
         [string]::IsNullOrWhiteSpace($RepositoryRoot) -or
-        -not (Test-Path -LiteralPath (Join-Path $RepositoryRoot 'powershell\profile.ps1'))
+        -not (Test-Path -LiteralPath (Join-Path $RepositoryRoot '.config\powershell\profile.ps1'))
     )
 ) {
     $TemporaryRoot = Join-Path ([System.IO.Path]::GetTempPath()) "dotfiles-$([guid]::NewGuid())"
@@ -337,29 +337,29 @@ function Install-GitInclude {
 
 $ConfigRoot = Join-Path $UserHome '.config'
 $Installations = @(
-    @{ Name = 'powershell'; Source = 'powershell\profile.ps1'; Destination = $PROFILE.CurrentUserAllHosts }
-    @{ Name = 'nushell'; Source = 'nushell\config.nu'; Destination = Join-Path $env:APPDATA 'nushell\config.nu' }
-    @{ Name = 'nushell'; Source = 'nushell\dotfiles-init\starship.nu'; Destination = Join-Path $env:APPDATA 'nushell\dotfiles-init\starship.nu' }
-    @{ Name = 'nushell'; Source = 'nushell\dotfiles-init\zoxide.nu'; Destination = Join-Path $env:APPDATA 'nushell\dotfiles-init\zoxide.nu' }
-    @{ Name = 'git'; Source = 'git\.gitconfig'; Destination = Join-Path $ConfigRoot 'dotfiles\gitconfig' }
-    @{ Name = 'lazygit'; Source = 'lazygit\config.yml'; Destination = Join-Path $env:LOCALAPPDATA 'lazygit\config.yml' }
-    @{ Name = 'broot'; Source = 'broot'; Destination = Join-Path $env:APPDATA 'dystroy\broot\config' }
-    @{ Name = 'nvim'; Source = 'nvim'; Destination = Join-Path $env:LOCALAPPDATA 'nvim' }
-    @{ Name = 'yazi'; Source = 'yazi'; Destination = Join-Path $env:APPDATA 'yazi\config' }
-    @{ Name = 'fastfetch'; Source = 'fastfetch'; Destination = Join-Path $ConfigRoot 'fastfetch' }
-    @{ Name = 'oh-my-posh'; Source = 'oh-my-posh\amro.omp.json'; Destination = Join-Path $ConfigRoot 'oh-my-posh\amro.omp.json' }
-    @{ Name = 'starship'; Source = 'starship\starship.toml'; Destination = Join-Path $ConfigRoot 'starship.toml' }
-    @{ Name = 'atuin'; Source = 'atuin\config.toml'; Destination = Join-Path $ConfigRoot 'atuin\config.toml' }
-    @{ Name = 'bat'; Source = 'bat\config'; Destination = Join-Path $env:APPDATA 'bat\config' }
-    @{ Name = 'bat'; Source = 'bat\themes'; Destination = Join-Path $env:APPDATA 'bat\themes' }
-    @{ Name = 'cava'; Source = 'cava\config'; Destination = Join-Path $ConfigRoot 'cava\config' }
+    @{ Name = 'powershell'; Source = '.config\powershell\profile.ps1'; Destination = $PROFILE.CurrentUserAllHosts }
+    @{ Name = 'nushell'; Source = '.config\nushell\config.nu'; Destination = Join-Path $env:APPDATA 'nushell\config.nu' }
+    @{ Name = 'nushell'; Source = '.config\nushell\dotfiles-init\starship.nu'; Destination = Join-Path $env:APPDATA 'nushell\dotfiles-init\starship.nu' }
+    @{ Name = 'nushell'; Source = '.config\nushell\dotfiles-init\zoxide.nu'; Destination = Join-Path $env:APPDATA 'nushell\dotfiles-init\zoxide.nu' }
+    @{ Name = 'git'; Source = '.config\git\.gitconfig'; Destination = Join-Path $ConfigRoot 'dotfiles\gitconfig' }
+    @{ Name = 'lazygit'; Source = '.config\lazygit\config.yml'; Destination = Join-Path $env:LOCALAPPDATA 'lazygit\config.yml' }
+    @{ Name = 'broot'; Source = '.config\broot'; Destination = Join-Path $env:APPDATA 'dystroy\broot\config' }
+    @{ Name = 'nvim'; Source = '.config\nvim'; Destination = Join-Path $env:LOCALAPPDATA 'nvim' }
+    @{ Name = 'yazi'; Source = '.config\yazi'; Destination = Join-Path $env:APPDATA 'yazi\config' }
+    @{ Name = 'fastfetch'; Source = '.config\fastfetch'; Destination = Join-Path $ConfigRoot 'fastfetch' }
+    @{ Name = 'oh-my-posh'; Source = '.config\oh-my-posh\amro.omp.json'; Destination = Join-Path $ConfigRoot 'oh-my-posh\amro.omp.json' }
+    @{ Name = 'starship'; Source = '.config\starship\starship.toml'; Destination = Join-Path $ConfigRoot 'starship.toml' }
+    @{ Name = 'atuin'; Source = '.config\atuin\config.toml'; Destination = Join-Path $ConfigRoot 'atuin\config.toml' }
+    @{ Name = 'bat'; Source = '.config\bat\config'; Destination = Join-Path $env:APPDATA 'bat\config' }
+    @{ Name = 'bat'; Source = '.config\bat\themes'; Destination = Join-Path $env:APPDATA 'bat\themes' }
+    @{ Name = 'cava'; Source = '.config\cava\config'; Destination = Join-Path $ConfigRoot 'cava\config' }
     @{
         Name = 'one-commander'
-        Source = 'one-commander\Catppuccin-Mocha.xaml'
+        Source = '.config\one-commander\Catppuccin-Mocha.xaml'
         Destination = Join-Path $env:LOCALAPPDATA 'OneCommander\Themes\Dark\Catppuccin-Mocha.xaml'
     }
-    @{ Name = 'yasb'; Source = 'yasb'; Destination = Join-Path $ConfigRoot 'yasb' }
-    @{ Name = 'ssh'; Source = 'ssh\config'; Destination = Join-Path $UserHome '.ssh\config.d\dotfiles.conf' }
+    @{ Name = 'yasb'; Source = '.config\yasb'; Destination = Join-Path $ConfigRoot 'yasb' }
+    @{ Name = 'ssh'; Source = '.config\ssh\config'; Destination = Join-Path $UserHome '.ssh\config.d\dotfiles.conf' }
 )
 
 try {
@@ -401,7 +401,7 @@ foreach ($Package in $TerminalPackages) {
     if (Test-Path -LiteralPath $TerminalState) {
         Install-Dotfile `
             -Name 'windows-terminal' `
-            -Source (Join-Path $RepositoryRoot 'windows-terminal\settings.json') `
+            -Source (Join-Path $RepositoryRoot '.config\windows-terminal\settings.json') `
             -Destination (Join-Path $TerminalState 'settings.json')
         break
     }
@@ -411,7 +411,7 @@ $VencordThemes = Join-Path $env:APPDATA 'Vencord\themes'
 if ((Test-Selected -Name 'discord') -and (Test-Path -LiteralPath (Split-Path $VencordThemes -Parent))) {
     Install-Dotfile `
         -Name 'discord' `
-        -Source (Join-Path $RepositoryRoot 'discord\theme') `
+        -Source (Join-Path $RepositoryRoot '.config\discord\theme') `
         -Destination $VencordThemes
 }
 

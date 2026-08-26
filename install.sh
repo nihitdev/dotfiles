@@ -35,7 +35,7 @@ Options:
 
 Components:
   zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh
-  starship atuin bat cava ssh kitty all
+  starship atuin bat cava ssh kitty fish all
 EOF
 }
 
@@ -65,7 +65,7 @@ while (($#)); do
     shift
 done
 
-valid_components=' zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh starship atuin bat cava ssh kitty all '
+valid_components=' zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh starship atuin bat cava ssh kitty fish all '
 for component in "${only[@]}"; do
     if [[ $valid_components != *" $component "* ]]; then
         printf 'Unsupported component: %s\n' "$component" >&2
@@ -97,7 +97,7 @@ cleanup() {
 trap cleanup EXIT
 
 # Support: curl -fsSL <raw-install.sh-url> | bash
-if [[ ! -f $repo_root/nvim/init.lua ]]; then
+if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
     command -v curl >/dev/null 2>&1 || {
         printf 'curl is required for remote installation.\n' >&2
         exit 1
@@ -127,6 +127,12 @@ timestamp=$(date '+%Y%m%d-%H%M%S')
 backup_root=''
 backup_display="$HOME/.dotfiles-backup/<unique-run>"
 config_root=${XDG_CONFIG_HOME:-"$HOME/.config"}
+source_config_root="$repo_root/.config"
+# The pinned bootstrap archive predates the .config/ repository layout. Keep
+# that immutable archive usable until the pin is updated after a future commit.
+if [[ $repo_root != "$script_dir" && ! -d $source_config_root ]]; then
+    source_config_root=$repo_root
+fi
 
 command -v realpath >/dev/null 2>&1 || {
     printf 'realpath is required for safe destination validation.\n' >&2
@@ -371,27 +377,32 @@ install_git_include() {
     rm -f -- "$temp_source"
 }
 
-install_item zsh "$repo_root/oh-my-zsh/.zshrc" "$HOME/.zshrc"
-install_item zsh "$repo_root/powerlevel10k/.p10k.zsh" "$HOME/.p10k.zsh"
-install_item nushell "$repo_root/nushell/config.nu" "$config_root/nushell/config.nu"
-install_item nushell "$repo_root/nushell/dotfiles-init/starship.nu" "$config_root/nushell/dotfiles-init/starship.nu"
-install_item nushell "$repo_root/nushell/dotfiles-init/zoxide.nu" "$config_root/nushell/dotfiles-init/zoxide.nu"
-install_item git "$repo_root/git/.gitconfig" "$config_root/dotfiles/gitconfig"
+install_item zsh "$source_config_root/oh-my-zsh/.zshrc" "$HOME/.zshrc"
+install_item zsh "$source_config_root/powerlevel10k/.p10k.zsh" "$HOME/.p10k.zsh"
+install_item nushell "$source_config_root/nushell/config.nu" "$config_root/nushell/config.nu"
+install_item nushell "$source_config_root/nushell/dotfiles-init/starship.nu" "$config_root/nushell/dotfiles-init/starship.nu"
+install_item nushell "$source_config_root/nushell/dotfiles-init/zoxide.nu" "$config_root/nushell/dotfiles-init/zoxide.nu"
+install_item git "$source_config_root/git/.gitconfig" "$config_root/dotfiles/gitconfig"
 install_git_include "$config_root/dotfiles/gitconfig"
-install_item lazygit "$repo_root/lazygit/config.yml" "$config_root/lazygit/config.yml"
-install_item broot "$repo_root/broot" "$config_root/broot"
-install_item nvim "$repo_root/nvim" "$config_root/nvim"
-install_item yazi "$repo_root/yazi" "$config_root/yazi"
-install_item fastfetch "$repo_root/fastfetch" "$config_root/fastfetch"
-install_item oh-my-posh "$repo_root/oh-my-posh/amro.omp.json" "$config_root/oh-my-posh/amro.omp.json"
-install_item starship "$repo_root/starship/starship.toml" "$config_root/starship.toml"
-install_item atuin "$repo_root/atuin/config.toml" "$config_root/atuin/config.toml"
-install_item bat "$repo_root/bat/config" "$config_root/bat/config"
-install_item bat "$repo_root/bat/themes" "$config_root/bat/themes"
-install_item cava "$repo_root/cava/config" "$config_root/cava/config"
-install_item ssh "$repo_root/ssh/config" "$HOME/.ssh/config.d/dotfiles.conf"
+install_item lazygit "$source_config_root/lazygit/config.yml" "$config_root/lazygit/config.yml"
+install_item broot "$source_config_root/broot" "$config_root/broot"
+install_item nvim "$source_config_root/nvim" "$config_root/nvim"
+install_item yazi "$source_config_root/yazi" "$config_root/yazi"
+install_item fastfetch "$source_config_root/fastfetch" "$config_root/fastfetch"
+install_item oh-my-posh "$source_config_root/oh-my-posh/amro.omp.json" "$config_root/oh-my-posh/amro.omp.json"
+install_item starship "$source_config_root/starship/starship.toml" "$config_root/starship.toml"
+install_item atuin "$source_config_root/atuin/config.toml" "$config_root/atuin/config.toml"
+install_item bat "$source_config_root/bat/config" "$config_root/bat/config"
+install_item bat "$source_config_root/bat/themes" "$config_root/bat/themes"
+install_item cava "$source_config_root/cava/config" "$config_root/cava/config"
+install_item ssh "$source_config_root/ssh/config" "$HOME/.ssh/config.d/dotfiles.conf"
 install_include_line ssh "$HOME/.ssh/config" 'Include ~/.ssh/config.d/*.conf'
-install_item kitty "$repo_root/kitty" "$config_root/kitty"
+install_item kitty "$source_config_root/kitty" "$config_root/kitty"
+if [[ -d $source_config_root/fish ]]; then
+    install_item fish "$source_config_root/fish" "$config_root/fish"
+elif is_selected fish; then
+    skipped+=(fish)
+fi
 
 if is_selected git && ! $dry_run && command -v git >/dev/null 2>&1; then
     # Adapt the tracked Windows defaults to Linux line-ending behavior.

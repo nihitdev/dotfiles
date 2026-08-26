@@ -27,34 +27,34 @@ jobs:
       - name: Check strict JSON files
         run: |
           jq empty \
-            nvim/lazy-lock.json \
-            nvim/lazyvim.json \
-            oh-my-posh/amro.omp.json \
-            windows-terminal/settings.json
+            .config/nvim/lazy-lock.json \
+            .config/nvim/lazyvim.json \
+            .config/oh-my-posh/amro.omp.json \
+            .config/windows-terminal/settings.json
 
       - name: Check Lua syntax
         run: find nvim yazi -type f -name '*.lua' -print0 | xargs -0 -n1 luac -p
 
       - name: Check Git configuration
-        run: git config --file git/.gitconfig --list >/dev/null
+        run: git config --file .config/git/.gitconfig --list >/dev/null
 
       - name: Check repository formats and links
         run: |
-          python3 scripts/validate_repo.py
+          python3 .config/scripts/validate_repo.py
           yamllint -d relaxed \
-            .github/workflows/validate.yml lazygit/config.yml yasb/config.yaml
+            .github/workflows/validate.yml .config/lazygit/config.yml .config/yasb/config.yaml
 
       - name: Check Linux installer
         run: |
           bash -n install.sh
           ./install.sh --dry-run --only nvim --only ssh
-          ./tests/test-install.sh
+          ./.config/tests/test-install.sh
 
       - name: Check Nushell portability guards
         run: |
-          grep -Fq 'source $STARSHIP_CACHE' nushell/config.nu
-          grep -Fq 'source $ZOXIDE_CACHE' nushell/config.nu
-          grep -Fq 'has-command sudo' nushell/config.nu
+          grep -Fq 'source $STARSHIP_CACHE' .config/nushell/config.nu
+          grep -Fq 'source $ZOXIDE_CACHE' .config/nushell/config.nu
+          grep -Fq 'has-command sudo' .config/nushell/config.nu
 
       - name: Check whitespace
         run: git diff --check HEAD~1 HEAD
@@ -82,4 +82,4 @@ jobs:
 
       - name: Test Windows installer safety
         shell: pwsh
-        run: ./tests/test-install.ps1
+        run: ./.config/tests/test-install.ps1

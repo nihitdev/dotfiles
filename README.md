@@ -37,7 +37,7 @@ Preview changes or install only selected components:
 ./install.sh --only all
 ```
 
-The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, `ssh`, and `kitty`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux.
+The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, `ssh`, `kitty`, and `fish`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux. Fish and Kitty are installed from `.config/fish/` and `.config/kitty/`.
 
 Install one specific tool by name, or repeat the selector for several tools:
 
@@ -60,30 +60,50 @@ Remote bootstrap archives are pinned to an immutable repository commit and verif
 
 ## What's included
 
+Application configuration is stored under `.config/`:
+
+```text
+dotfiles/
+├── .config/
+│   ├── fish/
+│   ├── hypr/
+│   ├── kitty/
+│   ├── nvim/
+│   ├── starship/
+│   └── yazi/
+├── install.sh
+├── install.ps1
+├── README.md
+├── LICENSE
+└── VENDORED.md
+```
+
 | Configuration | Purpose |
 | --- | --- |
-| [Atuin](atuin/) | Searchable and synchronized shell history with a Catppuccin theme |
-| [Bat](bat/) | Syntax-highlighted file viewer and Catppuccin themes |
-| [Broot](broot/) | Tree-based file navigation with custom verbs and a Catppuccin Mocha skin |
-| [Cava](cava/) | Terminal audio visualizer |
-| [Discord](discord/) | Shellcord/System24 Vencord themes and color flavors |
-| [ExplorerBlurMica](explorerblurmica/) | Explorer backdrop customization |
-| [Fastfetch](fastfetch/) | System information layout and custom ASCII art |
-| [Git](git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
-| [Kitty](kitty/) | Catppuccin Mocha terminal theme with a sleek top tab bar and clickable tab controls |
-| [LazyGit](lazygit/) | Catppuccin Mocha terminal Git UI theme |
-| [Neovim](nvim/) | LazyVim setup, pinned plugins, and a custom dashboard |
-| [Nushell](nushell/) | Interactive shell settings, helpers, and aliases |
-| [Oh My Zsh](oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
-| [OneCommander](one-commander/) | Catppuccin Mocha file manager theme |
-| [Oh My Posh](oh-my-posh/) | Custom prompt theme and shell integration |
-| [Powerlevel10k](powerlevel10k/) | Powerlevel10k prompt configuration for Zsh |
-| [PowerShell](powershell/) | Profile, prompt startup, navigation, and CLI helpers |
-| [SSH](ssh/) | Host aliases and isolated authentication-key paths for GitHub and the AUR |
-| [Starship](starship/) | Optional minimal cross-shell prompt |
-| [Windows Terminal](windows-terminal/) | Terminal profiles and appearance |
-| [YASB](yasb/) | Status bar configuration and styles |
-| [Yazi](yazi/) | Fast terminal file manager with previews, search, Git status, and Catppuccin Mocha |
+| [Atuin](.config/atuin/) | Searchable and synchronized shell history with a Catppuccin theme |
+| [Bat](.config/bat/) | Syntax-highlighted file viewer and Catppuccin themes |
+| [Broot](.config/broot/) | Tree-based file navigation with custom verbs and a Catppuccin Mocha skin |
+| [Cava](.config/cava/) | Terminal audio visualizer |
+| [Discord](.config/discord/) | Shellcord/System24 Vencord themes and color flavors |
+| [ExplorerBlurMica](.config/explorerblurmica/) | Explorer backdrop customization |
+| [Fastfetch](.config/fastfetch/) | System information layout and custom ASCII art |
+| [Fish](.config/fish/) | Fish shell configuration installed by `install.sh` |
+| [Git](.config/git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
+| [Hyprland](.config/hypr/) | Reference/backup only; never installed automatically |
+| [Kitty](.config/kitty/) | Current Kitty terminal configuration installed by `install.sh` |
+| [LazyGit](.config/lazygit/) | Catppuccin Mocha terminal Git UI theme |
+| [Neovim](.config/nvim/) | LazyVim setup, pinned plugins, and a custom dashboard |
+| [Nushell](.config/nushell/) | Interactive shell settings, helpers, and aliases |
+| [Oh My Zsh](.config/oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
+| [OneCommander](.config/one-commander/) | Catppuccin Mocha file manager theme |
+| [Oh My Posh](.config/oh-my-posh/) | Custom prompt theme and shell integration |
+| [Powerlevel10k](.config/powerlevel10k/) | Powerlevel10k prompt configuration for Zsh |
+| [PowerShell](.config/powershell/) | Profile, prompt startup, navigation, and CLI helpers |
+| [SSH](.config/ssh/) | Host aliases and isolated authentication-key paths for GitHub and the AUR |
+| [Starship](.config/starship/) | Optional minimal cross-shell prompt |
+| [Windows Terminal](.config/windows-terminal/) | Terminal profiles and appearance |
+| [YASB](.config/yasb/) | Status bar configuration and styles |
+| [Yazi](.config/yazi/) | Fast terminal file manager with previews, search, Git status, and Catppuccin Mocha |
 
 Third-party snapshots and intentionally duplicated application assets are
 documented in [VENDORED.md](VENDORED.md).
@@ -93,8 +113,8 @@ documented in [VENDORED.md](VENDORED.md).
 This repository includes three prompt configurations:
 
 - **Oh My Posh** — the default PowerShell prompt, using the tracked `amro.omp.json` theme.
-- **Starship** — an optional minimal two-line prompt with directory and Git information. Its configuration is available in `starship/starship.toml`.
-- **Powerlevel10k (p10k)** — the Zsh prompt used by `oh-my-zsh/.zshrc`, with its prompt settings tracked separately in `powerlevel10k/.p10k.zsh`.
+- **Starship** — an optional minimal two-line prompt with directory and Git information. Its configuration is available in `.config/starship/starship.toml`.
+- **Powerlevel10k (p10k)** — the Zsh prompt used by `.config/oh-my-zsh/.zshrc`, with its prompt settings tracked separately in `.config/powerlevel10k/.p10k.zsh`.
 
 All three require a [Nerd Font](https://www.nerdfonts.com/) for their icons to render correctly.
 
@@ -125,25 +145,25 @@ The main destinations are:
 
 | Repository path | Typical destination |
 | --- | --- |
-| `powershell/profile.ps1` | `$PROFILE` |
-| `nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
-| `git/.gitconfig` | Managed config included from `~/.gitconfig` |
-| `lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\config.yml` |
-| `broot/` | `%APPDATA%\dystroy\broot\config\` |
-| `nvim/` | `%LOCALAPPDATA%\nvim\` |
-| `yazi/` | `%APPDATA%\yazi\config\` |
-| `one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
-| `fastfetch/` | `~/.config/fastfetch/` |
-| `oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
-| `starship/starship.toml` | `~/.config/starship.toml` |
-| `atuin/config.toml` | `~/.config/atuin/config.toml` |
-| `bat/config` | Run `bat --config-file` to find it |
-| `bat/themes/` | Run `bat --config-dir` to find the theme directory |
-| `cava/config` | `~/.config/cava/config` |
-| `kitty/` | `~/.config/kitty/` |
-| `ssh/config` | `~/.ssh/config.d/dotfiles.conf`, included from `~/.ssh/config` |
-| `windows-terminal/settings.json` | Windows Terminal's LocalState directory |
-| `yasb/` | `~/.config/yasb/` |
+| `.config/powershell/profile.ps1` | `$PROFILE` |
+| `.config/nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
+| `.config/git/.gitconfig` | Managed config included from `~/.gitconfig` |
+| `.config/lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\config.yml` |
+| `.config/broot/` | `%APPDATA%\dystroy\broot\config\` |
+| `.config/nvim/` | `%LOCALAPPDATA%\nvim\` |
+| `.config/yazi/` | `%APPDATA%\yazi\config\` |
+| `.config/one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
+| `.config/fastfetch/` | `~/.config/fastfetch/` |
+| `.config/oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
+| `.config/starship/starship.toml` | `~/.config/starship.toml` |
+| `.config/atuin/config.toml` | `~/.config/atuin/config.toml` |
+| `.config/bat/config` | Run `bat --config-file` to find it |
+| `.config/bat/themes/` | Run `bat --config-dir` to find the theme directory |
+| `.config/cava/config` | `~/.config/cava/config` |
+| `.config/kitty/` | `~/.config/kitty/` |
+| `.config/ssh/config` | `~/.ssh/config.d/dotfiles.conf`, included from `~/.ssh/config` |
+| `.config/windows-terminal/settings.json` | Windows Terminal's LocalState directory |
+| `.config/yasb/` | `~/.config/yasb/` |
 
 The installer backs up every existing destination, stages replacements before activation, and automatically restores earlier destinations if installation fails. Existing Git and SSH configuration remains in place: the installer adds managed include files instead of replacing either global file. It also applies restricted permissions to the SSH client config, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
 
@@ -163,6 +183,23 @@ The Linux installer intentionally excludes configurations that are Windows-speci
 
 Discord themes are portable, but the Linux Vencord theme directory varies by installation method. They remain a manual copy instead of being forced by `install.sh`.
 
+### Manual Hyprland installation
+
+Hyprland is included only as a reference and backup in `.config/hypr/`. Neither installer copies it automatically, because replacing a compositor configuration could break the graphical session.
+
+> [!WARNING]
+> Copying this directory may replace or conflict with an existing Hyprland configuration. Back up `~/.config/hypr` before copying.
+
+A safer manual workflow is:
+
+```sh
+mkdir -p ~/.config
+mv ~/.config/hypr ~/.config/hypr.backup
+cp -r .config/hypr ~/.config/
+```
+
+If `~/.config/hypr` does not already exist, omit the `mv` command.
+
 ### Developer tools
 
 - **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. The installers preserve an existing identity instead of replacing it with the repository placeholders; if no identity exists, configure one before committing.
@@ -171,7 +208,7 @@ Discord themes are portable, but the Linux Vencord theme directory varies by ins
 - **Yazi:** the full configuration and vendored packages are installed. Run `ya pkg install` after installation whenever you want to verify or restore the package payload from `package.toml`.
 - **Broot:** `conf.hjson`, `verbs.hjson`, and the Catppuccin skin are installed together so custom verbs and theming remain in sync.
 
-ExplorerBlurMica remains a manual copy because its `config.ini` must live beside the particular ExplorerBlurMica installation, whose directory varies by package manager. Copy `explorerblurmica/config.ini` over the application's existing `config.ini` after backing it up.
+ExplorerBlurMica remains a manual copy because its `config.ini` must live beside the particular ExplorerBlurMica installation, whose directory varies by package manager. Copy `.config/explorerblurmica/config.ini` over the application's existing `config.ini` after backing it up.
 
 ### Atuin
 
@@ -187,7 +224,7 @@ After installing Atuin, set it up manually in PowerShell with these exact steps:
 
    ```powershell
    New-Item -ItemType Directory -Force -Path "$HOME\.config\atuin" | Out-Null
-   Copy-Item '.\atuin\config.toml' -Destination "$HOME\.config\atuin\config.toml" -Force
+   Copy-Item '.\.config\atuin\config.toml' -Destination "$HOME\.config\atuin\config.toml" -Force
    ```
 
 The tracked PowerShell profile already performs step 1 when Atuin is available, and `install.ps1` performs step 2 automatically.
@@ -207,8 +244,8 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
 The tracked Zsh configuration also enables [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) and [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting); install those plugins in the Oh My Zsh custom plugins directory before starting Zsh. The Linux installer copies the configuration files automatically. For a manual installation:
 
 ```sh
-cp oh-my-zsh/.zshrc ~/.zshrc
-cp powerlevel10k/.p10k.zsh ~/.p10k.zsh
+cp .config/oh-my-zsh/.zshrc ~/.zshrc
+cp .config/powerlevel10k/.p10k.zsh ~/.p10k.zsh
 exec zsh
 ```
 
@@ -221,7 +258,7 @@ The installer applies this theme automatically. For a manual installation, copy 
 ```powershell
 $themeDirectory = Join-Path $env:LOCALAPPDATA 'OneCommander\Themes\Dark'
 New-Item -ItemType Directory -Force -Path $themeDirectory | Out-Null
-Copy-Item '.\one-commander\Catppuccin-Mocha.xaml' -Destination $themeDirectory -Force
+Copy-Item '.\.config\one-commander\Catppuccin-Mocha.xaml' -Destination $themeDirectory -Force
 ```
 
 Restart OneCommander, open **Settings**, select **Theme**, and choose **Catppuccin Mocha** from the dark themes.

@@ -516,6 +516,10 @@ collect_missing_packages() {
     if is_selected bash || is_selected fish || is_selected nushell; then
         package_is_installed zoxide zoxide || record_unique missing_official_packages zoxide
     fi
+    if is_selected fish; then
+        package_is_installed fzf fzf || record_unique missing_official_packages fzf
+        package_is_installed curl curl || record_unique missing_official_packages curl
+    fi
     for profile in "${profiles[@]}"; do
         for package in ${profile_packages[$profile]}; do
             package_is_installed "$package" || record_unique missing_official_packages "$package"
@@ -906,6 +910,44 @@ install_zsh_integrations() {
     install_item zsh "$external_root/oh-my-zsh" "$HOME/.oh-my-zsh"
 }
 
+install_fish_integrations() {
+    local plugin_manifest="$config_root/fish/fish_plugins"
+    is_selected fish || return 0
+    $dry_run && plugin_manifest="$source_config_root/fish/fish_plugins"
+    [[ -f $plugin_manifest ]] || {
+        warnings+=('Fish plugin manifest is missing; skipped Fisher plugins')
+        return 0
+    }
+    if ! $install_packages; then
+        warnings+=('Fish plugins were not synced; rerun with --install-packages to install Fisher and plugins')
+        return 0
+    fi
+    if $dry_run; then
+        describe "Install Fisher and sync plugins from $plugin_manifest"
+        return 0
+    fi
+    command -v fish >/dev/null 2>&1 || {
+        warnings+=('Fish is unavailable; skipped Fisher plugin installation')
+        return 0
+    }
+    if ! fish -c 'type -q fisher'; then
+        local fisher_source
+        ensure_external_root
+        fisher_source="$external_root/fisher.fish"
+        if command -v curl >/dev/null 2>&1; then
+            curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish -o "$fisher_source"
+        elif command -v wget >/dev/null 2>&1; then
+            wget -qO "$fisher_source" https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish
+        else
+            printf 'curl or wget is required to install Fisher.\n' >&2
+            return 1
+        fi
+        fish -c "source '$fisher_source'; and fisher install jorgebucaran/fisher"
+    fi
+    fish -c 'fisher update'
+    describe "Synced Fish plugins from $config_root/fish/fish_plugins"
+}
+
 regenerate_nushell_caches() {
     is_selected nushell || return 0
     if $dry_run; then
@@ -1174,6 +1216,7 @@ fi
 
 if $interactive; then ui_stage 5 7 'Configuring shells'; else describe '[5/7] Configuring shells'; fi
 install_zsh_integrations
+install_fish_integrations
 
 if is_selected git && ! $dry_run && command -v git >/dev/null 2>&1; then
     # Enforce the repository's Linux line-ending policy.

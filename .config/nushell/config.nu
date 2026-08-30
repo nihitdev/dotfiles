@@ -11,10 +11,13 @@
 const STARTUP_CACHE_DIR = $"($nu.config-path | path dirname)/dotfiles-init"
 const STARSHIP_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/starship.nu"
 const ZOXIDE_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/zoxide.nu"
-const XDG_CONFIG_ROOT = $env.XDG_CONFIG_HOME? | default $"($nu.home-dir)/.config"
+const XDG_CONFIG_ROOT = ($nu.default-config-dir | path dirname)
 const STARSHIP_CONFIG = $"($XDG_CONFIG_ROOT)/starship/nushell.toml"
 const FASTFETCH_CONFIG = $"($XDG_CONFIG_ROOT)/fastfetch/config.jsonc"
 const FASTFETCH_LOGO = $"($XDG_CONFIG_ROOT)/fastfetch/ascii.txt"
+
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -146,11 +149,6 @@ def profile [] {
     } else {
         missing-command nvim
     }
-}
-
-# Open config.nu in Neovim/LazyVim.
-def nprofile [] {
-    ^nvim $nu.config-path
 }
 
 # Open env.nu in Neovim.

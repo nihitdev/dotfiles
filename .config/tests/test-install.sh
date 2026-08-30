@@ -155,7 +155,20 @@ run_fish_payload_test() {
         "$repo_root/install.sh" --only fish >/dev/null
     [[ -f $home/.config/fish/config.fish ]] || fail 'Fish config missing'
     [[ -f $home/.config/fish/conf.d/rashin.fish ]] || fail 'Fish conf.d payload missing'
+    [[ -f $home/.config/fish/fish_plugins ]] || fail 'Fish plugin manifest missing'
     [[ ! -e $home/.config/fish/fish_variables ]] || fail 'Machine-specific Fish variables were installed'
+}
+
+run_fisher_dry_run_test() {
+    local home="$test_root/fisher-dry-run" plan
+    mkdir -p "$home"
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        "$repo_root/install.sh" --dry-run --install-packages --only fish)
+    [[ $plan == *'Install Fisher and sync plugins'* ]] || fail 'Fisher dry-run plan missing'
+    [[ ! -e $home/.config/fish ]] || fail 'Fisher dry-run changed the filesystem'
+    assert_file_contains "$repo_root/.config/fish/fish_plugins" 'patrickf1/fzf.fish'
+    assert_file_contains "$repo_root/.config/fish/fish_plugins" 'jorgebucaran/autopair.fish'
+    assert_file_contains "$repo_root/.config/fish/fish_plugins" 'jorgebucaran/replay.fish'
 }
 
 run_starship_payload_test() {
@@ -365,6 +378,7 @@ run_bash_payload_test
 run_nushell_payload_test
 run_kitty_payload_test
 run_fish_payload_test
+run_fisher_dry_run_test
 run_starship_payload_test
 run_dry_run_immutability_test
 run_dry_run_without_optional_generators_test

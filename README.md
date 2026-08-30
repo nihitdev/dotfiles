@@ -153,6 +153,8 @@ Package installation is always opt-in through `--install-packages` or the intera
 - A missing helper is bootstrapped from its official AUR PKGBUILD as the current user.
 - Kairo never performs a surprise full-system upgrade.
 
+When Fish is selected with `--install-packages`, Kairo installs Fisher when needed and synchronizes the plugins declared in `.config/fish/fish_plugins`: `fzf.fish`, `autopair.fish`, and `replay.fish`. Fisher-generated functions and machine-specific `fish_variables` remain outside version control.
+
 When privileged work is selected, interactive mode requests and validates sudo access after review and before filesystem changes begin.
 
 ### Chaotic-AUR

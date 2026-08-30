@@ -155,6 +155,8 @@ Package installation is always opt-in through `--install-packages` or the intera
 
 When Fish is selected with `--install-packages`, Kairo installs Fisher when needed and synchronizes the plugins declared in `.config/fish/fish_plugins`: `fzf.fish`, `autopair.fish`, and `replay.fish`. Fisher-generated functions and machine-specific `fish_variables` remain outside version control.
 
+When Neovim is selected with `--install-packages`, Kairo bootstraps `lazy.nvim` and performs a headless LazyVim sync using the tracked `lazy-lock.json`. Without package installation, LazyVim performs its normal bootstrap the first time Neovim opens.
+
 When privileged work is selected, interactive mode requests and validates sudo access after review and before filesystem changes begin.
 
 ### Chaotic-AUR

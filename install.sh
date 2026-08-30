@@ -520,6 +520,9 @@ collect_missing_packages() {
         package_is_installed fzf fzf || record_unique missing_official_packages fzf
         package_is_installed curl curl || record_unique missing_official_packages curl
     fi
+    if is_selected nvim; then
+        package_is_installed git git || record_unique missing_official_packages git
+    fi
     for profile in "${profiles[@]}"; do
         for package in ${profile_packages[$profile]}; do
             package_is_installed "$package" || record_unique missing_official_packages "$package"
@@ -948,6 +951,29 @@ install_fish_integrations() {
     describe "Synced Fish plugins from $config_root/fish/fish_plugins"
 }
 
+install_lazyvim_plugins() {
+    is_selected nvim || return 0
+    if ! $install_packages; then
+        warnings+=('LazyVim plugins were not synced; rerun with --install-packages to download them')
+        return 0
+    fi
+    if $dry_run; then
+        describe 'Bootstrap lazy.nvim and sync LazyVim plugins from lazy-lock.json'
+        return 0
+    fi
+    command -v nvim >/dev/null 2>&1 || {
+        warnings+=('Neovim is unavailable; skipped LazyVim plugin installation')
+        return 0
+    }
+    if $interactive && declare -F ui_run_spinner >/dev/null; then
+        if ! ui_run_spinner 'Downloading LazyVim plugins' nvim --headless '+Lazy! sync' +qa; then
+            warnings+=('LazyVim plugin sync failed; run nvim and execute :Lazy sync')
+        fi
+    elif ! nvim --headless '+Lazy! sync' +qa; then
+        warnings+=('LazyVim plugin sync failed; run nvim and execute :Lazy sync')
+    fi
+}
+
 regenerate_nushell_caches() {
     is_selected nushell || return 0
     if $dry_run; then
@@ -1234,6 +1260,7 @@ fi
 if $interactive; then ui_stage 6 7 'Rebuilding generated caches'; else describe '[6/7] Rebuilding caches'; fi
 regenerate_nushell_caches
 if is_selected bat && ! $dry_run && command -v bat >/dev/null 2>&1; then bat cache --build; fi
+install_lazyvim_plugins
 
 if $interactive; then ui_stage 7 7 'Validating installation'; else describe '[7/7] Validating'; fi
 if ! $dry_run; then validate_installed_configs; fi

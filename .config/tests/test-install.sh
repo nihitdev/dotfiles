@@ -69,6 +69,18 @@ run_normal_install_test() {
     [[ ! -e $home/.config/hypr ]] || fail 'normal install unexpectedly selected opt-in Hyprland'
 }
 
+run_nvim_payload_test() {
+    local home="$test_root/nvim-payload"
+    mkdir -p "$home"
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --only nvim >/dev/null
+    [[ -f $home/.config/nvim/lua/plugins/colorscheme.lua ]] || fail 'Neovim colorscheme module missing'
+    [[ -f $home/.config/nvim/lua/plugins/editor.lua ]] || fail 'Neovim editor module missing'
+    [[ -f $home/.config/nvim/lua/plugins/lsp.lua ]] || fail 'Neovim LSP module missing'
+    [[ -f $home/.config/nvim/lua/plugins/ui.lua ]] || fail 'Neovim UI module missing'
+    [[ ! -e $home/.config/nvim/lua/plugins/cord.lua ]] || fail 'obsolete Neovim Cord plugin remained'
+}
+
 run_traversal_test() {
     local home="$test_root/traversal/home"
     local escaped="$test_root/traversal/escaped"
@@ -169,6 +181,17 @@ run_fisher_dry_run_test() {
     assert_file_contains "$repo_root/.config/fish/fish_plugins" 'patrickf1/fzf.fish'
     assert_file_contains "$repo_root/.config/fish/fish_plugins" 'jorgebucaran/autopair.fish'
     assert_file_contains "$repo_root/.config/fish/fish_plugins" 'jorgebucaran/replay.fish'
+}
+
+run_lazyvim_dry_run_test() {
+    local home="$test_root/lazyvim-dry-run" plan
+    mkdir -p "$home"
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" XDG_DATA_HOME="$home/.local/share" CI=true \
+        "$repo_root/install.sh" --dry-run --install-packages --only nvim)
+    [[ $plan == *'Bootstrap lazy.nvim and sync LazyVim plugins'* ]] ||
+        fail 'LazyVim dry-run plan missing'
+    [[ ! -e $home/.config/nvim ]] || fail 'LazyVim dry-run wrote Neovim configuration'
+    [[ ! -e $home/.local/share/nvim ]] || fail 'LazyVim dry-run downloaded plugin data'
 }
 
 run_starship_payload_test() {
@@ -370,6 +393,7 @@ run_specific_selector_test() {
 }
 
 run_normal_install_test
+run_nvim_payload_test
 run_preservation_test
 run_traversal_test
 run_symlink_escape_test
@@ -379,6 +403,7 @@ run_nushell_payload_test
 run_kitty_payload_test
 run_fish_payload_test
 run_fisher_dry_run_test
+run_lazyvim_dry_run_test
 run_starship_payload_test
 run_dry_run_immutability_test
 run_dry_run_without_optional_generators_test

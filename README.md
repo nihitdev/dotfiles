@@ -9,7 +9,7 @@ A safe, interactive installer for an Arch Linux, Hyprland, and CLI-first worksta
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=archlinux&logoColor=white)](https://archlinux.org/)
 [![Website](https://img.shields.io/badge/Website-get--kairo.vercel.app-cba6f7)](https://get-kairo.vercel.app)
 [![Shell](https://img.shields.io/badge/Installer-Bash-a6e3a1?logo=gnubash&logoColor=11111b)](install.sh)
-[![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
+[![License](https://img.shields.io/github/license/nihitdev/kairo)](LICENSE)
 
 [Website](https://get-kairo.vercel.app) · [Quick start](#quick-start) · [Modules](#included-configurations) · [Safety](#safety-first)
 
@@ -33,8 +33,8 @@ Kairo turns a fresh Arch installation into a focused development environment wit
 Clone the repository for the complete interactive experience:
 
 ```sh
-git clone https://github.com/nihitdev/dotfiles.git
-cd dotfiles
+git clone https://github.com/nihitdev/kairo.git
+cd kairo
 ./install.sh
 ```
 
@@ -47,7 +47,7 @@ Start with a zero-write preview if you want to inspect every action first:
 For a plain remote bootstrap:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
 ```
 
 The remote entry point downloads an immutable repository archive and verifies its SHA-256 checksum before use. Because piped input is not a terminal, it automatically uses deterministic non-interactive output.
@@ -188,7 +188,7 @@ One Starship binary is shared across all shells, while `STARSHIP_CONFIG` selects
 └── zsh.toml        # Zsh
 ```
 
-The installer manages the complete directory. There is no canonical `~/.config/starship.toml`.
+The installer manages the complete directory; Kairo does not use a single prompt file at the configuration root.
 
 ## Safety first
 

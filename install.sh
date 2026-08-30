@@ -188,7 +188,7 @@ temporary_root=''
 stage_root=''
 external_root=''
 remote_ref='e73351e3e6745c15294075c711005f507b8664b1'
-remote_archive_sha256='9ee478057f58ba0561bcc6ce96c38522b87efc8b0585c3aaf7a20c2799b51aa9'
+remote_archive_sha256='55c716e9520ed1f47cc6a59db2bec78c1dc242281fc1a0d1e3ab323ed029857a'
 
 # The verified remote archive can predate the optional UI helper. Piped and CI
 # runs are deliberately plain, so the bootstrap remains self-contained.
@@ -239,15 +239,15 @@ if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
     }
 
     temporary_root=$(mktemp -d)
-    archive="$temporary_root/dotfiles.tar.gz"
-    printf 'Downloading dotfiles...\n'
-    curl -fsSL "https://github.com/nihitdev/dotfiles/archive/$remote_ref.tar.gz" -o "$archive"
+    archive="$temporary_root/kairo.tar.gz"
+    printf 'Downloading Kairo...\n'
+    curl -fsSL "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz" -o "$archive"
     printf '%s  %s\n' "$remote_archive_sha256" "$archive" | sha256sum --check --status || {
         printf 'Downloaded archive failed SHA-256 verification.\n' >&2
         exit 1
     }
     tar -xzf "$archive" -C "$temporary_root"
-    repo_root="$temporary_root/dotfiles-$remote_ref"
+    repo_root="$temporary_root/kairo-$remote_ref"
 fi
 
 timestamp=$(date '+%Y%m%d-%H%M%S')

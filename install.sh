@@ -6,6 +6,8 @@
 
 set -Eeuo pipefail
 
+original_args=("$@")
+
 if [[ $(uname -s) != Linux ]]; then
     printf 'This installer supports Linux only.\n' >&2
     exit 1
@@ -182,17 +184,23 @@ for component in "${only[@]}"; do
     fi
 done
 
-script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-repo_root=$script_dir
+script_path=${BASH_SOURCE[0]:-}
+if [[ -n $script_path ]]; then
+    script_dir=$(cd -- "$(dirname -- "$script_path")" && pwd)
+    repo_root=$script_dir
+else
+    script_dir=''
+    repo_root=''
+fi
 temporary_root=''
 stage_root=''
 external_root=''
-remote_ref='e73351e3e6745c15294075c711005f507b8664b1'
-remote_archive_sha256='55c716e9520ed1f47cc6a59db2bec78c1dc242281fc1a0d1e3ab323ed029857a'
+remote_ref='d7209502e87958f796bd2b0db788c5462d459bec'
+remote_archive_sha256='186b98b8852a4c20be05cb15df1989f917d5a0a7ca2554a775f3a5b5525f21fd'
 
-# The verified remote archive can predate the optional UI helper. Piped and CI
-# runs are deliberately plain, so the bootstrap remains self-contained.
-if [[ -f $script_dir/.config/scripts/install-ui.sh ]]; then
+# Local runs load the dependency-free UI immediately. Remote runs hand off to
+# the same verified repository snapshot after it has been downloaded.
+if [[ -n $script_dir && -f $script_dir/.config/scripts/install-ui.sh ]]; then
     # shellcheck source=.config/scripts/install-ui.sh
     source "$script_dir/.config/scripts/install-ui.sh"
 fi
@@ -253,6 +261,17 @@ if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
     }
     tar -xzf "$archive" -C "$temporary_root"
     repo_root="$temporary_root/kairo-$remote_ref"
+
+    # A pipe cannot provide interactive input. When a controlling terminal is
+    # available, run the verified installer snapshot with /dev/tty as stdin so
+    # Curl and Wget quick-start commands open the same TUI as a local clone.
+    if [[ -t 1 && ${CI:-false} != true && ${#only[@]} -eq 0 && -r /dev/tty ]]; then
+        set +e
+        bash "$repo_root/install.sh" "${original_args[@]}" </dev/tty
+        remote_status=$?
+        set -e
+        exit "$remote_status"
+    fi
 fi
 
 timestamp=$(date '+%Y%m%d-%H%M%S')
@@ -260,11 +279,6 @@ backup_root=''
 backup_display="$HOME/.dotfiles-backup/<unique-run>"
 config_root=${XDG_CONFIG_HOME:-"$HOME/.config"}
 source_config_root="$repo_root/.config"
-# The pinned bootstrap archive predates the .config/ repository layout. Keep
-# that immutable archive usable until the pin is updated after a future commit.
-if [[ $repo_root != "$script_dir" && ! -d $source_config_root ]]; then
-    source_config_root=$repo_root
-fi
 
 command -v realpath >/dev/null 2>&1 || {
     printf 'realpath is required for safe destination validation.\n' >&2

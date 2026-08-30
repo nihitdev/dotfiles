@@ -314,7 +314,12 @@ run_remote_verification_test() {
     output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
         bash "$script_copy" --dry-run)
     [[ $output == *'Planned:'* ]] || fail 'verified remote bootstrap did not produce an install plan'
-    [[ $output == *'Skipped: bash starship fish'* ]] || fail 'remote bootstrap did not safely skip payloads absent from the pinned archive'
+    [[ $output == *"Install starship -> $home/.config/starship"* ]] ||
+        fail 'remote bootstrap archive omitted current Starship payloads'
+
+    output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        bash -s -- --dry-run --only nvim <"$script_copy")
+    [[ $output == *'Planned: nvim'* ]] || fail 'stdin bootstrap did not produce an install plan'
 
     if command -v wget >/dev/null 2>&1; then
         sed 's/command -v curl/command -v __kairo_missing_curl/g' "$script_copy" >"$wget_script"

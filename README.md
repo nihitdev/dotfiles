@@ -24,7 +24,7 @@ Kairo turns a fresh Arch installation into a focused development environment wit
 - Selectable dotfile modules and independent developer toolchain profiles
 - Intel, AMD, and NVIDIA GPU detection with reviewed driver proposals
 - Private backups, staged replacements, path validation, and transaction rollback
-- Deterministic plain output for CI, pipes, remote bootstrap, and automation
+- Deterministic plain output for CI, redirected output, and automation
 - Separate Starship configuration for Bash, Fish, Nushell, and Zsh
 - Fish login-shell setup after a successful interactive installation
 
@@ -42,7 +42,7 @@ curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | ba
 wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
 ```
 
-Both remote entry points download an immutable repository archive and verify its SHA-256 checksum before use. Because piped input is not a terminal, they automatically use deterministic non-interactive output.
+Both remote entry points download an immutable repository archive and verify its SHA-256 checksum before use. When a controlling terminal is available, Kairo reconnects input to it and opens the full interactive installer. CI and redirected/non-terminal sessions remain plain and deterministic.
 
 ### 3. Clone
 

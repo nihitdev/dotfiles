@@ -200,6 +200,22 @@ run_dry_run_immutability_test() {
     [[ ! -e $home/.dotfiles-backup ]] || fail 'dry-run created a backup directory'
 }
 
+run_dry_run_without_optional_generators_test() {
+    local home="$test_root/dry-run-no-generators"
+    mkdir -p "$home"
+    command() {
+        if [[ $1 == -v && ($2 == starship || $2 == zoxide) ]]; then
+            return 1
+        fi
+        builtin command "$@"
+    }
+    export -f command
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        "$repo_root/install.sh" --dry-run --only nushell >/dev/null ||
+        fail 'Nushell dry-run failed when optional cache generators were unavailable'
+    unset -f command
+}
+
 run_no_backup_test() {
     local home="$test_root/no-backup"
     mkdir -p "$home/.config/nvim"
@@ -352,6 +368,7 @@ run_kitty_payload_test
 run_fish_payload_test
 run_starship_payload_test
 run_dry_run_immutability_test
+run_dry_run_without_optional_generators_test
 run_no_backup_test
 run_selector_validation_test
 run_package_profile_dry_run_test

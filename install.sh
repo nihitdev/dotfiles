@@ -885,7 +885,7 @@ regenerate_nushell_caches() {
     if $dry_run; then
         command -v starship >/dev/null 2>&1 && describe "Regenerate $config_root/nushell/dotfiles-init/starship.nu"
         command -v zoxide >/dev/null 2>&1 && describe "Regenerate $config_root/nushell/dotfiles-init/zoxide.nu"
-        return
+        return 0
     fi
     ensure_external_root
     if command -v starship >/dev/null 2>&1; then

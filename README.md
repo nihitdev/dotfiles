@@ -1,27 +1,21 @@
-# Nihit's cross-platform dotfiles
+# Kairo
 
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white)](https://www.microsoft.com/windows)
-[![Linux](https://img.shields.io/badge/Linux-supported-FCC624?logo=linux&logoColor=black)](https://kernel.org/)
-[![PowerShell](https://img.shields.io/badge/PowerShell-7-5391FE?logo=powershell&logoColor=white)](https://github.com/PowerShell/PowerShell)
+[![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=archlinux&logoColor=white)](https://archlinux.org/)
 [![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
-My Catppuccin-inspired setup for Windows and Linux, covering shells, terminals, editors, Git, file managers, and modern command-line tools.
+An Arch-first, Catppuccin-inspired environment for Bash, Fish, Nushell, Zsh, Kitty, Hyprland, Neovim, Git, Yazi, and modern command-line tools.
 
-## Quick install
+## Installation
 
-### Windows
+Quick install directly from GitHub:
 
-Open PowerShell and run:
-
-```powershell
-irm https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.ps1 | iex
+```sh
+curl -fsSL https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.sh | bash
 ```
 
-The installer backs up existing files to a private, uniquely named directory under `~/.dotfiles-backup` before applying the configurations. Applications and command-line tools are not installed automatically. Windows Terminal settings are installed only when explicitly requested with `-Only windows-terminal`.
+The piped installer automatically uses plain non-interactive output and downloads the pinned, SHA-256-verified repository archive.
 
-### Linux
-
-Clone the repository and run the Linux installer:
+Clone the repository and run the transactional installer:
 
 ```sh
 git clone https://github.com/nihitdev/dotfiles.git
@@ -29,258 +23,146 @@ cd dotfiles
 ./install.sh
 ```
 
-Preview changes or install only selected components:
+On a terminal, `./install.sh` opens Kairo's dependency-free full-screen installer. It detects the system, lets you select modules with the keyboard, reviews packages and replacement targets, then shows real installation stages and results. Small terminals use a compact layout. Pipes, redirected output, explicit `--only` selections, and `CI=true` automatically use deterministic plain output.
+
+Preview changes or select individual components:
 
 ```sh
 ./install.sh --dry-run
+./install.sh --only bash --only starship
 ./install.sh --only nvim --only yazi
 ./install.sh --only all
+./install.sh --install-packages
+./install.sh --profile core-build --profile rust --profile python
 ```
 
-The Linux installer supports `zsh`, `nushell`, `git`, `lazygit`, `broot`, `nvim`, `yazi`, `fastfetch`, `oh-my-posh`, `starship`, `atuin`, `bat`, `cava`, `ssh`, `kitty`, and `fish`. It backs up existing destinations, replaces managed directories cleanly so removed files do not linger, and adapts the tracked Git line-ending policy for Linux. Fish and Kitty are installed from `.config/fish/` and `.config/kitty/`.
+The installer supports `bash`, `fish`, `nushell`, `zsh`, `starship`, `atuin`, `bat`, `broot`, `yazi`, `lazygit`, `fastfetch`, `git`, `nvim`, `kitty`, `cava`, `ssh`, `oh-my-posh`, and opt-in `hypr`. It backs up existing destinations under private, uniquely named `~/.dotfiles-backup/YYYYMMDD-HHMMSS.xxxxxx/` directories, stages replacements before activation, rolls back failed transactions, and rejects unsafe or escaping paths. Unchanged payloads are reported as already current.
 
-Install one specific tool by name, or repeat the selector for several tools:
+`--install-packages` installs only missing packages needed by selected modules. Official packages are grouped into one `sudo pacman -S --needed` call. AUR packages use Paru by default, or Yay with `--aur-helper yay`, without `sudo`; Kairo refuses to invoke an AUR helper as root and never performs a surprise full-system upgrade. If the selected helper is missing, Kairo installs `base-devel` and Git, clones its official AUR PKGBUILD, and builds it as the current user. Without the flag, missing tools are reported but dotfile installation continues.
+
+Optional package profiles turn Kairo into a broader workstation bootstrapper without forcing unrelated packages:
+
+| Profile | Includes |
+| --- | --- |
+| `core-build` | `base-devel`, Git, curl, rsync, archives, jq, ShellCheck |
+| `cpp` | GCC, Clang, CMake, Ninja, Meson, GDB, LLDB |
+| `rust` | Rustup |
+| `python` | Python, pip, uv |
+| `web` | Node.js, npm, pnpm, Bun |
+| `containers` | Docker, Docker Compose, Podman, Buildah |
+| `wayland` | Portal, clipboard, screenshots, brightness, media controls, DDC |
+| `media` | PipeWire, WirePlumber, FFmpeg, ImageMagick, yt-dlp |
+
+Repeat `--profile` to combine profiles. The interactive installer exposes the same choices on a separate package-profile screen.
+Use `--profile all` to select every package profile.
+
+Chaotic-AUR is an optional third-party binary repository. Enable it only after reviewing the trust change:
 
 ```sh
-./install.sh --only kitty
-./install.sh --only nvim --only yazi --only fastfetch
+./install.sh --dry-run --enable-chaotic-aur --profile web
+./install.sh --enable-chaotic-aur --profile web
 ```
 
-On Windows, `-Only` accepts one name or a comma-separated list:
+Kairo follows [Chaotic-AUR's published setup](https://github.com/chaotic-aur): imports and locally signs its primary key, installs its signed keyring and mirrorlist packages, backs up `/etc/pacman.conf`, appends the repository idempotently, and synchronizes package databases. It restores `pacman.conf` if the installation subsequently fails.
 
-```powershell
-.\install.ps1 -Only nvim
-.\install.ps1 -Only powershell,git,yazi
-```
+The interactive flow offers package installation when selected tools are missing. When Fish is selected, it also makes Fish the login shell after verifying its path is listed in `/etc/shells`. Automated and explicit `--only` runs do not change the login shell.
 
-Run `./install.sh --help` on Linux or `Get-Help .\install.ps1 -Detailed` in
-PowerShell to see the validated component names.
-
-Remote bootstrap archives are pinned to an immutable repository commit and verified with SHA-256 before extraction. When publishing installer changes, update the pinned commit and both archive hashes together.
-
-## What's included
-
-Application configuration is stored under `.config/`:
+## Repository layout
 
 ```text
 dotfiles/
 ├── .config/
+│   ├── bash/
 │   ├── fish/
 │   ├── hypr/
 │   ├── kitty/
+│   ├── nushell/
 │   ├── nvim/
 │   ├── starship/
+│   │   ├── bash.toml
+│   │   ├── fish.toml
+│   │   ├── nushell.toml
+│   │   └── zsh.toml
 │   └── yazi/
 ├── install.sh
-├── install.ps1
-├── README.md
 ├── LICENSE
 └── VENDORED.md
 ```
 
 | Configuration | Purpose |
 | --- | --- |
-| [Atuin](.config/atuin/) | Searchable and synchronized shell history with a Catppuccin theme |
+| [Atuin](.config/atuin/) | Searchable shell history with Catppuccin colors |
+| [Bash](.config/bash/) | Interactive Bash setup with Starship, Zoxide, and Atuin |
 | [Bat](.config/bat/) | Syntax-highlighted file viewer and Catppuccin themes |
-| [Broot](.config/broot/) | Tree-based file navigation with custom verbs and a Catppuccin Mocha skin |
+| [Broot](.config/broot/) | Tree navigation, custom verbs, and Catppuccin skin |
 | [Cava](.config/cava/) | Terminal audio visualizer |
-| [Discord](.config/discord/) | Shellcord/System24 Vencord themes and color flavors |
-| [ExplorerBlurMica](.config/explorerblurmica/) | Explorer backdrop customization |
-| [Fastfetch](.config/fastfetch/) | System information layout and custom ASCII art |
-| [Fish](.config/fish/) | Fish shell configuration installed by `install.sh` |
-| [Git](.config/git/) | Global Git behavior, concise aliases, and Catppuccin-styled Delta diffs |
-| [Hyprland](.config/hypr/) | Reference/backup only; never installed automatically |
-| [Kitty](.config/kitty/) | Current Kitty terminal configuration installed by `install.sh` |
-| [LazyGit](.config/lazygit/) | Catppuccin Mocha terminal Git UI theme |
-| [Neovim](.config/nvim/) | LazyVim setup, pinned plugins, and a custom dashboard |
-| [Nushell](.config/nushell/) | Interactive shell settings, helpers, and aliases |
-| [Oh My Zsh](.config/oh-my-zsh/) | Manual Linux Zsh configuration and plugins |
-| [OneCommander](.config/one-commander/) | Catppuccin Mocha file manager theme |
-| [Oh My Posh](.config/oh-my-posh/) | Custom prompt theme and shell integration |
-| [Powerlevel10k](.config/powerlevel10k/) | Powerlevel10k prompt configuration for Zsh |
-| [PowerShell](.config/powershell/) | Profile, prompt startup, navigation, and CLI helpers |
-| [SSH](.config/ssh/) | Host aliases and isolated authentication-key paths for GitHub and the AUR |
-| [Starship](.config/starship/) | Optional minimal cross-shell prompt |
-| [Windows Terminal](.config/windows-terminal/) | Terminal profiles and appearance |
-| [YASB](.config/yasb/) | Status bar configuration and styles |
-| [Yazi](.config/yazi/) | Fast terminal file manager with previews, search, Git status, and Catppuccin Mocha |
+| [Fastfetch](.config/fastfetch/) | System information layout and custom Arch artwork |
+| [Fish](.config/fish/) | Fish shell environment and integrations |
+| [Git](.config/git/) | Linux Git defaults, aliases, and Delta styling |
+| [Hyprland](.config/hypr/) | Arch/Hyprland configuration available as an opt-in module |
+| [Kitty](.config/kitty/) | Kitty terminal configuration |
+| [LazyGit](.config/lazygit/) | Catppuccin LazyGit theme |
+| [Neovim](.config/nvim/) | LazyVim setup with pinned plugins |
+| [Nushell](.config/nushell/) | Nushell settings, helpers, and cached integrations |
+| [Oh My Posh](.config/oh-my-posh/) | Optional prompt theme |
+| [Oh My Zsh](.config/oh-my-zsh/) | Zsh configuration and plugins |
+| [SSH](.config/ssh/) | Managed SSH include with GitHub and AUR hosts |
+| [Starship](.config/starship/) | Per-shell prompt configurations |
+| [Yazi](.config/yazi/) | Terminal file manager configuration and plugins |
 
-Third-party snapshots and intentionally duplicated application assets are
-documented in [VENDORED.md](VENDORED.md).
+Third-party snapshots and intentionally duplicated assets are documented in [VENDORED.md](VENDORED.md).
 
-## Prompt options
+## Starship
 
-This repository includes three prompt configurations:
+One Starship binary is shared by all shells, while each shell selects its own configuration through `STARSHIP_CONFIG`:
 
-- **Oh My Posh** — the default PowerShell prompt, using the tracked `amro.omp.json` theme.
-- **Starship** — an optional minimal two-line prompt with directory and Git information. Its configuration is available in `.config/starship/starship.toml`.
-- **Powerlevel10k (p10k)** — the Zsh prompt used by `.config/oh-my-zsh/.zshrc`, with its prompt settings tracked separately in `.config/powerlevel10k/.p10k.zsh`.
-
-All three require a [Nerd Font](https://www.nerdfonts.com/) for their icons to render correctly.
-
-## Windows installation details
-
-If you prefer to inspect everything before running it, clone the repository:
-
-```powershell
-git clone https://github.com/nihitdev/dotfiles.git
-cd dotfiles
-Set-ExecutionPolicy -Scope Process Bypass
-.\install.ps1
+```text
+~/.config/starship/
+├── bash.toml
+├── fish.toml
+├── nushell.toml
+└── zsh.toml
 ```
 
-Preview the changes without writing anything, or skip backups if you already have your own:
-
-```powershell
-.\install.ps1 -WhatIf
-.\install.ps1 -NoBackup
-.\install.ps1 -Only nvim,yazi
-.\install.ps1 -Only all
-```
-
-`all` explicitly selects every component supported by that platform. On Windows,
-this includes the normally opt-in Windows Terminal settings.
-
-The main destinations are:
-
-| Repository path | Typical destination |
-| --- | --- |
-| `.config/powershell/profile.ps1` | `$PROFILE` |
-| `.config/nushell/config.nu` | Run `$nu.config-path` in Nushell to find it |
-| `.config/git/.gitconfig` | Managed config included from `~/.gitconfig` |
-| `.config/lazygit/config.yml` | `%LOCALAPPDATA%\lazygit\config.yml` |
-| `.config/broot/` | `%APPDATA%\dystroy\broot\config\` |
-| `.config/nvim/` | `%LOCALAPPDATA%\nvim\` |
-| `.config/yazi/` | `%APPDATA%\yazi\config\` |
-| `.config/one-commander/Catppuccin-Mocha.xaml` | `%LOCALAPPDATA%\OneCommander\Themes\Dark\Catppuccin-Mocha.xaml` |
-| `.config/fastfetch/` | `~/.config/fastfetch/` |
-| `.config/oh-my-posh/amro.omp.json` | `~/.config/oh-my-posh/amro.omp.json` |
-| `.config/starship/starship.toml` | `~/.config/starship.toml` |
-| `.config/atuin/config.toml` | `~/.config/atuin/config.toml` |
-| `.config/bat/config` | Run `bat --config-file` to find it |
-| `.config/bat/themes/` | Run `bat --config-dir` to find the theme directory |
-| `.config/cava/config` | `~/.config/cava/config` |
-| `.config/kitty/` | `~/.config/kitty/` |
-| `.config/ssh/config` | `~/.ssh/config.d/dotfiles.conf`, included from `~/.ssh/config` |
-| `.config/windows-terminal/settings.json` | Windows Terminal's LocalState directory |
-| `.config/yasb/` | `~/.config/yasb/` |
-
-The installer backs up every existing destination, stages replacements before activation, and automatically restores earlier destinations if installation fails. Existing Git and SSH configuration remains in place: the installer adds managed include files instead of replacing either global file. It also applies restricted permissions to the SSH client config, corrects the Vencord theme destination, and rebuilds the Bat theme cache when Bat is available. Restart your shells and configured applications after installation.
-
-Windows Terminal is intentionally excluded from the default install because its settings contain machine-specific profiles. Install it explicitly with `.\install.ps1 -Only windows-terminal` after reviewing the tracked settings.
-
-## Platform compatibility
-
-The Linux installer intentionally excludes configurations that are Windows-specific or depend on Windows application paths:
-
-| Configuration | Why it is not installed on Linux |
-| --- | --- |
-| PowerShell profile | Uses Windows paths and Windows-focused commands |
-| Windows Terminal | Windows application with package-specific settings paths |
-| YASB | Windows status bar |
-| ExplorerBlurMica | Windows Explorer customization |
-| OneCommander | Windows file manager |
-
-Discord themes are portable, but the Linux Vencord theme directory varies by installation method. They remain a manual copy instead of being forced by `install.sh`.
-
-### Manual Hyprland installation
-
-Hyprland is included only as a reference and backup in `.config/hypr/`. Neither installer copies it automatically, because replacing a compositor configuration could break the graphical session.
-
-> [!WARNING]
-> Copying this directory may replace or conflict with an existing Hyprland configuration. Back up `~/.config/hypr` before copying.
-
-A safer manual workflow is:
+The tracked Bash, Fish, Nushell, and Zsh configurations already point to their matching file. Install Starship on Arch with:
 
 ```sh
-mkdir -p ~/.config
-mv ~/.config/hypr ~/.config/hypr.backup
-cp -r .config/hypr ~/.config/
+sudo pacman -S starship
 ```
 
-If `~/.config/hypr` does not already exist, omit the `mv` command.
+## Arch setup notes
 
-### Developer tools
-
-- **Git and Delta:** the tracked global config uses histogram diffs, `zdiff3` conflicts, safe pruning, reusable conflict resolutions, eight focused aliases, and a subtle Catppuccin Mocha Delta presentation. The installers preserve an existing identity instead of replacing it with the repository placeholders; if no identity exists, configure one before committing.
-- **LazyGit:** the theme is installed into LazyGit's standard Windows configuration directory.
-- **Neovim:** the complete LazyVim configuration and lockfile are installed to Neovim's standard Windows config directory. Start `nvim` after installation to let `lazy.nvim` restore pinned plugins.
-- **Yazi:** the full configuration and vendored packages are installed. Run `ya pkg install` after installation whenever you want to verify or restore the package payload from `package.toml`.
-- **Broot:** `conf.hjson`, `verbs.hjson`, and the Catppuccin skin are installed together so custom verbs and theming remain in sync.
-
-ExplorerBlurMica remains a manual copy because its `config.ini` must live beside the particular ExplorerBlurMica installation, whose directory varies by package manager. Copy `.config/explorerblurmica/config.ini` over the application's existing `config.ini` after backing it up.
-
-### Atuin
-
-After installing Atuin, set it up manually in PowerShell with these exact steps:
-
-1. Initialize Atuin in your shell by adding this line to your PowerShell profile (`$PROFILE`):
-
-   ```powershell
-   atuin init powershell | Out-String | Invoke-Expression
-   ```
-
-2. Create Atuin's configuration directory and copy the tracked configuration into it:
-
-   ```powershell
-   New-Item -ItemType Directory -Force -Path "$HOME\.config\atuin" | Out-Null
-   Copy-Item '.\.config\atuin\config.toml' -Destination "$HOME\.config\atuin\config.toml" -Force
-   ```
-
-The tracked PowerShell profile already performs step 1 when Atuin is available, and `install.ps1` performs step 2 automatically.
-
-### Oh My Zsh and Powerlevel10k (Linux)
-
-> [!IMPORTANT]
-> This configuration is installed by `install.sh`, but not by the Windows `install.ps1` script.
-
-After installing Zsh and [Oh My Zsh](https://ohmyz.sh/), clone [Powerlevel10k](https://github.com/romkatv/powerlevel10k) into the Oh My Zsh custom themes directory:
+Package installation is optional. Preview both package and dotfile actions safely with:
 
 ```sh
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-  "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+./install.sh --dry-run --install-packages --only fish --only starship
 ```
 
-The tracked Zsh configuration also enables [`zsh-autosuggestions`](https://github.com/zsh-users/zsh-autosuggestions) and [`zsh-syntax-highlighting`](https://github.com/zsh-users/zsh-syntax-highlighting); install those plugins in the Oh My Zsh custom plugins directory before starting Zsh. The Linux installer copies the configuration files automatically. For a manual installation:
+The Zsh configuration expects Oh My Zsh plus `zsh-autosuggestions` and `zsh-syntax-highlighting`. All prompt configurations work best with a Nerd Font.
+
+Hyprland is not selected by default because replacing compositor configuration can disrupt an active graphical session. Review it first, then install it explicitly:
 
 ```sh
-cp .config/oh-my-zsh/.zshrc ~/.zshrc
-cp .config/powerlevel10k/.p10k.zsh ~/.p10k.zsh
-exec zsh
+./install.sh --dry-run --only hypr
+./install.sh --only hypr
 ```
 
-Use a [Nerd Font](https://www.nerdfonts.com/) so the Powerlevel10k icons render correctly.
+Kairo backs up an existing `~/.config/hypr` directory before replacing it.
 
-### OneCommander theme
+## Remote bootstrap
 
-The installer applies this theme automatically. For a manual installation, copy it to OneCommander's dark-theme directory:
+The quick-install command above uses plain output. Its downloaded repository archive is pinned to an immutable commit and verified with SHA-256 before extraction; checksum verification is never bypassed.
 
-```powershell
-$themeDirectory = Join-Path $env:LOCALAPPDATA 'OneCommander\Themes\Dark'
-New-Item -ItemType Directory -Force -Path $themeDirectory | Out-Null
-Copy-Item '.\.config\one-commander\Catppuccin-Mocha.xaml' -Destination $themeDirectory -Force
+## Validation
+
+```sh
+bash -n install.sh
+./install.sh --dry-run
+./install.sh --dry-run --only starship
+python3 .config/scripts/validate_repo.py
+./.config/tests/test-install.sh
 ```
-
-Restart OneCommander, open **Settings**, select **Theme**, and choose **Catppuccin Mocha** from the dark themes.
-
-> [!NOTE]
-> Windows Terminal settings can contain machine-specific profile identifiers. The installer backs up your existing settings before replacing them, so review the tracked file first if you have custom profiles.
-
-## Shell tooling
-
-The PowerShell and Nushell profiles integrate with optional tools such as Fastfetch, Oh My Posh, Zoxide, Atuin, Bat, Ripgrep, fd, eza, dust, bottom, gsudo, xh, doggo, procs, sd, Glow, Yazi, Broot, LazyGit, GitHub CLI, and Neovim. Missing optional commands are handled gracefully.
-
-## Look and feel
-
-- Palette: Catppuccin Mocha
-- Fonts: Nerd Font-compatible terminal fonts
-- Terminals: Kitty on Linux and Windows Terminal on Windows
-- Prompts: Oh My Posh, Starship, and Powerlevel10k
-- System information: Fastfetch
-- Pagers: Delta for Git, Bat for files
 
 ## License
 
-Licensed under the [GNU General Public License v3.0](LICENSE).
-
-Copyright (C) 2026 nihitdev.
+See [LICENSE](LICENSE).

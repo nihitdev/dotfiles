@@ -11,7 +11,7 @@ local ok, rebinds = pcall(require, "rebinds")
 if not ok or type(rebinds) ~= "table" then rebinds = {} end
 local function K(k) return rebinds[k] or k end
 
--- Windows
+-- Window actions
 hl.bind(K(mod .. " + Q"),         hl.dsp.window.close())                           -- close active window
 hl.bind(K(mod .. " + F"),         hl.dsp.window.fullscreen())                      -- fullscreen
 hl.bind(K(mod .. " + A"),         function() hl.dispatch(hl.dsp.window.float({ action = "toggle" })); hl.dispatch(hl.dsp.window.resize({ x = 1000, y = 660, exact = true })); hl.dispatch(hl.dsp.window.center()) end) -- float at 1000x660, centred (press again to tile back)

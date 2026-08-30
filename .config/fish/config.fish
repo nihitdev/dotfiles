@@ -82,6 +82,7 @@ if status is-interactive
     # -------------------------------------------------------------------------
 
     if command -v starship >/dev/null 2>&1
+        set -gx STARSHIP_CONFIG "$HOME/.config/starship/fish.toml"
         starship init fish | source
     end
 

@@ -12,6 +12,7 @@ const STARTUP_CACHE_DIR = $"($nu.config-path | path dirname)/dotfiles-init"
 const STARSHIP_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/starship.nu"
 const ZOXIDE_CACHE = $"($nu.config-path | path dirname)/dotfiles-init/zoxide.nu"
 const XDG_CONFIG_ROOT = $env.XDG_CONFIG_HOME? | default $"($nu.home-dir)/.config"
+const STARSHIP_CONFIG = $"($XDG_CONFIG_ROOT)/starship/nushell.toml"
 const FASTFETCH_CONFIG = $"($XDG_CONFIG_ROOT)/fastfetch/config.jsonc"
 const FASTFETCH_LOGO = $"($XDG_CONFIG_ROOT)/fastfetch/ascii.txt"
 
@@ -57,6 +58,7 @@ def refresh-shell-cache [] {
 # ─────────────────────────────────────────────────────────────────────────────
 
 $env.config.show_banner = false
+$env.STARSHIP_CONFIG = $STARSHIP_CONFIG
 
 $env.config.history = {
     max_size: 100_000
@@ -137,14 +139,12 @@ def reload [] {
     exec nu
 }
 
-# Open config.nu in Notepad.
+# Open config.nu in Neovim.
 def profile [] {
-    if (has-command notepad.exe) {
-        ^notepad.exe $nu.config-path
-    } else if (has-command nvim) {
+    if (has-command nvim) {
         ^nvim $nu.config-path
     } else {
-        missing-command "notepad.exe or nvim"
+        missing-command nvim
     }
 }
 
@@ -153,14 +153,12 @@ def nprofile [] {
     ^nvim $nu.config-path
 }
 
-# Open env.nu in Notepad.
+# Open env.nu in Neovim.
 def env-profile [] {
-    if (has-command notepad.exe) {
-        ^notepad.exe $nu.env-path
-    } else if (has-command nvim) {
+    if (has-command nvim) {
         ^nvim $nu.env-path
     } else {
-        missing-command "notepad.exe or nvim"
+        missing-command nvim
     }
 }
 
@@ -225,12 +223,10 @@ def --wrapped btm [...args] {
 }
 
 def --wrapped sudo [...args] {
-    if $nu.os-info.name == "windows" and (has-command gsudo) {
-        ^gsudo ...$args
-    } else if (has-command sudo) {
+    if (has-command sudo) {
         ^sudo ...$args
     } else {
-        missing-command (if $nu.os-info.name == "windows" { "gsudo" } else { "sudo" })
+        missing-command sudo
     }
 }
 
@@ -388,4 +384,4 @@ def --wrapped ff [...args] {
 # Starship is loaded from the cached initialization script.
 # Prompt appearance and the beloved λ are configured in:
 #
-# ~/.config/starship.toml
+# ~/.config/starship/nushell.toml

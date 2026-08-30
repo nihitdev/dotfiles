@@ -29,8 +29,7 @@ jobs:
           jq empty \
             .config/nvim/lazy-lock.json \
             .config/nvim/lazyvim.json \
-            .config/oh-my-posh/amro.omp.json \
-            .config/windows-terminal/settings.json
+            .config/oh-my-posh/amro.omp.json
 
       - name: Check Lua syntax
         run: find .config/nvim .config/yazi -type f -name '*.lua' -print0 | xargs -0 -n1 luac -p
@@ -42,11 +41,16 @@ jobs:
         run: |
           python3 .config/scripts/validate_repo.py
           yamllint -d relaxed \
-            .github/workflows/validate.yml .config/lazygit/config.yml .config/yasb/config.yaml
+            .github/workflows/validate.yml .config/lazygit/config.yml
 
       - name: Check Linux installer
         run: |
           bash -n install.sh
+          bash -n .config/scripts/install-ui.sh
+          ./install.sh --help
+          ./install.sh --dry-run
+          ./install.sh --dry-run --only starship
+          ./install.sh --dry-run --only yazi --only broot --only starship
           ./install.sh --dry-run --only nvim --only ssh
           ./.config/tests/test-install.sh
 
@@ -58,28 +62,3 @@ jobs:
 
       - name: Check whitespace
         run: git diff --check HEAD~1 HEAD
-
-  windows-installer:
-    runs-on: windows-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Parse PowerShell files
-        shell: pwsh
-        run: |
-          $Errors = $null
-          $Tokens = $null
-          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
-            [System.Management.Automation.Language.Parser]::ParseFile(
-              $_.FullName,
-              [ref]$Tokens,
-              [ref]$Errors
-            ) | Out-Null
-            if ($Errors) { throw ($Errors | Out-String) }
-          }
-
-      - name: Test Windows installer safety
-        shell: pwsh
-        run: ./.config/tests/test-install.ps1

@@ -1,8 +1,6 @@
 # Discord themes
 
-Installable Vencord and BetterDiscord theme entrypoints used by these dotfiles.
-The Windows installer copies `theme/` to Vencord's theme directory only when
-Vencord is already present and the `discord` component is selected.
+Vencord and BetterDiscord theme entrypoints retained for manual installation.
 
 ## Files
 

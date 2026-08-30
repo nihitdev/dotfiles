@@ -2,12 +2,12 @@
 # Git
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Core and Windows line-ending policy
+# Core and Linux line-ending policy
 [core]
 	pager = delta
 	editor = nvim
-	autocrlf = true
-	eol = native
+	autocrlf = input
+	eol = lf
 	safecrlf = warn
 
 # Repository defaults and maintenance

@@ -27,20 +27,6 @@ image_delay   = 0
 image_filter  = "triangle"
 image_quality = 80
 
-# Scoop's Windows `file.exe` lacks the `-L` option required by Yazi.
-# Use Yazi's official extension-based MIME provider so preview routing works.
-[[plugin.prepend_fetchers]]
-url   = "local://*"
-run   = "mime-ext.local"
-prio  = "high"
-group = "mime"
-
-[[plugin.prepend_fetchers]]
-url   = "remote://*"
-run   = "mime-ext.remote"
-prio  = "high"
-group = "mime"
-
 # Show Git status alongside filenames without replacing Yazi's MIME fetchers.
 [[plugin.prepend_fetchers]]
 url   = "*"
@@ -52,7 +38,7 @@ url   = "*/"
 run   = "git"
 group = "git"
 
-# Render Markdown with Glow. Piper uses the installed Git-for-Windows `sh`.
+# Render Markdown with Glow through the system shell.
 [[plugin.prepend_previewers]]
 url = "*.md"
 run = 'piper -- glow -w=$w -s=dark "$1"'

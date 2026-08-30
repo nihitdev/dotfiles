@@ -13,6 +13,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ERRORS: list[str] = []
+IGNORED_PARTS = {".git", "node_modules", "dist"}
+
+
+def is_repository_file(path: Path) -> bool:
+    return not IGNORED_PARTS.intersection(path.relative_to(ROOT).parts)
 
 
 def error(path: Path, message: str) -> None:
@@ -58,19 +63,23 @@ def strip_json_comments(text: str) -> str:
 
 def validate_structured_files() -> None:
     for path in ROOT.rglob("*.json"):
-        if ".git" not in path.parts:
+        if is_repository_file(path):
             try:
                 json.loads(path.read_text(encoding="utf-8"))
             except Exception as exc:  # noqa: BLE001 - report parser details
                 error(path, f"invalid JSON: {exc}")
 
     for path in ROOT.rglob("*.jsonc"):
+        if not is_repository_file(path):
+            continue
         try:
             json.loads(strip_json_comments(path.read_text(encoding="utf-8")))
         except Exception as exc:  # noqa: BLE001
             error(path, f"invalid JSONC: {exc}")
 
     for path in ROOT.rglob("*.toml"):
+        if not is_repository_file(path):
+            continue
         try:
             tomllib.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:  # noqa: BLE001
@@ -78,12 +87,16 @@ def validate_structured_files() -> None:
 
     for pattern in ("*.xml", "*.xaml"):
         for path in ROOT.rglob(pattern):
+            if not is_repository_file(path):
+                continue
             try:
                 element_tree.parse(path)
             except Exception as exc:  # noqa: BLE001
                 error(path, f"invalid XML: {exc}")
 
     for path in ROOT.rglob("*.hjson"):
+        if not is_repository_file(path):
+            continue
         text = path.read_text(encoding="utf-8")
         if text.count("{") != text.count("}") or text.count("[") != text.count("]"):
             error(path, "unbalanced HJSON delimiters")
@@ -92,6 +105,8 @@ def validate_structured_files() -> None:
 def validate_markdown_links() -> None:
     link_pattern = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)")
     for path in ROOT.rglob("*.md"):
+        if not is_repository_file(path):
+            continue
         for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             for match in link_pattern.finditer(line):
                 target = match.group(1).strip("<>")
@@ -111,6 +126,8 @@ def validate_css() -> None:
         r"(?:raw\.githubusercontent\.com/[^/]+/[^/]+/(?:main|master|refs/heads/)|github\.io/)"
     )
     for path in ROOT.rglob("*.css"):
+        if not is_repository_file(path):
+            continue
         text = path.read_text(encoding="utf-8")
         bare = strip_css_comments(text)
         if bare.count("{") != bare.count("}"):

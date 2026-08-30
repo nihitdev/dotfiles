@@ -12,3 +12,5 @@ Thumbs.db
 # Editor state
 .idea/
 .vscode/
+site/node_modules/
+site/dist/

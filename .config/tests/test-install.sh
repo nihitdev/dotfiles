@@ -49,12 +49,24 @@ run_preservation_test() {
     assert_count 1 "$home/.ssh/config" 'Include ~/.ssh/config.d/*.conf'
 
     mapfile -t backups < <(find "$home/.dotfiles-backup" -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
-    [[ ${#backups[@]} -eq 2 ]] || fail 'backup runs did not use unique directories'
+    [[ ${#backups[@]} -eq 1 ]] || fail 'idempotent repeat created an unnecessary backup run'
     [[ $(stat -c '%a' "$home/.dotfiles-backup") == 700 ]] || fail 'backup parent is not private'
     local backup
     for backup in "${backups[@]}"; do
         [[ $(stat -c '%a' "$home/.dotfiles-backup/$backup") == 700 ]] || fail 'backup run directory is not private'
     done
+}
+
+run_normal_install_test() {
+    local home="$test_root/normal"
+    mkdir -p "$home"
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" XDG_CACHE_HOME="$home/.cache" CI=true \
+        "$repo_root/install.sh" >/dev/null
+    [[ -f $home/.bashrc ]] || fail 'normal install omitted Bash'
+    [[ -f $home/.config/fish/config.fish ]] || fail 'normal install omitted Fish'
+    [[ -f $home/.config/nvim/init.lua ]] || fail 'normal install omitted Neovim'
+    [[ -f $home/.config/starship/zsh.toml ]] || fail 'normal install omitted Starship'
+    [[ ! -e $home/.config/hypr ]] || fail 'normal install unexpectedly selected opt-in Hyprland'
 }
 
 run_traversal_test() {
@@ -115,6 +127,15 @@ run_nushell_payload_test() {
     assert_file_contains "$home/.config/nushell/config.nu" 'has-command sudo'
 }
 
+run_bash_payload_test() {
+    local home="$test_root/bash"
+    mkdir -p "$home"
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --only bash >/dev/null
+    [[ -f $home/.bashrc ]] || fail 'Bash config missing'
+    assert_file_contains "$home/.bashrc" '.config/starship/bash.toml'
+}
+
 run_kitty_payload_test() {
     local home="$test_root/kitty"
     mkdir -p "$home"
@@ -137,14 +158,145 @@ run_fish_payload_test() {
     [[ ! -e $home/.config/fish/fish_variables ]] || fail 'Machine-specific Fish variables were installed'
 }
 
+run_starship_payload_test() {
+    local home="$test_root/starship"
+    local plan config
+    mkdir -p "$home/.config/starship"
+    printf 'old config\n' >"$home/.config/starship/obsolete.toml"
+
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --dry-run --only starship)
+    [[ $plan == *"Replace $home/.config/starship transactionally"* ]] ||
+        fail 'Starship dry-run did not plan a directory replacement'
+    assert_file_contains "$home/.config/starship/obsolete.toml" 'old config'
+
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --only starship >/dev/null
+    for config in bash fish nushell zsh; do
+        [[ -f $home/.config/starship/$config.toml ]] || fail "Starship $config config missing"
+    done
+    [[ ! -e $home/.config/starship/obsolete.toml ]] || fail 'stale Starship file survived directory replacement'
+    find "$home/.dotfiles-backup" -path '*/.config/starship/obsolete.toml' -type f | grep -q . ||
+        fail 'existing Starship directory was not backed up'
+
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --only starship >/dev/null
+    for config in bash fish nushell zsh; do
+        [[ -f $home/.config/starship/$config.toml ]] || fail "Starship $config config missing after repeat install"
+    done
+}
+
+run_dry_run_immutability_test() {
+    local home="$test_root/dry-run"
+    local before after
+    mkdir -p "$home/.config/starship"
+    printf 'sentinel\n' >"$home/.config/starship/sentinel"
+    before=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        "$repo_root/install.sh" --dry-run --install-packages \
+        --only yazi --only broot --only starship >/dev/null
+    after=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    [[ $before == "$after" ]] || fail 'dry-run changed the filesystem'
+    [[ ! -e $home/.dotfiles-backup ]] || fail 'dry-run created a backup directory'
+}
+
+run_no_backup_test() {
+    local home="$test_root/no-backup"
+    mkdir -p "$home/.config/nvim"
+    printf 'old\n' >"$home/.config/nvim/old"
+    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --no-backup --only nvim >/dev/null
+    [[ -f $home/.config/nvim/init.lua ]] || fail '--no-backup install failed'
+    [[ ! -e $home/.dotfiles-backup ]] || fail '--no-backup created backups'
+}
+
+run_selector_validation_test() {
+    local home="$test_root/selectors" plan
+    mkdir -p "$home"
+    if HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+        "$repo_root/install.sh" --dry-run --only invalid-module >/dev/null 2>&1; then
+        fail 'invalid component was accepted'
+    fi
+    if "$repo_root/install.sh" --dry-run --profile invalid-profile >/dev/null 2>&1; then
+        fail 'invalid package profile was accepted'
+    fi
+    if "$repo_root/install.sh" --dry-run --aur-helper invalid-helper >/dev/null 2>&1; then
+        fail 'invalid AUR helper was accepted'
+    fi
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        "$repo_root/install.sh" --dry-run --only yazi --only broot --only starship)
+    [[ $plan == *'Install yazi'* && $plan == *'Install broot'* && $plan == *'Install starship'* ]] ||
+        fail 'multiple --only selectors were not honored'
+    [[ $plan != *$'\033['* ]] || fail 'non-interactive output contains terminal escape sequences'
+}
+
+run_package_profile_dry_run_test() {
+    local home="$test_root/package-profile/home" fake_bin="$test_root/package-profile/bin" plan before after
+    mkdir -p "$home" "$fake_bin"
+    printf '#!/usr/bin/env bash\nexit 0\n' >"$fake_bin/pacman"
+    chmod +x "$fake_bin/pacman"
+    before=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true PATH="$fake_bin:$PATH" \
+        "$repo_root/install.sh" --dry-run --profile cpp --profile rust \
+        --aur-helper paru --enable-chaotic-aur --only nvim)
+    after=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    [[ $before == "$after" ]] || fail 'package-profile dry-run changed the filesystem'
+    [[ $plan == *'Trust and locally sign Chaotic-AUR key'* ]] || fail 'Chaotic-AUR dry-run plan missing'
+    [[ $plan == *'Run sudo pacman -S --needed'* ]] || fail 'toolchain package plan missing'
+}
+
+run_gpu_driver_dry_run_test() {
+    local home="$test_root/gpu-dry-run" before after plan
+    mkdir -p "$home"
+    before=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        "$repo_root/install.sh" --dry-run --install-gpu-drivers --only nvim)
+    after=$(find "$home" -printf '%P|%y|%s\n' | sort)
+    [[ $before == "$after" ]] || fail 'GPU driver dry-run changed the filesystem'
+    assert_file_contains "$repo_root/install.sh" 'sudo -v'
+    [[ $plan == *'Installing packages'* ]] || fail 'GPU driver plan omitted package stage'
+}
+
+run_missing_optional_source_test() {
+    local home="$test_root/missing-source/home"
+    local source="$test_root/missing-source/source"
+    mkdir -p "$home" "$source/.config/nvim"
+    cp "$repo_root/install.sh" "$source/install.sh"
+    printf 'return {}\n' >"$source/.config/nvim/init.lua"
+    local output
+    output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        bash "$source/install.sh" --dry-run --only bash)
+    [[ $output == *'Skipped: bash'* ]] || fail 'missing optional Bash payload was not reported as skipped'
+}
+
+run_shell_starship_reference_test() {
+    assert_file_contains "$repo_root/.config/bash/.bashrc" '$HOME/.config/starship/bash.toml'
+    assert_file_contains "$repo_root/.config/fish/config.fish" '$HOME/.config/starship/fish.toml'
+    assert_file_contains "$repo_root/.config/nushell/config.nu" '/starship/nushell.toml'
+    assert_file_contains "$repo_root/.config/oh-my-zsh/.zshrc" '$HOME/.config/starship/zsh.toml'
+    if grep -R -E --exclude-dir=.git '(\.config/starship\.toml|starship/starship\.toml)' "$repo_root" >/dev/null; then
+        fail 'stale single-file Starship path remains'
+    fi
+}
+
+run_signal_cleanup_static_test() {
+    assert_file_contains "$repo_root/install.sh" 'trap handle_interrupt INT TERM'
+    assert_file_contains "$repo_root/install.sh" 'exit 130'
+    assert_file_contains "$repo_root/.config/scripts/install-ui.sh" "printf '\\033[?25h'"
+    assert_file_contains "$repo_root/.config/scripts/install-ui.sh" "printf '\\033[?1049l'"
+}
+
 run_remote_verification_test() {
     local home="$test_root/remote/home"
     local script_copy="$test_root/remote/install.sh"
     local bad_script="$test_root/remote/install-bad-hash.sh"
     mkdir -p "$home"
     cp "$repo_root/install.sh" "$script_copy"
-    HOME="$home" XDG_CONFIG_HOME="$home/.config" \
-        bash "$script_copy" --dry-run --only nvim >/dev/null
+    local output
+    output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+        bash "$script_copy" --dry-run)
+    [[ $output == *'Planned:'* ]] || fail 'verified remote bootstrap did not produce an install plan'
+    [[ $output == *'Skipped: bash starship fish'* ]] || fail 'remote bootstrap did not safely skip payloads absent from the pinned archive'
 
     sed "s/remote_archive_sha256='[0-9a-f]*'/remote_archive_sha256='0000000000000000000000000000000000000000000000000000000000000000'/" \
         "$script_copy" >"$bad_script"
@@ -155,8 +307,6 @@ run_remote_verification_test() {
 }
 
 run_static_security_defaults_test() {
-    grep -Fq 'raw.githubusercontent.com/nihitdev/dotfiles/main/install.ps1' "$repo_root/README.md" ||
-        fail 'Windows quick-install URL is not hosted on raw.githubusercontent.com'
     grep -Fqx -- '--color=auto' "$repo_root/.config/bat/config" || fail 'Bat does not use automatic color mode'
     if grep -Fq '~/.config/fastfetch/ascii.txt' "$repo_root/.config/fastfetch/config.jsonc"; then
         fail 'Fastfetch config still hard-codes ~/.config'
@@ -183,7 +333,7 @@ run_specific_selector_test() {
     local home="$test_root/specific-selector"
     local component
     mkdir -p "$home"
-    for component in zsh nushell git lazygit broot nvim yazi fastfetch \
+    for component in bash zsh nushell git lazygit broot nvim yazi fastfetch \
         oh-my-posh starship atuin bat cava ssh kitty fish; do
         HOME="$home" XDG_CONFIG_HOME="$home/.config" \
             "$repo_root/install.sh" --dry-run --only "$component" >/dev/null ||
@@ -191,13 +341,24 @@ run_specific_selector_test() {
     done
 }
 
+run_normal_install_test
 run_preservation_test
 run_traversal_test
 run_symlink_escape_test
 run_rollback_test
+run_bash_payload_test
 run_nushell_payload_test
 run_kitty_payload_test
 run_fish_payload_test
+run_starship_payload_test
+run_dry_run_immutability_test
+run_no_backup_test
+run_selector_validation_test
+run_package_profile_dry_run_test
+run_gpu_driver_dry_run_test
+run_missing_optional_source_test
+run_shell_starship_reference_test
+run_signal_cleanup_static_test
 run_remote_verification_test
 run_static_security_defaults_test
 run_all_selector_test

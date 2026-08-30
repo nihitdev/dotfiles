@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d10">
+  <meta name="description" content="Kairo is a safe, interactive Arch Linux workstation and dotfiles installer.">
+  <title>Kairo — Arch, composed.</title>
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="nav-shell">
+    <nav class="nav wrap" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Kairo home"><span class="brand-mark">K</span><span>Kairo</span></a>
+      <div class="nav-links">
+        <a href="#experience">Experience</a>
+        <a href="#modules">Modules</a>
+        <a href="#safety">Safety</a>
+        <a class="nav-github" href="https://github.com/nihitdev/dotfiles">GitHub ↗</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" id="top">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="pulse"></span> Arch Linux · Hyprland · CLI-first</p>
+        <h1>Arch,<br><em>composed.</em></h1>
+        <p class="hero-lede">A focused workstation installer that turns a fresh Arch system into your environment—without treating your home directory like a blank canvas.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#install">Install Kairo</a>
+          <a class="button button-ghost" href="#modules">Explore modules <span>↓</span></a>
+        </div>
+        <dl class="hero-facts">
+          <div><dt>18</dt><dd>dotfile modules</dd></div>
+          <div><dt>8</dt><dd>toolchain profiles</dd></div>
+          <div><dt>0</dt><dd>TUI dependencies</dd></div>
+        </dl>
+      </div>
+
+      <div class="terminal-wrap reveal" aria-label="Kairo installer preview">
+        <div class="terminal-glow"></div>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span>kairo · module selection</span>
+            <span class="terminal-arch">arch</span>
+          </div>
+          <div class="terminal-body">
+            <pre class="wordmark" aria-hidden="true">██╗  ██╗ █████╗ ██╗██████╗  ██████╗
+██║ ██╔╝██╔══██╗██║██╔══██╗██╔═══██╗
+█████╔╝ ███████║██║██████╔╝██║   ██║
+╚════╝  ╚══════╝╚═╝╚═════╝  ╚═════╝</pre>
+            <div class="terminal-section"><span>◆</span> Choose your modules <b>14 selected</b></div>
+            <p class="terminal-label">SHELLS</p>
+            <p class="terminal-row active"><span>›</span><i>●</i> Fish <small>default shell</small></p>
+            <p class="terminal-row"><span></span><i>●</i> Nushell</p>
+            <p class="terminal-row"><span></span><i>●</i> Zsh + Starship</p>
+            <p class="terminal-label">DEVELOPMENT</p>
+            <p class="terminal-row"><span></span><i>●</i> Neovim</p>
+            <p class="terminal-row"><span></span><i>○</i> Hyprland <small>opt-in</small></p>
+            <div class="terminal-footer">↑/↓ move &nbsp; Space toggle &nbsp; Enter review</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="install-band" id="install">
+      <div class="wrap install-grid">
+        <div>
+          <p class="eyebrow">One command</p>
+          <h2>Start with a preview.</h2>
+          <p>The remote entry point uses plain output and a pinned, SHA-256-verified archive. Clone locally for the full interactive experience.</p>
+        </div>
+        <div class="command-card">
+          <div class="command-tabs" role="tablist" aria-label="Install methods">
+            <button class="command-tab active" role="tab" aria-selected="true" data-command="remote">Remote</button>
+            <button class="command-tab" role="tab" aria-selected="false" data-command="clone">Clone</button>
+            <button class="command-tab" role="tab" aria-selected="false" data-command="dry">Dry run</button>
+          </div>
+          <div class="command-line">
+            <code id="install-command">curl -fsSL https://raw.githubusercontent.com/nihitdev/dotfiles/main/install.sh | bash</code>
+            <button class="copy-button" type="button" data-copy="#install-command" aria-label="Copy install command">Copy</button>
+          </div>
+          <p class="copy-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="experience">
+      <div class="section-heading reveal">
+        <p class="eyebrow">Designed for confidence</p>
+        <h2>A guided install.<br>Not a blind script.</h2>
+        <p>Kairo discovers the machine, lets you choose the surface area, and shows the consequences before it writes.</p>
+      </div>
+      <ol class="flow-grid reveal">
+        <li><span>01</span><h3>Detect</h3><p>Arch, architecture, shell, session, package tools, and systemd.</p></li>
+        <li><span>02</span><h3>Choose</h3><p>Dotfiles and toolchain profiles selected independently.</p></li>
+        <li><span>03</span><h3>Review</h3><p>Missing packages, replacements, trust changes, and backup status.</p></li>
+        <li><span>04</span><h3>Apply</h3><p>Packages, staged configs, shell integration, caches, and validation.</p></li>
+      </ol>
+    </section>
+
+    <section class="section modules-section" id="modules">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Make it yours</p>
+          <h2>Small modules.<br>Useful combinations.</h2>
+          <p>Install one config, a complete workstation, or anything between.</p>
+        </div>
+        <div class="filter-row reveal" role="group" aria-label="Filter modules">
+          <button class="filter active" data-filter="all">Everything</button>
+          <button class="filter" data-filter="shell">Shells</button>
+          <button class="filter" data-filter="cli">CLI</button>
+          <button class="filter" data-filter="development">Development</button>
+          <button class="filter" data-filter="desktop">Desktop</button>
+        </div>
+        <div class="module-grid reveal" id="module-grid">
+          <article data-category="shell"><span>01</span><h3>Fish</h3><p>Default login shell, Starship, Atuin, and modern navigation.</p></article>
+          <article data-category="shell"><span>02</span><h3>Nushell</h3><p>Structured pipelines with generated Starship and Zoxide caches.</p></article>
+          <article data-category="shell"><span>03</span><h3>Zsh</h3><p>Oh My Zsh with Arch-packaged plugins and a dedicated prompt.</p></article>
+          <article data-category="shell"><span>04</span><h3>Bash</h3><p>A compact interactive baseline—nothing sprawling or magical.</p></article>
+          <article data-category="cli"><span>05</span><h3>Starship</h3><p>One binary, four carefully separated shell configurations.</p></article>
+          <article data-category="cli"><span>06</span><h3>Yazi</h3><p>Catppuccin file management, previews, Git state, and plugins.</p></article>
+          <article data-category="cli"><span>07</span><h3>Bat + Broot</h3><p>Readable files and fast tree navigation with shared theming.</p></article>
+          <article data-category="development"><span>08</span><h3>Neovim</h3><p>LazyVim, pinned plugins, and a focused development surface.</p></article>
+          <article data-category="development"><span>09</span><h3>Git + LazyGit</h3><p>Managed includes preserve identity while Delta sharpens diffs.</p></article>
+          <article data-category="desktop"><span>10</span><h3>Hyprland</h3><p>An opt-in Wayland desktop module with explicit replacement review.</p></article>
+          <article data-category="desktop"><span>11</span><h3>Kitty</h3><p>Fast terminal rendering, tabs, themes, and Fish-first workflow.</p></article>
+          <article data-category="cli"><span>12</span><h3>Fastfetch + Cava</h3><p>Arch system identity and a responsive terminal visualizer.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap profiles-section">
+      <div class="profile-intro reveal">
+        <p class="eyebrow">Beyond dotfiles</p>
+        <h2>Toolchains,<br>on your terms.</h2>
+        <p>Profiles are opt-in package bundles. Combine them freely; Kairo installs only what the selected environment is missing.</p>
+        <code>./install.sh --profile rust --profile python</code>
+      </div>
+      <div class="profile-list reveal">
+        <div><b>core-build</b><span>base-devel · Git · curl · archives · ShellCheck</span></div>
+        <div><b>cpp</b><span>GCC · Clang · CMake · Ninja · GDB · LLDB</span></div>
+        <div><b>rust</b><span>Rustup and a clean toolchain starting point</span></div>
+        <div><b>python</b><span>Python · pip · uv</span></div>
+        <div><b>web</b><span>Node.js · npm · pnpm · Bun</span></div>
+        <div><b>containers</b><span>Docker · Compose · Podman · Buildah</span></div>
+        <div><b>wayland</b><span>Portals · clipboard · capture · display controls</span></div>
+        <div><b>media</b><span>PipeWire · FFmpeg · ImageMagick · yt-dlp</span></div>
+      </div>
+    </section>
+
+    <section class="section safety-section" id="safety">
+      <div class="wrap safety-grid">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Built to back out</p>
+          <h2>Safety is part<br>of the interface.</h2>
+          <p>The installer’s visual polish sits on top of conservative filesystem behavior—not instead of it.</p>
+        </div>
+        <div class="safety-card reveal">
+          <ul>
+            <li><i>✓</i><div><b>Private, unique backups</b><span>Every run gets a restrictive timestamped backup directory.</span></div></li>
+            <li><i>✓</i><div><b>Transactional replacement</b><span>Payloads stage beside their target before activation.</span></div></li>
+            <li><i>✓</i><div><b>Reverse-order rollback</b><span>A failed operation restores completed replacements.</span></div></li>
+            <li><i>✓</i><div><b>Strict path boundaries</b><span>Traversal, root targets, and symlink escapes are rejected.</span></div></li>
+            <li><i>✓</i><div><b>Actually dry</b><span>Dry-run performs no package, plugin, cache, or config writes.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing wrap reveal">
+      <p class="eyebrow">Ready when you are</p>
+      <h2>Your system.<br><em>Still yours.</em></h2>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#install">View install command</a>
+        <a class="button button-ghost" href="https://github.com/nihitdev/dotfiles">Read the source ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <a class="brand" href="#top"><span class="brand-mark">K</span><span>Kairo</span></a>
+      <p>Arch-first. Dependency-light. Carefully reversible.</p>
+      <p>GPL-3.0 · Built in the open.</p>
+    </div>
+  </footer>
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # THEME
 # ─────────────────────────────────────────────────────────────────────────────
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME=""
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PLUGINS
@@ -19,18 +19,25 @@ plugins=(
   sudo
   command-not-found
   colored-man-pages
-  zsh-autosuggestions
-  zsh-syntax-highlighting
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
 # OH MY ZSH
 # ─────────────────────────────────────────────────────────────────────────────
 
-source "$ZSH/oh-my-zsh.sh"
+[[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+
+# Arch packages provide these integrations under /usr/share/zsh/plugins.
+[[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
+  source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] &&
+  source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # ─────────────────────────────────────────────────────────────────────────────
-# POWERLEVEL10K
+# STARSHIP
 # ─────────────────────────────────────────────────────────────────────────────
 
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+if command -v starship >/dev/null 2>&1; then
+  export STARSHIP_CONFIG="$HOME/.config/starship/zsh.toml"
+  eval "$(starship init zsh)"
+fi

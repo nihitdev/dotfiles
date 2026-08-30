@@ -1,0 +1,110 @@
+# ==============================================================================
+# Nushell Starship Prompt
+# ==============================================================================
+
+format = """
+[](#7aa2f7)\
+$os\
+$username\
+[](bg:#24283b fg:#7aa2f7)\
+$directory\
+[](fg:#24283b bg:#1f2335)\
+$git_branch\
+$git_status\
+[](fg:#1f2335)\
+$fill\
+$cmd_duration\
+$time\
+$line_break\
+$character"""
+
+add_newline = true
+command_timeout = 1000
+
+
+# ==============================================================================
+# Operating System
+# ==============================================================================
+
+[os]
+disabled = false
+style = "bg:#7aa2f7 fg:#1a1b26"
+format = "[$symbol]($style)"
+
+[os.symbols]
+Arch = "  "
+CachyOS = "  "
+Linux = "  "
+
+
+# ==============================================================================
+# Username
+# ==============================================================================
+
+[username]
+show_always = true
+style_user = "bold bg:#7aa2f7 fg:#1a1b26"
+style_root = "bold bg:#f7768e fg:#1a1b26"
+format = "[$user ]($style)"
+
+
+# ==============================================================================
+# Directory
+# ==============================================================================
+
+[directory]
+style = "bold bg:#24283b fg:#7dcfff"
+format = "[ 󰉋 $path ]($style)"
+truncation_length = 3
+truncate_to_repo = false
+home_symbol = "~"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = "󰇚 "
+"Music" = "󰝚 "
+"Pictures" = "󰉏 "
+"Projects" = "󰲋 "
+
+
+# ==============================================================================
+# Git
+# ==============================================================================
+
+[git_branch]
+symbol = " "
+style = "bg:#1f2335 fg:#bb9af7"
+format = "[ $symbol$branch]($style)"
+
+[git_status]
+style = "bg:#1f2335 fg:#e0af68"
+format = "[$all_status$ahead_behind ]($style)"
+
+
+# ==============================================================================
+# Right Side
+# ==============================================================================
+
+[fill]
+symbol = " "
+
+[cmd_duration]
+min_time = 500
+style = "fg:#e0af68"
+format = "[󰔚 $duration ]($style)"
+
+[time]
+disabled = false
+time_format = "%H:%M"
+style = "fg:#565f89"
+format = "[ $time]($style)"
+
+
+# ==============================================================================
+# Structured Prompt Character
+# ==============================================================================
+
+[character]
+success_symbol = "[╰─](bold #565f89)[❯](bold #9ece6a)"
+error_symbol = "[╰─](bold #565f89)[❯](bold #f7768e)"
+vimcmd_symbol = "[╰─](bold #565f89)[❯](bold #bb9af7)"

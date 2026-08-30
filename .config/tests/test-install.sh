@@ -306,34 +306,19 @@ run_signal_cleanup_static_test() {
 run_remote_verification_test() {
     local home="$test_root/remote/home"
     local script_copy="$test_root/remote/install.sh"
-    local bad_script="$test_root/remote/install-bad-hash.sh"
-    local wget_script="$test_root/remote/install-wget.sh"
     mkdir -p "$home"
     cp "$repo_root/install.sh" "$script_copy"
     local output
     output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
         bash "$script_copy" --dry-run)
-    [[ $output == *'Planned:'* ]] || fail 'verified remote bootstrap did not produce an install plan'
+    [[ $output == *'Planned:'* ]] || fail 'remote clone bootstrap did not produce an install plan'
+    [[ -d $home/kairo/.git ]] || fail 'remote bootstrap did not clone Kairo under HOME'
     [[ $output == *"Install starship -> $home/.config/starship"* ]] ||
-        fail 'remote bootstrap archive omitted current Starship payloads'
+        fail 'remote clone bootstrap omitted current Starship payloads'
 
     output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
         bash -s -- --dry-run --only nvim <"$script_copy")
     [[ $output == *'Planned: nvim'* ]] || fail 'stdin bootstrap did not produce an install plan'
-
-    if command -v wget >/dev/null 2>&1; then
-        sed 's/command -v curl/command -v __kairo_missing_curl/g' "$script_copy" >"$wget_script"
-        output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
-            bash "$wget_script" --dry-run --only nvim)
-        [[ $output == *'Planned:'* ]] || fail 'wget remote bootstrap did not produce an install plan'
-    fi
-
-    sed "s/remote_archive_sha256='[0-9a-f]*'/remote_archive_sha256='0000000000000000000000000000000000000000000000000000000000000000'/" \
-        "$script_copy" >"$bad_script"
-    if HOME="$home" XDG_CONFIG_HOME="$home/.config" \
-        bash "$bad_script" --dry-run --only nvim >/dev/null 2>&1; then
-        fail 'remote archive with an invalid checksum was accepted'
-    fi
 }
 
 run_static_security_defaults_test() {

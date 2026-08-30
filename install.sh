@@ -195,8 +195,6 @@ fi
 temporary_root=''
 stage_root=''
 external_root=''
-remote_ref='d7209502e87958f796bd2b0db788c5462d459bec'
-remote_archive_sha256='186b98b8852a4c20be05cb15df1989f917d5a0a7ca2554a775f3a5b5525f21fd'
 
 # Local runs load the dependency-free UI immediately. Remote runs hand off to
 # the same verified repository snapshot after it has been downloaded.
@@ -231,47 +229,56 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Support: curl -fsSL <raw-install.sh-url> | bash
-#      or: wget -qO- <raw-install.sh-url> | bash
+# Remote quick start: clone/update ~/kairo, then run the normal local installer.
 if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
-    if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
-        printf 'curl or wget is required for remote installation.\n' >&2
-        exit 1
+    kairo_checkout="$HOME/kairo"
+    if [[ -t 1 && ${CI:-false} != true && -r /dev/tty ]]; then
+        command -v sudo >/dev/null 2>&1 || {
+            printf 'sudo is required for interactive system setup.\n' >&2
+            exit 1
+        }
+        printf 'Kairo needs administrator access for system packages and setup.\n'
+        sudo -v </dev/tty
     fi
-    command -v tar >/dev/null 2>&1 || {
-        printf 'tar is required for remote installation.\n' >&2
-        exit 1
-    }
-    command -v sha256sum >/dev/null 2>&1 || {
-        printf 'sha256sum is required for remote archive verification.\n' >&2
-        exit 1
-    }
-
-    temporary_root=$(mktemp -d)
-    archive="$temporary_root/kairo.tar.gz"
-    printf 'Downloading Kairo...\n'
-    if command -v curl >/dev/null 2>&1; then
-        curl -fsSL "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz" -o "$archive"
+    if ! command -v git >/dev/null 2>&1; then
+        if command -v pacman >/dev/null 2>&1 && command -v sudo >/dev/null 2>&1; then
+            sudo pacman -S --needed git </dev/tty
+        else
+            printf 'Git is required to clone Kairo.\n' >&2
+            exit 1
+        fi
+    fi
+    if [[ -e $kairo_checkout ]]; then
+        [[ -d $kairo_checkout/.git ]] || {
+            printf '%s already exists and is not a Git checkout.\n' "$kairo_checkout" >&2
+            exit 1
+        }
+        checkout_origin=$(git -C "$kairo_checkout" remote get-url origin 2>/dev/null || true)
+        [[ $checkout_origin == https://github.com/nihitdev/kairo.git ||
+           $checkout_origin == git@github.com:nihitdev/kairo.git ]] || {
+            printf '%s is not a Kairo checkout; refusing to replace it.\n' "$kairo_checkout" >&2
+            exit 1
+        }
+        [[ -z $(git -C "$kairo_checkout" status --porcelain) ]] || {
+            printf '%s has local changes; commit or stash them before updating.\n' "$kairo_checkout" >&2
+            exit 1
+        }
+        printf 'Updating %s...\n' "$kairo_checkout"
+        git -C "$kairo_checkout" pull --ff-only origin main
     else
-        wget -qO "$archive" "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz"
+        printf 'Cloning Kairo -> %s...\n' "$kairo_checkout"
+        git clone https://github.com/nihitdev/kairo.git "$kairo_checkout"
     fi
-    printf '%s  %s\n' "$remote_archive_sha256" "$archive" | sha256sum --check --status || {
-        printf 'Downloaded archive failed SHA-256 verification.\n' >&2
-        exit 1
-    }
-    tar -xzf "$archive" -C "$temporary_root"
-    repo_root="$temporary_root/kairo-$remote_ref"
-
-    # A pipe cannot provide interactive input. When a controlling terminal is
-    # available, run the verified installer snapshot with /dev/tty as stdin so
-    # Curl and Wget quick-start commands open the same TUI as a local clone.
+    printf 'Starting Kairo...\n'
+    set +e
     if [[ -t 1 && ${CI:-false} != true && ${#only[@]} -eq 0 && -r /dev/tty ]]; then
-        set +e
-        bash "$repo_root/install.sh" "${original_args[@]}" </dev/tty
-        remote_status=$?
-        set -e
-        exit "$remote_status"
+        (cd "$kairo_checkout" && bash ./install.sh "${original_args[@]}" </dev/tty)
+    else
+        (cd "$kairo_checkout" && bash ./install.sh "${original_args[@]}")
     fi
+    remote_status=$?
+    set -e
+    exit "$remote_status"
 fi
 
 timestamp=$(date '+%Y%m%d-%H%M%S')
@@ -1149,7 +1156,7 @@ if [[ -f $source_config_root/starship/bash.toml &&
     install_item starship "$source_config_root/starship" "$config_root/starship"
 elif is_selected starship; then
     skipped+=(starship)
-    warnings+=('The pinned remote archive predates per-shell Starship configs; refresh the archive pin after committing this layout')
+    warnings+=('Starship source directory is incomplete; skipped Starship configuration')
 fi
 install_item atuin "$source_config_root/atuin/config.toml" "$config_root/atuin/config.toml"
 install_item bat "$source_config_root/bat/config" "$config_root/bat/config"

@@ -42,7 +42,7 @@ curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | ba
 wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
 ```
 
-Both remote entry points download an immutable repository archive and verify its SHA-256 checksum before use. When a controlling terminal is available, Kairo reconnects input to it and opens the full interactive installer. CI and redirected/non-terminal sessions remain plain and deterministic.
+Both remote entry points request sudo access, clone Kairo to `~/kairo`, enter the checkout, and launch the full interactive installer. An existing clean Kairo checkout is updated with a fast-forward pull; unrelated or modified directories are never overwritten. CI and redirected/non-terminal sessions remain plain and deterministic.
 
 ### 3. Clone
 

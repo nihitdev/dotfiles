@@ -30,7 +30,21 @@ Kairo turns a fresh Arch installation into a focused development environment wit
 
 ## Quick start
 
-Clone the repository for the complete interactive experience:
+### 1. Curl
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
+```
+
+### 2. Wget
+
+```sh
+wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
+```
+
+Both remote entry points download an immutable repository archive and verify its SHA-256 checksum before use. Because piped input is not a terminal, they automatically use deterministic non-interactive output.
+
+### 3. Clone
 
 ```sh
 git clone https://github.com/nihitdev/kairo.git
@@ -38,25 +52,11 @@ cd kairo
 ./install.sh
 ```
 
-Start with a zero-write preview if you want to inspect every action first:
+Cloning provides the complete interactive TUI. Start with a zero-write preview if you want to inspect every action first:
 
 ```sh
 ./install.sh --dry-run
 ```
-
-For a plain remote bootstrap:
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
-```
-
-Or with Wget:
-
-```sh
-wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
-```
-
-The remote entry point downloads an immutable repository archive and verifies its SHA-256 checksum before use. Because piped input is not a terminal, it automatically uses deterministic non-interactive output.
 
 ## Installer experience
 

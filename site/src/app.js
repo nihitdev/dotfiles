@@ -1,5 +1,6 @@
 const commands = {
-  remote: "curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash",
+  curl: "curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash",
+  wget: "wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash",
   clone: "git clone https://github.com/nihitdev/kairo.git && cd kairo && ./install.sh",
   dry: "./install.sh --dry-run",
 };

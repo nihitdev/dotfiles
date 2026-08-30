@@ -80,10 +80,6 @@ Kairo shows the detected distribution, architecture, shell, display session, pac
 | `Enter` | Continue |
 | `Q` or `Esc` | Cancel safely |
 
-Mouse escape sequences are consumed safely and scrolling does not terminate the installer. Small terminals use a compact layout. The cursor, alternate screen, input mode, and terminal state are restored after success, failure, cancellation, `SIGINT`, or `SIGTERM`.
-
-Animations are automatically disabled when output is redirected, stdout is not a TTY, or `CI=true`.
-
 ## Useful commands
 
 ```sh

@@ -1,5 +1,7 @@
 # Kairo website
 
+Production: [get-kairo.vercel.app](https://get-kairo.vercel.app)
+
 The project site uses Vite and Tailwind CSS v4. It works with pnpm or Bun.
 
 ```sh

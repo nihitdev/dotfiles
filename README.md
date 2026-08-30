@@ -1,9 +1,12 @@
 # Kairo
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793D1?logo=archlinux&logoColor=white)](https://archlinux.org/)
+[![Website](https://img.shields.io/badge/Website-get--kairo.vercel.app-cba6f7)](https://get-kairo.vercel.app)
 [![License](https://img.shields.io/github/license/nihitdev/dotfiles)](LICENSE)
 
 An Arch-first, Catppuccin-inspired environment for Bash, Fish, Nushell, Zsh, Kitty, Hyprland, Neovim, Git, Yazi, and modern command-line tools.
+
+**[Explore Kairo →](https://get-kairo.vercel.app)**
 
 ## Installation
 

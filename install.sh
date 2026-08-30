@@ -224,11 +224,12 @@ cleanup() {
 trap cleanup EXIT
 
 # Support: curl -fsSL <raw-install.sh-url> | bash
+#      or: wget -qO- <raw-install.sh-url> | bash
 if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
-    command -v curl >/dev/null 2>&1 || {
-        printf 'curl is required for remote installation.\n' >&2
+    if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
+        printf 'curl or wget is required for remote installation.\n' >&2
         exit 1
-    }
+    fi
     command -v tar >/dev/null 2>&1 || {
         printf 'tar is required for remote installation.\n' >&2
         exit 1
@@ -241,7 +242,11 @@ if [[ ! -f $repo_root/.config/nvim/init.lua ]]; then
     temporary_root=$(mktemp -d)
     archive="$temporary_root/kairo.tar.gz"
     printf 'Downloading Kairo...\n'
-    curl -fsSL "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz" -o "$archive"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsSL "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz" -o "$archive"
+    else
+        wget -qO "$archive" "https://github.com/nihitdev/kairo/archive/$remote_ref.tar.gz"
+    fi
     printf '%s  %s\n' "$remote_archive_sha256" "$archive" | sha256sum --check --status || {
         printf 'Downloaded archive failed SHA-256 verification.\n' >&2
         exit 1

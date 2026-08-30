@@ -50,6 +50,12 @@ For a plain remote bootstrap:
 curl -fsSL https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
 ```
 
+Or with Wget:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/nihitdev/kairo/main/install.sh | bash
+```
+
 The remote entry point downloads an immutable repository archive and verifies its SHA-256 checksum before use. Because piped input is not a terminal, it automatically uses deterministic non-interactive output.
 
 ## Installer experience
@@ -132,7 +138,7 @@ Profiles install workstation packages independently from dotfile modules. Repeat
 
 | Profile | Included tools |
 | --- | --- |
-| `core-build` | Base development tools, Git, curl, rsync, archives, jq, ShellCheck |
+| `core-build` | Base development tools, Git, curl, wget, rsync, archives, jq, ShellCheck |
 | `cpp` | GCC, Clang, CMake, Ninja, Meson, GDB, LLDB |
 | `rust` | Rustup |
 | `python` | Python, pip, uv |

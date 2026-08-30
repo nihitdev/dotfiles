@@ -253,12 +253,13 @@ run_package_profile_dry_run_test() {
     chmod +x "$fake_bin/pacman"
     before=$(find "$home" -printf '%P|%y|%s\n' | sort)
     plan=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true PATH="$fake_bin:$PATH" \
-        "$repo_root/install.sh" --dry-run --profile cpp --profile rust \
+        "$repo_root/install.sh" --dry-run --profile core-build --profile cpp --profile rust \
         --aur-helper paru --enable-chaotic-aur --only nvim)
     after=$(find "$home" -printf '%P|%y|%s\n' | sort)
     [[ $before == "$after" ]] || fail 'package-profile dry-run changed the filesystem'
     [[ $plan == *'Trust and locally sign Chaotic-AUR key'* ]] || fail 'Chaotic-AUR dry-run plan missing'
     [[ $plan == *'Run sudo pacman -S --needed'* ]] || fail 'toolchain package plan missing'
+    [[ $plan == *'wget'* ]] || fail 'core-build profile omitted wget'
 }
 
 run_gpu_driver_dry_run_test() {
@@ -306,6 +307,7 @@ run_remote_verification_test() {
     local home="$test_root/remote/home"
     local script_copy="$test_root/remote/install.sh"
     local bad_script="$test_root/remote/install-bad-hash.sh"
+    local wget_script="$test_root/remote/install-wget.sh"
     mkdir -p "$home"
     cp "$repo_root/install.sh" "$script_copy"
     local output
@@ -313,6 +315,13 @@ run_remote_verification_test() {
         bash "$script_copy" --dry-run)
     [[ $output == *'Planned:'* ]] || fail 'verified remote bootstrap did not produce an install plan'
     [[ $output == *'Skipped: bash starship fish'* ]] || fail 'remote bootstrap did not safely skip payloads absent from the pinned archive'
+
+    if command -v wget >/dev/null 2>&1; then
+        sed 's/command -v curl/command -v __kairo_missing_curl/g' "$script_copy" >"$wget_script"
+        output=$(HOME="$home" XDG_CONFIG_HOME="$home/.config" CI=true \
+            bash "$wget_script" --dry-run --only nvim)
+        [[ $output == *'Planned:'* ]] || fail 'wget remote bootstrap did not produce an install plan'
+    fi
 
     sed "s/remote_archive_sha256='[0-9a-f]*'/remote_archive_sha256='0000000000000000000000000000000000000000000000000000000000000000'/" \
         "$script_copy" >"$bad_script"

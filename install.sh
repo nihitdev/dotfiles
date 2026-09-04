@@ -1234,6 +1234,7 @@ install_item ssh "$source_config_root/ssh/config" "$HOME/.ssh/config.d/dotfiles.
 install_include_line ssh "$HOME/.ssh/config" 'Include ~/.ssh/config.d/*.conf'
 install_item kitty "$source_config_root/kitty" "$config_root/kitty"
 install_item hypr "$source_config_root/hypr" "$config_root/hypr"
+install_item hypr "$source_config_root/waybar" "$config_root/waybar"
 if [[ -d $source_config_root/fish ]]; then
     install_item fish "$source_config_root/fish" "$config_root/fish"
 elif is_selected fish; then

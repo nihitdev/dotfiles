@@ -27,6 +27,7 @@ Kairo turns a fresh Arch installation into a focused development environment wit
 - Deterministic plain output for CI, redirected output, and automation
 - Separate Starship configuration for Bash, Fish, Nushell, and Zsh
 - Fish login-shell setup after a successful interactive installation
+- Switchable rice branches with coordinated Hyprland, Waybar, Kitty, and wallpaper colors
 
 ## Quick start
 
@@ -110,6 +111,37 @@ Kairo shows the detected distribution, architecture, shell, display session, pac
 
 Run `./install.sh --help` for the authoritative option and component list.
 
+## Rice branches
+
+Kairo ships each complete desktop palette as a Git branch. Switch the checkout,
+then apply its Hyprland, Waybar, Kitty, and wallpaper configuration through the
+same transactional installer:
+
+```sh
+cd ~/kairo
+git fetch origin
+git switch rice/catppuccin-mocha
+./install.sh --only hypr --only kitty
+```
+
+Preview the replacement first with `--dry-run`. To change rice later, return to
+a clean checkout, switch to another `rice/*` branch, and run the same install
+command. Kairo backs up replaced configuration unless `--no-backup` is given.
+
+Available branches:
+
+| Family | Branches |
+| --- | --- |
+| Classic terminal | `rice/campbell`, `rice/vintage` |
+| One Half | `rice/one-half-dark`, `rice/one-half-light` |
+| Tango | `rice/tango-dark`, `rice/tango-light` |
+| Catppuccin | `rice/catppuccin-latte`, `rice/catppuccin-frappe`, `rice/catppuccin-macchiato`, `rice/catppuccin-mocha` |
+| Rosé Pine | `rice/rose-pine`, `rice/rose-pine-moon`, `rice/rose-pine-dawn` |
+
+`main` remains the stable development branch. Rice branches contain distinct
+palette files, so changing branches changes the configuration that the installer
+deploys; Git itself does not rewrite the already-installed files in `~/.config`.
+
 ## Included configurations
 
 | Area | Modules |
@@ -118,7 +150,7 @@ Run `./install.sh --help` for the authoritative option and component list.
 | Prompt and history | [Starship](.config/starship/), [Atuin](.config/atuin/), [Oh My Posh](.config/oh-my-posh/) |
 | CLI workflow | [Bat](.config/bat/), [Broot](.config/broot/), [Yazi](.config/yazi/), [LazyGit](.config/lazygit/), [Fastfetch](.config/fastfetch/), [Cava](.config/cava/) |
 | Development | [Git](.config/git/), [Neovim](.config/nvim/), [SSH](.config/ssh/) |
-| Desktop | [Kitty](.config/kitty/), [Hyprland](.config/hypr/) |
+| Desktop | [Kitty](.config/kitty/), [Hyprland](.config/hypr/), [Waybar](.config/waybar/) |
 
 Hyprland is opt-in because replacing a compositor configuration can disrupt an active session. Preview it before installation:
 

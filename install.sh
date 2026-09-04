@@ -41,34 +41,34 @@ chaotic_config_backup=''
 
 declare -a module_names=(
     bash fish nushell zsh starship atuin bat broot yazi lazygit fastfetch
-    git nvim kitty cava ssh oh-my-posh hypr
+    git nvim kitty cava ssh oh-my-posh hypr rofi
 )
 declare -a module_labels=(
     Bash Fish Nushell Zsh Starship Atuin Bat Broot Yazi LazyGit Fastfetch
-    Git Neovim Kitty Cava SSH 'Oh My Posh' Hyprland
+    Git Neovim Kitty Cava SSH 'Oh My Posh' Hyprland Rofi
 )
 declare -a module_categories=(
     Shells Shells Shells Shells Shells CLI CLI CLI CLI CLI CLI
-    Development Development Desktop Desktop System Shells Desktop
+    Development Development Desktop Desktop System Shells Desktop Desktop
 )
 declare -A module_default=(
     [bash]=true [fish]=true [nushell]=true [zsh]=true [starship]=true
     [atuin]=true [bat]=true [broot]=true [yazi]=true [lazygit]=true
     [fastfetch]=true [git]=true [nvim]=true [kitty]=true [cava]=true
-    [ssh]=true [oh-my-posh]=false [hypr]=false
+    [ssh]=true [oh-my-posh]=false [hypr]=false [rofi]=false
 )
 declare -A module_package=(
     [bash]=bash [fish]=fish [nushell]=nushell [zsh]=zsh [starship]=starship
     [atuin]=atuin [bat]=bat [broot]=broot [yazi]=yazi [lazygit]=lazygit
     [fastfetch]=fastfetch [git]=git [nvim]=neovim [kitty]=kitty [cava]=cava
-    [ssh]=openssh [hypr]=hyprland
+    [ssh]=openssh [hypr]=hyprland [rofi]=rofi-wayland
 )
 declare -A module_aur_package=([oh-my-posh]=oh-my-posh-bin)
 declare -A module_command=(
     [bash]=bash [fish]=fish [nushell]=nu [zsh]=zsh [starship]=starship
     [atuin]=atuin [bat]=bat [broot]=broot [yazi]=yazi [lazygit]=lazygit
     [fastfetch]=fastfetch [git]=git [nvim]=nvim [kitty]=kitty [cava]=cava
-    [ssh]=ssh [oh-my-posh]=oh-my-posh [hypr]=Hyprland
+    [ssh]=ssh [oh-my-posh]=oh-my-posh [hypr]=Hyprland [rofi]=rofi
 )
 declare -A installed_package_cache=()
 package_cache_loaded=false
@@ -107,7 +107,7 @@ Options:
 
 Components:
   bash zsh nushell git lazygit broot nvim yazi fastfetch oh-my-posh
-  starship atuin bat cava ssh kitty fish hypr all
+  starship atuin bat cava ssh kitty fish hypr rofi all
 EOF
 }
 
@@ -1235,6 +1235,7 @@ install_include_line ssh "$HOME/.ssh/config" 'Include ~/.ssh/config.d/*.conf'
 install_item kitty "$source_config_root/kitty" "$config_root/kitty"
 install_item hypr "$source_config_root/hypr" "$config_root/hypr"
 install_item hypr "$source_config_root/waybar" "$config_root/waybar"
+install_item rofi "$source_config_root/rofi" "$config_root/rofi"
 if [[ -d $source_config_root/fish ]]; then
     install_item fish "$source_config_root/fish" "$config_root/fish"
 elif is_selected fish; then

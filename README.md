@@ -228,6 +228,30 @@ One Starship binary is shared across all shells, while `STARSHIP_CONFIG` selects
 
 The installer manages the complete directory; Kairo does not use a single prompt file at the configuration root.
 
+## Rice branches
+
+Kairo publishes one Git branch per curated rice. Each branch includes a matching Kitty palette, Waybar accents, and Hyprland border colors:
+
+```text
+rice/campbell             rice/vintage
+rice/one-half-dark        rice/one-half-light
+rice/tango-dark           rice/tango-light
+rice/catppuccin-latte     rice/catppuccin-frappe
+rice/catppuccin-macchiato rice/catppuccin-mocha
+rice/rose-pine            rice/rose-pine-moon
+rice/rose-pine-dawn
+```
+
+Switching a rice is intentionally an ordinary Git workflow. From a clean checkout, select a branch and reinstall the affected components:
+
+```sh
+git fetch origin
+git switch rice/catppuccin-mocha
+./install.sh --only kitty --only hypr
+```
+
+Waybar is included in the repository at `.config/waybar`; copy it to `~/.config/waybar` (or use your usual dotfile deployment step) after switching. Return to the default configuration with `git switch main`. The installer backs up replaced destinations, so switching back is reversible.
+
 ## Safety first
 
 Kairo preserves the existing installer’s transactional design:

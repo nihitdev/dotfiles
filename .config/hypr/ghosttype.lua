@@ -1,1 +1,0 @@
--- owned by ghosttype when installed.

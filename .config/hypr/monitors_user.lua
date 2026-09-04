@@ -1,1 +1,0 @@
--- hand-pinned displays, see monitors_user.lua.example. pins here win.
